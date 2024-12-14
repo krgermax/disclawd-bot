@@ -7,7 +7,7 @@ import org.clawd.data.mobs.enums.TradeType;
 public class TradeMob extends Mob {
     private final TradeType tradeType;
     public TradeMob(
-            int uniqueID,
+            int id,
             String name,
             String desc,
             MobType mobType,
@@ -16,7 +16,7 @@ public class TradeMob extends Mob {
             double spawnChance,
             TradeType tradeType
     ) {
-        super(uniqueID, name, desc, mobType, mobSubType, imgPath, spawnChance);
+        super(id, name, desc, mobType, mobSubType, imgPath, spawnChance);
         this.tradeType = tradeType;
     }
 

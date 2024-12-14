@@ -9,13 +9,10 @@ public class InvCommand implements SlashCommand {
     @Override
     public void executeCommand(SlashCommandInteractionEvent event) {
         String userID = event.getUser().getId();
-
         if (!Main.sqlHandler.isUserRegistered(userID)) {
             Main.sqlHandler.registerUser(userID);
-            Main.sqlHandler.sqlEmbeddedHandler.replyToNewRegisteredUser(event);
-        } else {
-            Main.mineworld.inventoryHandler.replyWithInventoryFirstEmbedded(event);
-            Main.LOG.info("Executed '" + Constants.INV_COMMAND_ID + "' button");
         }
+        Main.mineworld.inventoryHandler.replyWithInventoryFirstEmbedded(event);
+        Main.LOG.info("Executed '" + Constants.INV_COMMAND_ID + "' button");
     }
 }

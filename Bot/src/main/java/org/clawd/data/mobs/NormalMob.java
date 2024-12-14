@@ -8,7 +8,7 @@ public class NormalMob extends Mob {
     private final int goldDrop;
 
     public NormalMob(
-            int uniqueID,
+            int id,
             String name,
             String desc,
             MobType mobType,
@@ -18,7 +18,7 @@ public class NormalMob extends Mob {
             double xpDrop,
             int goldDrop
     ) {
-        super(uniqueID, name, desc, mobType, mobSubType, imgPath, spawnChance);
+        super(id, name, desc, mobType, mobSubType, imgPath, spawnChance);
         this.xpDrop = xpDrop;
         this.goldDrop = goldDrop;
     }

@@ -193,7 +193,7 @@ public class MobParser {
      * @return True of false, depending on the mobs validity
      */
     private boolean isValidMob(Mob mob) {
-        int uniqueID = mob.getUniqueID();
+        int uniqueID = mob.getID();
         if (uniqueID < 0
                 || mob.getSpawnChance() < Constants.MOB_SPAWN_CHANCE_LOWER_B
                 || mob.getSpawnChance() > Constants.MOB_SPAWN_CHANCE_UPPER_B

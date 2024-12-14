@@ -1,4 +1,4 @@
-package org.clawd.data.shop;
+package org.clawd.data;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
@@ -101,7 +101,7 @@ public class MobSpawner {
             messageChannelUnion.sendMessageEmbeds(embedBuilder.build())
                     .addFiles(FileUpload.fromData(imgFile, "mob.png"))
                     .addActionRow(
-                            Button.danger(Constants.HIT_BUTTON_ID + mob.getUniqueID(), "Hit")
+                            Button.danger(Constants.HIT_BUTTON_ID + mob.getID(), "Hit")
                     )
                     .queue();
 

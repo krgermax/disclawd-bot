@@ -8,7 +8,7 @@ public class BossMob extends NormalMob {
     private final double health;
 
     public BossMob(
-            int uniqueID,
+            int id,
             String name,
             String desc,
             MobType mobType,
@@ -20,7 +20,7 @@ public class BossMob extends NormalMob {
             boolean specialDrop,
             double health
     ) {
-        super(uniqueID, name, desc, mobType, mobSubType, imgPath, spawnChance, xpDrop, goldDrop);
+        super(id, name, desc, mobType, mobSubType, imgPath, spawnChance, xpDrop, goldDrop);
         this.specialDrop = specialDrop;
         this.health = health;
     }

@@ -15,18 +15,22 @@ public class EquipButton implements CustomButton {
     @Override
     public void executeButton(ButtonInteractionEvent event) {
         String userID = event.getUser().getId();
-        List<MessageEmbed> embeds = event.getMessage().getEmbeds();
-        String title = embeds.getFirst().getTitle();
-        String searchTerm = title.replace(":mag:", "");
-        Item item = Main.mineworld.getItemByName(searchTerm);
+        if (!Main.sqlHandler.isUserRegistered(userID)) {
+            Main.sqlHandler.registerUser(userID);
+            Main.sqlHandler.sqlEmbeddedHandler.replyToNewRegisteredUser(event);
+        } else {
+            String componentId = event.getComponentId();
+            int itemID = Integer.parseInt(componentId.replace(Constants.EQUIP_BUTTON_ID, ""));
+            Item item = Main.mineworld.getItemByID(itemID);
 
-        Main.sqlHandler.sqlInventoryHandler.equipItem(userID, item.getUniqueID());
+            Main.sqlHandler.sqlInventoryHandler.equipItem(userID, item.getID());
 
-        EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setColor(Color.ORANGE);
-        embedBuilder.setDescription("You're now wielding **" + item.getEmoji() + item.getName() + item.getEmoji() + "**!");
+            EmbedBuilder embedBuilder = new EmbedBuilder();
+            embedBuilder.setColor(Color.ORANGE);
+            embedBuilder.setDescription("You're now wielding **" + item.getEmoji() + item.getName() + item.getEmoji() + "**!");
 
-        event.replyEmbeds(embedBuilder.build()).setEphemeral(true).queue();
-        Main.LOG.info("Executed '"+ Constants.EQUIP_BUTTON_ID  +"' button");
+            event.replyEmbeds(embedBuilder.build()).setEphemeral(true).queue();
+            Main.LOG.info("Executed '" + Constants.EQUIP_BUTTON_ID + "' button");
+        }
     }
 }

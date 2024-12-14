@@ -9,10 +9,12 @@ import org.clawd.tokens.Constants;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class ButtonManager extends ListenerAdapter {
 
     private final HashMap<String, CustomButton> buttons;
+    private final HashMap<String, String> buttonsWithID;
 
     public ButtonManager () {
         this.buttons = new HashMap<>();
@@ -27,6 +29,12 @@ public class ButtonManager extends ListenerAdapter {
         this.buttons.put(Constants.BACK_INV_BUTTON_ID, new InvBackButton());
         this.buttons.put(Constants.HOME_INV_BUTTON_ID, new InvHomeButton());
         this.buttons.put(Constants.HIT_BUTTON_ID, new HitButton());
+
+        this.buttonsWithID = new HashMap<>();
+
+        this.buttonsWithID.put(Constants.HIT_BUTTON_ID, Constants.HIT_BUTTON_ID);
+        this.buttonsWithID.put(Constants.EQUIP_BUTTON_ID, Constants.EQUIP_BUTTON_ID);
+        this.buttonsWithID.put(Constants.BUY_BUTTON_ID, Constants.BUY_BUTTON_ID);
     }
 
     /**
@@ -40,7 +48,12 @@ public class ButtonManager extends ListenerAdapter {
         String buttonID = event.getComponentId();
         Main.LOG.info("Received button interaction: " + buttonID);
 
-        String key = buttonID.contains(Constants.HIT_BUTTON_ID) ? Constants.HIT_BUTTON_ID : buttonID;
+        String key = buttonsWithID.entrySet().stream()
+                .filter(entry -> buttonID.contains(entry.getKey()))
+                .map(Map.Entry::getValue)
+                .findFirst()
+                .orElse(buttonID);
+
         CustomButton button = buttons.get(key);
 
         if (button != null) {

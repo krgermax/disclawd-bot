@@ -43,6 +43,7 @@ public class ShopCore {
             int endIndex = Math.min(startIndex + Constants.ITEMS_PER_PAGE, this.itemList.size());
 
             for (int j = startIndex; j < endIndex; j++) {
+                // TODO: a lot of this can be done in the respective item class
                 Item item = itemList.get(j);
 
                 String itemName = item.getName();

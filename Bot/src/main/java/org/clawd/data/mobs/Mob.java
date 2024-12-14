@@ -11,7 +11,7 @@ public abstract class Mob extends DataObject {
     private final MobSubType mobSubType;
 
     public Mob(
-            int uniqueID,
+            int id,
             String name,
             String desc,
             MobType mobType,
@@ -19,7 +19,7 @@ public abstract class Mob extends DataObject {
             String imgPath,
             double spawnChance
     ) {
-        super(uniqueID, name, desc);
+        super(id, name, desc);
         this.mobType = mobType;
         this.mobSubType = mobSubType;
         this.imgPath = imgPath;

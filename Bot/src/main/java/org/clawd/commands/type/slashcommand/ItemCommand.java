@@ -19,11 +19,9 @@ import java.util.Objects;
 public class ItemCommand implements SlashCommand{
     @Override
     public void executeCommand(SlashCommandInteractionEvent event) {
-
-        String searchTerm = Objects.requireNonNull(event.getOption(Constants.ITEM_COMMAND_OPTION_ID)).getAsString();
+        String searchTerm = getSearchTerm(event);
 
         Item foundItem = Main.mineworld.getItemByName(searchTerm);
-
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setColor(Color.ORANGE);
 
@@ -31,74 +29,96 @@ public class ItemCommand implements SlashCommand{
             embedBuilder.setDescription("Item **" + searchTerm + "** was not found, maybe you mistyped something :/");
             event.replyEmbeds(embedBuilder.build()).setEphemeral(true).queue();
         } else {
-            String priceCheck = ":black_small_square:";
-            String lvlCheck = ":black_small_square:";
-
-            String userID = event.getUser().getId();
-
-            String itemDesc = foundItem.getDescription();
-            int itemPrice = foundItem.getPrice();
-            int itemLvl = foundItem.getReqLvl();
-            double itemXPMult = foundItem.getXpMultiplier();
-
-            String alternativeTxt;
-            double alternativePerk;
-
-            UserStats userStats = Main.sqlHandler.sqlStatsHandler.getUserStats(userID);
+            UserStats userStats = fetchUserStats(event);
+                /*
+                 * TODO: a lot of this can be done in the respective item class, pass user stats to method to dynamically
+                 *  change the values of the embedded message
+                 */
 
             int userLvl = Main.generator.computeLevel(userStats.getXpCount());
             int userGold = userStats.getGoldCount();
 
-            Button buyButton = Button.success(Constants.BUY_BUTTON_ID, "Buy");
-            Button equipButton = Button.success(Constants.EQUIP_BUTTON_ID, "Equip");
-            boolean isItemInInv = Main.sqlHandler.sqlInventoryHandler.isItemInUserInventory(userID, foundItem.getUniqueID());
+            String priceCheck = ":black_small_square:";
+            String lvlCheck = ":black_small_square:";
 
-            if (isItemInInv) {
-                buyButton = buyButton.asDisabled();
-            } else {
-                if (userLvl < itemLvl ) {
-                    buyButton = buyButton.asDisabled();
-                    lvlCheck = ":x:";
-                }
-                if (userGold < itemPrice) {
-                    buyButton = buyButton.asDisabled();
-                    priceCheck = ":x:";
-                }
-                equipButton = equipButton.asDisabled();
+            Button buyButton = createBuyButton(event, foundItem, userLvl, userGold);
+            Button equipButton = createEquipButton(event, foundItem, event.getUser().getId());
+
+            if (buyButton.isDisabled()) {
+                priceCheck = userGold < foundItem.getPrice() ? ":x:" : priceCheck;
+                lvlCheck = userLvl < foundItem.getReqLvl() ? ":x:" : lvlCheck;
             }
 
-            if (foundItem.getItemType() == ItemType.UTILITY) {
-                UtilItem utilItem = (UtilItem) foundItem;
-                alternativeTxt = ":black_small_square: Gold boost: ";
-                alternativePerk = utilItem.getGoldMultiplier();
-            } else {
-                WeaponItem weaponItem = (WeaponItem) foundItem;
-                alternativeTxt = ":black_small_square: Damage boost: ";
-                alternativePerk = weaponItem.getDmgMultiplier();
-            }
+            double alternativePerk = extractAlternativePerk(foundItem);
+            String alternativeTxt = generateAlternativeText(foundItem);
 
-            embedBuilder.setTitle(":mag: " + foundItem.getName() + " :mag: ");
-            File imgFile = new File(foundItem.getImgPath());
-            embedBuilder.setThumbnail("attachment://item.png")
-                    .addField(
-                    itemDesc,
-                    ":black_small_square: XP boost: " + itemXPMult + "\n"
-                            + alternativeTxt + alternativePerk + "\n"
-                            + priceCheck + " Price: " + itemPrice + " Coins" + "\n"
-                            + lvlCheck + " Required lvl. " + itemLvl
-                    ,
-                    false);
-
-            event.replyEmbeds(embedBuilder.build())
-                    .addFiles(FileUpload.fromData(imgFile, "item.png"))
-                    .addActionRow(
-                            buyButton,
-                            equipButton
-                    )
-                    .setEphemeral(true)
-                    .queue();
-
-            Main.LOG.info("Executed '"+ Constants.ITEM_COMMAND_ID +"' command");
+            populateEmbed(embedBuilder, foundItem, alternativeTxt, alternativePerk, priceCheck, lvlCheck);
+            sendResponse(event, embedBuilder, foundItem, buyButton, equipButton);
         }
+    }
+
+    private String getSearchTerm(SlashCommandInteractionEvent event) {
+        return Objects.requireNonNull(event.getOption(Constants.ITEM_COMMAND_OPTION_ID)).getAsString();
+    }
+
+    private UserStats fetchUserStats(SlashCommandInteractionEvent event) {
+        String userID = event.getUser().getId();
+        return Main.sqlHandler.sqlStatsHandler.getUserStats(userID);
+    }
+
+    private Button createBuyButton(SlashCommandInteractionEvent event, Item foundItem, int userLvl, int userGold) {
+        Button buyButton = Button.success(Constants.BUY_BUTTON_ID + foundItem.getID(), "Buy");
+        boolean isItemInUserInv = Main.sqlHandler.sqlInventoryHandler.isItemInUserInventory(event.getUser().getId(), foundItem.getID());
+        if (isItemInUserInv || userLvl < foundItem.getReqLvl() || userGold < foundItem.getPrice()) {
+            buyButton = buyButton.asDisabled();
+        }
+        return buyButton;
+    }
+
+    private Button createEquipButton(SlashCommandInteractionEvent event, Item foundItem, String userID) {
+        Button equipButton = Button.success(Constants.EQUIP_BUTTON_ID + foundItem.getID(), "Equip");
+        boolean isItemInUserInv = Main.sqlHandler.sqlInventoryHandler.isItemInUserInventory(event.getUser().getId(), foundItem.getID());
+        if (!isItemInUserInv) {
+            equipButton = equipButton.asDisabled();
+        }
+        return equipButton;
+    }
+
+    private double extractAlternativePerk(Item foundItem) {
+        if (foundItem.getItemType() == ItemType.UTILITY) {
+            return ((UtilItem) foundItem).getGoldMultiplier();
+        } else {
+            return ((WeaponItem) foundItem).getDmgMultiplier();
+        }
+    }
+
+    private String generateAlternativeText(Item foundItem) {
+        return foundItem.getItemType() == ItemType.UTILITY
+                ? ":black_small_square: Gold boost: "
+                : ":black_small_square: Damage boost: ";
+    }
+
+    private void populateEmbed(EmbedBuilder embedBuilder, Item foundItem, String alternativeTxt, double alternativePerk, String priceCheck, String lvlCheck) {
+        embedBuilder.setTitle(":mag: " + foundItem.getName() + " :mag:")
+                .setThumbnail("attachment://item.png")
+                .addField(
+                        foundItem.getDescription(),
+                        ":black_small_square: XP boost: " + foundItem.getXpMultiplier() + "\n" +
+                                alternativeTxt + alternativePerk + "\n" +
+                                priceCheck + " Price: " + foundItem.getPrice() + " Coins" + "\n" +
+                                lvlCheck + " Required lvl. " + foundItem.getReqLvl(),
+                        false
+                );
+    }
+
+    private void sendResponse(SlashCommandInteractionEvent event, EmbedBuilder embedBuilder, Item foundItem, Button buyButton, Button equipButton) {
+        File imgFile = new File(foundItem.getImgPath());
+        event.replyEmbeds(embedBuilder.build())
+                .addFiles(FileUpload.fromData(imgFile, "item.png"))
+                .addActionRow(buyButton, equipButton)
+                .setEphemeral(true)
+                .queue();
+
+        Main.LOG.info("Executed '" + Constants.ITEM_COMMAND_ID + "' command");
     }
 }

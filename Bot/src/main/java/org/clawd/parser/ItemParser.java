@@ -144,7 +144,7 @@ public class ItemParser {
      * @return True of false, depending on the items validity
      */
     private boolean isValidItem(Item item) {
-        int uniqueID = item.getUniqueID();
+        int uniqueID = item.getID();
         if (uniqueID < 0
                 || item.getDropChance() > Constants.ITEM_DROP_CHANCE_UPPER_B
                 || item.getXpMultiplier() < Constants.XP_MULTIPLIER_LOWER_B

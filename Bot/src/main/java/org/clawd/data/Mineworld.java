@@ -200,6 +200,7 @@ public class Mineworld {
         if (equippedItem != null && equippedItem.getItemType().equals(ItemType.WEAPON)) {
             WeaponItem weaponItem = (WeaponItem) equippedItem;
             dmgMult = weaponItem.getDmgMultiplier();
+            Main.LOG.info(String.valueOf(dmgMult));
         }
         //seems to be fixed with rounding the HP value and not transforming it to the form X.X before
         double totalDamage = Constants.BASE_DAMAGE_MULTIPLIER * dmgMult;
@@ -280,7 +281,7 @@ public class Mineworld {
     public Item getItemByID(int id) {
         Item returnItem = null;
         for (Item item : itemList) {
-            if (item.getUniqueID() == id)
+            if (item.getID() == id)
                 returnItem = item;
         }
         return returnItem;
@@ -294,7 +295,7 @@ public class Mineworld {
      */
     public Mob getMobByID(int id) {
         for (Mob mob : mobList) {
-            if (mob.getUniqueID() == id)
+            if (mob.getID() == id)
                 return mob;
         }
         return null;

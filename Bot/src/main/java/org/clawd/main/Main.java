@@ -6,7 +6,7 @@ import org.clawd.data.Mineworld;
 import org.clawd.data.biomes.Biome;
 import org.clawd.data.items.Item;
 import org.clawd.data.mobs.Mob;
-import org.clawd.data.shop.MobSpawner;
+import org.clawd.data.MobSpawner;
 import org.clawd.parser.BiomeParser;
 import org.clawd.parser.ItemParser;
 import org.clawd.parser.MobParser;

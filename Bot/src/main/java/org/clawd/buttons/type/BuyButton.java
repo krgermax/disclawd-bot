@@ -18,16 +18,13 @@ public class BuyButton implements CustomButton {
     @Override
     public void executeButton(ButtonInteractionEvent event) {
         String userID = event.getUser().getId();
-
         if (!Main.sqlHandler.isUserRegistered(userID)) {
             Main.sqlHandler.registerUser(userID);
             Main.sqlHandler.sqlEmbeddedHandler.replyToNewRegisteredUser(event);
         } else {
-
-            List<MessageEmbed> embeds = event.getMessage().getEmbeds();
-            String embeddedTitle = embeds.getFirst().getTitle();
-            String itemName = embeddedTitle.replace(":mag:", "").strip();
-            Item item = Main.mineworld.getItemByName(itemName);
+            String componentId = event.getComponentId();
+            int itemID = Integer.parseInt(componentId.replace(Constants.BUY_BUTTON_ID, ""));
+            Item item = Main.mineworld.getItemByID(itemID);
 
             EmbedBuilder embedBuilder = new EmbedBuilder();
             embedBuilder.setTitle("Couldn't buy item");
@@ -40,11 +37,10 @@ public class BuyButton implements CustomButton {
             }
 
             int itemPrice = item.getPrice();
-            int itemID = item.getUniqueID();
 
             Main.sqlHandler.sqlStatsHandler.changeGoldCount(userID, -itemPrice);
             Main.sqlHandler.sqlInventoryHandler.addItemToPlayer(userID, itemID);
-            embedBuilder.setDescription("You successfully acquired " + item.getEmoji() + "**" + itemName + "**" + item.getEmoji() + " !");
+            embedBuilder.setDescription("You successfully acquired " + item.getEmoji() + "**" + item.getName() + "**" + item.getEmoji() + " !");
 
             event.editComponents(
                     ActionRow.of(

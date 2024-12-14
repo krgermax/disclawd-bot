@@ -1,18 +1,18 @@
 package org.clawd.data;
 
 public abstract class DataObject {
-    private final int uniqueID;
+    private final int id;
     private final String name;
     private final String desc;
 
-    public DataObject(int uniqueID, String name, String desc) {
-        this.uniqueID = uniqueID;
+    public DataObject(int id, String name, String desc) {
+        this.id = id;
         this.name = name;
         this.desc = desc;
     }
 
-    public int getUniqueID() {
-        return uniqueID;
+    public int getID() {
+        return id;
     }
 
     public String getName() {
