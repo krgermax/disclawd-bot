@@ -31,6 +31,7 @@ public class SQLStatsHandler {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
+                userStats.setUserID(userID);
                 userStats.setMinedCount(resultSet.getInt("minedCount"));
                 userStats.setXpCount(Main.generator.transformDouble(resultSet.getDouble("xpCount"))); // Fix precision issue
                 userStats.setGoldCount(resultSet.getInt("goldCount"));

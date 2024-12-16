@@ -71,6 +71,12 @@ public final class Constants {
     public static final Emoji HOME_BUTTON_EMOJI = Emoji.fromUnicode("U+1F504");
     public static final Emoji BACK_BUTTON_EMOJI = Emoji.fromUnicode("U+25C0");
 
+    /*
+     * Embedded message emoji's
+     */
+
+    public static final String BLACK_SMALL_SQUARE = ":black_small_square:";
+    public static final String RED_CROSS = ":x:";
 
     /*
      * Base stat constants
@@ -99,9 +105,6 @@ public final class Constants {
     public static final String HELP_WHAT_IS = ">>> What is **Disclawd**? Simple put, it is a clicker game for Discord. Ore's" +
             " from a pretty familiar game are to be mined! While doings this collect, **XP :sparkles:**, **GOLD :coin:** and Items. Also do not" +
             " forget to fight the **monsters** that can spawn!";
-    public static final String HELP_ABOUT_ME = ">>> I'm a Mediainformatics student from germany. I like to develop applications that people" +
-            " can interact with and enjoy playing around. This bot is only one way to express a passion for games, art and coding!" +
-            " If there is any kind of feedback you would like to give, feel free to message me :mailbox:";
     public static final String HELP_END_TEXT = ">>> But now enough of reading! On the next page you will find the most important commands" +
             " and more to get started. Have fun! ~ max";
 }

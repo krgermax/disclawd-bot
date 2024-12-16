@@ -1,6 +1,11 @@
 package org.clawd.data.items;
 
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.MessageEmbed.Field;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import org.clawd.data.inventory.UserStats;
 import org.clawd.data.items.enums.ItemType;
+import org.clawd.tokens.Constants;
 
 public class UtilItem extends Item {
     private final double goldMultiplier;
@@ -19,24 +24,40 @@ public class UtilItem extends Item {
     ) {
         super(uniqueID, name, desc, itemEmoji, imgPath, reqLvl, itemType, dropChance, xpMultiplier);
         this.goldMultiplier = goldMultiplier;
-        calculatePrice();
+        this.price = calculatePrice(xpMultiplier, goldMultiplier);
     }
 
-    //TODO comment the code
-    private void calculatePrice () {
-        double xpMultDif = this.getXpMultiplier() - 1.0;
-        double goldMultDif = this.getGoldMultiplier() - 1.0;
+    @Override
+    public Field createShopField() {
+        return new Field(
+                this.getEmoji() + this.getName() + this.getEmoji(),
+                Constants.BLACK_SMALL_SQUARE + " XP boost: " + this.getXpMultiplier() + "\n"
+                        + Constants.BLACK_SMALL_SQUARE + " Gold boost: " + this.getGoldMultiplier() + "\n"
+                        + Constants.BLACK_SMALL_SQUARE + " Price: " + this.getPrice() + " Coins" + "\n"
+                        + Constants.BLACK_SMALL_SQUARE + " lvl. " + this.getReqLvl(),
+                true
+        );
+    }
 
-        int firstPerkGoldIncrease = ((int) (xpMultDif * 10)) * 300;
-        int scdPerkGoldIncrease = ((int) (goldMultDif * 10)) * 300;
+    @Override
+    public EmbedBuilder createInspectEmbed(UserStats userStats, Button buyButton, Button equipButton) {
 
-        int additionalIncrease = 0;
-        if (firstPerkGoldIncrease > 0 && scdPerkGoldIncrease > 0)
-            additionalIncrease = 200;
+        String priceEmoji = buyButton.isDisabled() ? Constants.RED_CROSS : Constants.BLACK_SMALL_SQUARE;
+        String lvlEmoji = buyButton.isDisabled() ? Constants.RED_CROSS : Constants.BLACK_SMALL_SQUARE;
 
-        int formulaResult = (int) ((this.reqLvl / 0.2)  * (this.reqLvl / 0.2));
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        embedBuilder.setTitle(":mag: " + this.getName() + " :mag:")
+                .setThumbnail("attachment://item.png")
+                .addField(
+                        this.getDescription(),
+                        Constants.BLACK_SMALL_SQUARE + " XP boost: " + this.getXpMultiplier() + "\n"
+                                + Constants.BLACK_SMALL_SQUARE + " Gold boost: " + this.getGoldMultiplier() + "\n"
+                                + priceEmoji + " Price: " + this.getPrice() + " Coins" + "\n"
+                                + lvlEmoji + " Required lvl. " + this.getReqLvl(),
+                        false
+                );
 
-        this.price = firstPerkGoldIncrease + scdPerkGoldIncrease + additionalIncrease + formulaResult;
+        return embedBuilder;
     }
 
     public double getGoldMultiplier() {

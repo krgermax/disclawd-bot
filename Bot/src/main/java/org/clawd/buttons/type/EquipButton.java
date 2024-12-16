@@ -1,7 +1,6 @@
 package org.clawd.buttons.type;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.clawd.buttons.CustomButton;
 import org.clawd.data.items.Item;
@@ -9,7 +8,6 @@ import org.clawd.main.Main;
 import org.clawd.tokens.Constants;
 
 import java.awt.*;
-import java.util.List;
 
 public class EquipButton implements CustomButton {
     @Override

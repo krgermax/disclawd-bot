@@ -1,6 +1,10 @@
 package org.clawd.data.items;
 
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.MessageEmbed.Field;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.clawd.data.DataObject;
+import org.clawd.data.inventory.UserStats;
 import org.clawd.data.items.enums.ItemType;
 
 public abstract class Item extends DataObject {
@@ -34,20 +38,17 @@ public abstract class Item extends DataObject {
         this.itemType = itemType;
     }
 
-    public int getPrice(){
+    public int getPrice() {
         return price;
     }
 
     /**
-     *
-     *
      * @param perkOne The first perk of an item
      * @param perkTwo The second perk of an item
-     *
      * @return The price following a formula:
-     *             - ((perkOne * 10) mod 10) * 300 + ((perkTwo * 10) mod 10) * 300 + (lvlReq/0.2)^2
+     * - ((perkOne * 10) mod 10) * 300 + ((perkTwo * 10) mod 10) * 300 + (lvlReq/0.2)^2
      */
-    protected int calculatePrice (double perkOne, double perkTwo) {
+    protected int calculatePrice(double perkOne, double perkTwo) {
         double xpMultDif = (perkOne * 10) % 10;
         double goldMultDif = (perkTwo * 10) % 10;
 
@@ -58,10 +59,14 @@ public abstract class Item extends DataObject {
         if (firstPerkGoldIncrease > 0 && scdPerkGoldIncrease > 0)
             additionalIncrease = 200;
 
-        int formulaResult = (int) ((this.reqLvl / 0.2)  * (this.reqLvl / 0.2));
+        int formulaResult = (int) ((this.reqLvl / 0.2) * (this.reqLvl / 0.2));
 
         return firstPerkGoldIncrease + scdPerkGoldIncrease + additionalIncrease + formulaResult;
     }
+
+    public abstract Field createShopField();
+
+    public abstract EmbedBuilder createInspectEmbed(UserStats userStats, Button buyButton, Button equipButton);
 
     public double getDropChance() {
         return dropChance;
@@ -76,7 +81,7 @@ public abstract class Item extends DataObject {
     }
 
     public String getEmoji() {
-        return  emoji;
+        return emoji;
     }
 
     public int getReqLvl() {
