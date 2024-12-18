@@ -58,8 +58,8 @@ public final class Constants {
     public static final String NEXT_INV_BUTTON_ID = "next-inv";
     public static final String HOME_INV_BUTTON_ID = "home-inv";
     public static final String BACK_INV_BUTTON_ID = "back-inv";
-    public static final String BUY_BUTTON_ID = "buy";
-    public static final String EQUIP_BUTTON_ID = "equip";
+    public static final String BUY_BUTTON_ID = "buy-";
+    public static final String EQUIP_BUTTON_ID = "equip-";
     public static final String HIT_BUTTON_ID = "hit-mob-";
 
     /*

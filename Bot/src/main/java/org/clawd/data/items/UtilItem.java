@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed.Field;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.clawd.data.inventory.UserStats;
 import org.clawd.data.items.enums.ItemType;
+import org.clawd.main.Main;
 import org.clawd.tokens.Constants;
 
 public class UtilItem extends Item {
@@ -41,10 +42,12 @@ public class UtilItem extends Item {
 
     @Override
     public EmbedBuilder createInspectEmbed(UserStats userStats, Button buyButton, Button equipButton) {
-
-        String priceEmoji = buyButton.isDisabled() ? Constants.RED_CROSS : Constants.BLACK_SMALL_SQUARE;
-        String lvlEmoji = buyButton.isDisabled() ? Constants.RED_CROSS : Constants.BLACK_SMALL_SQUARE;
-
+        String priceEmoji = Constants.BLACK_SMALL_SQUARE;
+        String lvlEmoji = Constants.BLACK_SMALL_SQUARE;
+        if (buyButton.isDisabled()) {
+            priceEmoji = userStats.getGoldCount() < this.getPrice() ? Constants.RED_CROSS : Constants.BLACK_SMALL_SQUARE;
+            lvlEmoji = Main.generator.computeLevel(userStats.getXpCount()) < this.getReqLvl() ? Constants.RED_CROSS : Constants.BLACK_SMALL_SQUARE;
+        }
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle(":mag: " + this.getName() + " :mag:")
                 .setThumbnail("attachment://item.png")
