@@ -64,6 +64,25 @@ public class Mineworld {
         return returnBiome;
     }
 
+    private EmbedBuilder buildBiomeEmbed() {
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        embedBuilder.setTitle(currentBiome.name())
+                .setColor(Color.BLACK)
+                .setDescription("Active miners: " + currentUserMap.size() + " (Last " + Constants.MAX_MINE_NOT_INTERACTED_MINUTES + " minutes)")
+                .addField("Biome HP", currentBiomeHP + "/" + currentBiomeFullHP, false)
+                .setImage("attachment://ore.png");
+        return embedBuilder;
+    }
+
+    private File getBiomeImageFile() {
+        File imgFile = new File(currentBiome.imgPath());
+        if (!imgFile.exists()) {
+            Main.LOG.severe("Biome image not found: " + currentBiome.imgPath());
+            return null;
+        }
+        return imgFile;
+    }
+
     /**
      * This method replies to the '/biome' command, by building an embedded message
      * with all necessary information and buttons
@@ -71,26 +90,13 @@ public class Mineworld {
      * @param event Event
      */
     public void replyWithBiomeEmbedded(SlashCommandInteractionEvent event) {
-        EmbedBuilder embedBuilder = new EmbedBuilder();
-        try {
-            File imgFile = new File(currentBiome.imgPath());
+        File imgFile = getBiomeImageFile();
+        if (imgFile == null) return;
 
-            embedBuilder.setTitle(currentBiome.type().name());
-            embedBuilder.setColor(Color.BLACK);
-            embedBuilder.setDescription("Active miners: " + this.currentUserMap.size() + " (Last " + Constants.MAX_MINE_NOT_INTERACTED_MINUTES + " minutes)");
-            embedBuilder.addField("Biome HP", currentBiomeHP + "/" + this.currentBiomeFullHP, false);
-            embedBuilder.setImage("attachment://ore.png");
-
-            event.replyEmbeds(embedBuilder.build())
-                    .addFiles(FileUpload.fromData(imgFile, "ore.png"))
-                    .addActionRow(
-                            Button.primary(Constants.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI)
-                    )
-                    .queue();
-
-        } catch (NullPointerException ex) {
-            Main.LOG.severe("Could not load image file: " + ex.getMessage());
-        }
+        event.replyEmbeds(buildBiomeEmbed().build())
+                .addFiles(FileUpload.fromData(imgFile, "ore.png"))
+                .addActionRow(Button.primary(Constants.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
+                .queue();
     }
 
     /**
@@ -101,25 +107,13 @@ public class Mineworld {
      * @param event Event
      */
     public void replyWithBiomeEmbedded(ButtonInteractionEvent event) {
-        EmbedBuilder embedBuilder = new EmbedBuilder();
-        try {
-            File imgFile = new File(currentBiome.imgPath());
+        File imgFile = getBiomeImageFile();
+        if (imgFile == null) return;
 
-            embedBuilder.setTitle(currentBiome.type().name());
-            embedBuilder.setColor(Color.BLACK);
-            embedBuilder.setDescription("Active miners: " + this.currentUserMap.size() + " (Last " + Constants.MAX_MINE_NOT_INTERACTED_MINUTES + " minutes)");
-            embedBuilder.addField("Biome HP", Main.generator.transformDouble(this.currentBiomeHP) + "/" + this.currentBiomeFullHP, false);
-            embedBuilder.setImage("attachment://ore.png");
-
-            event.replyEmbeds(embedBuilder.build())
-                    .addFiles(FileUpload.fromData(imgFile, "ore.png"))
-                    .addActionRow(
-                            Button.primary(Constants.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI)
-                    ).queue();
-
-        } catch (NullPointerException ex) {
-            Main.LOG.severe("Could not load image file: " + ex.getMessage());
-        }
+        event.replyEmbeds(buildBiomeEmbed().build())
+                .addFiles(FileUpload.fromData(imgFile, "ore.png"))
+                .addActionRow(Button.primary(Constants.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
+                .queue();
     }
 
     /**
@@ -128,25 +122,14 @@ public class Mineworld {
      * @param event Event
      */
     private void updateBiomeMsg(ButtonInteractionEvent event) {
-        try {
-            File imgFile = new File(currentBiome.imgPath());
+        File imgFile = getBiomeImageFile();
+        if (imgFile == null) return;
 
-            EmbedBuilder embedBuilder = new EmbedBuilder();
-            embedBuilder.setTitle(currentBiome.type().name());
-            embedBuilder.setColor(Color.BLACK);
-            embedBuilder.setDescription("Active miners: " + this.currentUserMap.size() + " (Last " + Constants.MAX_MINE_NOT_INTERACTED_MINUTES + " minutes)");
-            embedBuilder.addField("Biome HP", Main.generator.transformDouble(this.currentBiomeHP) + "/" + this.currentBiomeFullHP, false);
-            embedBuilder.setImage("attachment://ore.png");
-
-            event.editMessageEmbeds(embedBuilder.build())
-                    .setFiles(FileUpload.fromData(imgFile, "ore.png"))
-                    .setActionRow(
-                            Button.primary(Constants.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI)
-                    ).queue();
-            Main.LOG.info("Updated biome state.");
-        } catch (NullPointerException ex) {
-            Main.LOG.severe("Could not load image file: " + ex.getMessage());
-        }
+        event.editMessageEmbeds(buildBiomeEmbed().build())
+                .setFiles(FileUpload.fromData(imgFile, "ore.png"))
+                .setActionRow(Button.primary(Constants.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
+                .queue();
+        Main.LOG.info("Updated biome state.");
     }
 
     /**

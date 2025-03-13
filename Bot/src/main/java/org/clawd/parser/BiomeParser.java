@@ -30,15 +30,11 @@ public class BiomeParser {
     public List<Biome> parseBiomes() throws FailedDataParseException {
         List<Biome> biomes = getBiomesFromJSON();
 
-        boolean isBiomeListValid = validateBiomes(biomes);
-        // Storing if biome list is empty is for logging purposes
-        boolean isBiomeListEmpty = biomes.isEmpty();
-
-        if (!isBiomeListValid || isBiomeListEmpty)
+        if (!validateBiomes(biomes) || biomes.isEmpty())
             throw new FailedDataParseException(
                     "Could not parse biomes correctly:\n" +
-                            "- valid biomes = " + isBiomeListValid + "\n" +
-                            "- is biome list empty = " + isBiomeListEmpty);
+                            "- valid biomes = " + validateBiomes(biomes) + "\n" +
+                            "- is biome list empty = " + biomes.isEmpty());
 
         Main.LOG.info("Biome parsing finished, biome list size: " + biomes.size());
         return biomes;
@@ -61,6 +57,7 @@ public class BiomeParser {
 
                 JSONObject jsonItem = (JSONObject) o;
 
+                String name = jsonItem.getString("name");
                 BiomeType biomeType = BiomeType.valueOf(jsonItem.getString("type"));
                 double biomeHP = jsonItem.getDouble("hp");
                 String imgPath = jsonItem.getString("imgPath");
@@ -72,7 +69,7 @@ public class BiomeParser {
                     spawnableMobs.add(MobSubType.valueOf((String) object));
                 }
 
-                biomeList.add(new Biome(biomeType, biomeHP, imgPath, xpEnabled, spawnableMobs));
+                biomeList.add(new Biome(name, biomeType, biomeHP, imgPath, xpEnabled, spawnableMobs));
             }
         } catch (JSONException | IOException ex) {
             Main.LOG.severe("Failed to parse JSON biomes file: " + ex.getMessage());

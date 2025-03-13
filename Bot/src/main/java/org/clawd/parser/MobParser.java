@@ -38,15 +38,11 @@ public class MobParser {
     public List<Mob> parseMobs() throws FailedDataParseException {
         List<Mob> mobs = getMobsFromJSON();
 
-        boolean isMobListValid = validateMobs(mobs);
-        // Storing if mob list is empty is for logging purposes
-        boolean isMobListEmpty = mobs.isEmpty();
-
-        if (!isMobListValid || isMobListEmpty)
+        if (!validateMobs(mobs) || mobs.isEmpty())
             throw new FailedDataParseException(
                     "Could not parse mobs correctly:\n" +
-                            "- valid mobs = " + isMobListValid + "\n" +
-                            "- is mob list empty = " + isMobListEmpty);
+                            "- valid mobs = " + validateMobs(mobs) + "\n" +
+                            "- is mob list empty = " + mobs.isEmpty());
 
         Main.LOG.info("Mob parsing finished, mob list size: " + mobs.size());
         return mobs;
