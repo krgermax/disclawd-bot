@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class BiomeParser {
     private List<Biome> getBiomesFromJSON() {
         List<Biome> biomeList = new ArrayList<>();
 
-        try (FileReader fileReader = new FileReader(Constants.BIOMES_JSON_FILEPATH)) {
+        try (FileReader fileReader = new FileReader(Constants.JSON_BASE_PATH + Constants.BIOMES_JSON_FILEPATH)) {
 
             JSONObject obj = new JSONObject(new JSONTokener(fileReader));
             JSONArray arr = obj.getJSONArray(Constants.BIOMES_JSON_BIOMES);
@@ -63,7 +64,8 @@ public class BiomeParser {
 
                 BiomeType biomeType = BiomeType.valueOf(jsonItem.getString("type"));
                 double biomeHP = jsonItem.getDouble("hp");
-                String imgPath = jsonItem.getString("imgPath");
+                String fileName = jsonItem.getString("fileName");
+                String imgPath = Constants.BIOME_IMAGE_BASE_PATH + File.separator + fileName;
                 boolean xpEnabled = jsonItem.getBoolean("xpEnabled");
                 JSONArray jsonArray = jsonItem.getJSONArray("mobs");
                 Set<MobSubType> spawnableMobs = new HashSet<>();
@@ -104,7 +106,14 @@ public class BiomeParser {
      * @return True of false, depending on the biomes validity
      */
     private boolean isValidBiome(Biome biome) {
-        // return !biome.spawnableMobSubTypes().isEmpty() && !(biome.biomeHP() <= 0);
-        return !(biome.biomeHP() <= 0);
+        if (biome.biomeHP() <= 0) {
+            return false;
+        }
+        File imageFile = new File(biome.imgPath());
+        if (!imageFile.exists()) {
+            Main.LOG.severe("Biome image file not found: " + biome.imgPath());
+            return false;
+        }
+        return true;
     }
 }

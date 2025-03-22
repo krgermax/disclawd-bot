@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -55,7 +56,7 @@ public class ItemParser {
 
         List<Item> items = new ArrayList<>();
 
-        try (FileReader fileReader = new FileReader(Constants.ITEMS_JSON_FILEPATH)) {
+        try (FileReader fileReader = new FileReader(Constants.JSON_BASE_PATH + Constants.ITEMS_JSON_FILEPATH)) {
 
             JSONObject obj = new JSONObject(new JSONTokener(fileReader));
             JSONArray arr = obj.getJSONArray(Constants.ITEMS_JSON_ITEMS);
@@ -68,7 +69,8 @@ public class ItemParser {
                 String itemName = jsonItem.getString("name");
                 String itemEmoji = jsonItem.getString("emoji");
                 String itemDesc = jsonItem.getString("description");
-                String imgPath = jsonItem.getString("imgPath");
+                String fileName = jsonItem.getString("fileName");
+                String imgPath = Constants.ITEM_IMAGE_BASE_PATH + File.separator + fileName;
                 int reqLvl = jsonItem.getInt("reqLvl");
                 ItemType itemType = ItemType.valueOf(jsonItem.getString("item_type"));
 
@@ -159,6 +161,12 @@ public class ItemParser {
         } else if (item.getItemType().equals(ItemType.WEAPON)) {
             WeaponItem weaponItem = (WeaponItem) item;
             return weaponItem.getDmgMultiplier() >= Constants.DMG_MULTIPLIER_LOWER_B;
+        }
+
+        File imageFile = new File(item.getImgPath());
+        if (!imageFile.exists()) {
+            Main.LOG.severe("Item image file not found: " + item.getImgPath());
+            return false;
         }
 
         return true;

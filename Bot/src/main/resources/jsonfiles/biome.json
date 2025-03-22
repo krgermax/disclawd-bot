@@ -3,7 +3,7 @@
     {
       "type" : "COAL",
       "hp" : "10.0",
-      "imgPath": "src/main/resources/images/biome/coal.png",
+      "fileName": "coal.png",
       "xpEnabled": true,
       "mobs": [
         "ZOMBIE",
@@ -14,7 +14,7 @@
     {
       "type" : "IRON",
       "hp" : "10.0",
-      "imgPath": "src/main/resources/images/biome/iron.png",
+      "fileName": "iron.png",
       "xpEnabled": false,
       "mobs": [
         "ZOMBIE",
@@ -25,7 +25,7 @@
     {
       "type" : "DIAMOND",
       "hp" : "10.0",
-      "imgPath": "src/main/resources/images/biome/diamond.png",
+      "fileName": "diamond.png",
       "xpEnabled": true,
       "mobs": [
         "ZOMBIE",
@@ -36,7 +36,7 @@
     {
       "type" : "SNOW",
       "hp" : "10.0",
-      "imgPath": "src/main/resources/images/biome/snow.png",
+      "fileName": "snow.png",
       "xpEnabled": false,
       "mobs": [
         "STRAY",
@@ -46,7 +46,7 @@
     {
       "type" : "NETHERRACK",
       "hp" : "10.0",
-      "imgPath": "src/main/resources/images/biome/netherrack.png",
+      "fileName": "netherrack.png",
       "xpEnabled": false,
       "mobs": [
         "PIGLIN"
@@ -55,7 +55,7 @@
     {
       "type" : "NETHER_QUARZ",
       "hp" : "10.0",
-      "imgPath": "src/main/resources/images/biome/nether_quarz.png",
+      "fileName": "nether_quarz.png",
       "xpEnabled": true,
       "mobs": [
         "PIGLIN"
@@ -64,7 +64,7 @@
     {
       "type" : "NETHER_GOLD",
       "hp" : "10.0",
-      "imgPath": "src/main/resources/images/biome/nether_gold.png",
+      "fileName": "nether_gold.png",
       "xpEnabled": true,
       "mobs": [
         "PIGLIN"

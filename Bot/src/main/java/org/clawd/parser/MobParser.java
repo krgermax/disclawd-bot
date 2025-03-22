@@ -14,6 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ public class MobParser {
 
         List<Mob> mobs = new ArrayList<>();
 
-        try(FileReader fileReader = new FileReader(Constants.MOBS_JSON_FILEPATH)) {
+        try(FileReader fileReader = new FileReader(Constants.JSON_BASE_PATH + Constants.MOBS_JSON_FILEPATH)) {
 
             JSONObject obj = new JSONObject(new JSONTokener(fileReader));
             JSONArray arr = obj.getJSONArray(Constants.MOBS_JSON_MOBS);
@@ -76,7 +77,8 @@ public class MobParser {
                 String mobDesc = jsonItem.getString("description");
                 MobType mobType = MobType.valueOf(jsonItem.getString("mob_type"));
                 MobSubType mobSubType = MobSubType.valueOf(jsonItem.getString("mob_sub_type"));
-                String imgPath = jsonItem.getString("img_path");
+                String fileName = jsonItem.getString("fileName");
+                String imgPath = Constants.MOB_IMAGE_BASE_PATH + File.separator + fileName;
                 double spawnChance = jsonItem.getDouble("spawn_chance");
 
                 if (mobType.equals(MobType.NORMAL)) {
@@ -214,6 +216,12 @@ public class MobParser {
             double goldDrop = bossMob.getGoldDrop();
             double health = bossMob.getHealth();
             return health > 0 || xpDrop >= Constants.XP_DROP_AMOUNT_LOWER_B || goldDrop >= Constants.GOLD_DROP_AMOUNT_LOWER_B;
+        }
+
+        File imageFile = new File(mob.getImgPath());
+        if (!imageFile.exists()) {
+            Main.LOG.severe("Mob image file not found: " + mob.getImgPath());
+            return false;
         }
 
         return true;

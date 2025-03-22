@@ -2,6 +2,8 @@ package org.clawd.tokens;
 
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 
+import java.io.File;
+
 public final class Constants {
     public static final String LOGGER_NAME = "DISCLAWD BOT";
     public static final String SQL_CLASS_NAME = "com.mysql.cj.jdbc.Driver";
@@ -11,12 +13,22 @@ public final class Constants {
      * JSON String constants
      */
 
-    public static final String ITEMS_JSON_FILEPATH = "src/main/resources/jsonfiles/items.json";
+    public static final String JSON_BASE_PATH = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "jsonfiles";
+
+    public static final String ITEMS_JSON_FILEPATH = File.separator + "items.json";
     public static final String ITEMS_JSON_ITEMS = "items";
-    public static final String MOBS_JSON_FILEPATH = "src/main/resources/jsonfiles/mobs.json";
+    public static final String MOBS_JSON_FILEPATH = File.separator + "mobs.json";
     public static final String MOBS_JSON_MOBS = "mobs";
-    public static final String BIOMES_JSON_FILEPATH = "src/main/resources/jsonfiles/biome.json";
+    public static final String BIOMES_JSON_FILEPATH = File.separator + "biome.json";
     public static final String BIOMES_JSON_BIOMES = "biomes";
+
+    /*
+     * Image base paths
+     */
+
+    public static final String BIOME_IMAGE_BASE_PATH = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "images" + File.separator + "biomes";
+    public static final String ITEM_IMAGE_BASE_PATH = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "images" + File.separator + "items";
+    public static final String MOB_IMAGE_BASE_PATH = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "images" + File.separator + "mobs";
 
     /*
      * THRESHOLDS for item params
@@ -91,7 +103,7 @@ public final class Constants {
      */
 
     public static final int ITEMS_PER_PAGE = 3;
-    public static final String PATH_LOGO_IMG = "src/main/resources/images/disclawd_logo.png";
+    public static final String PATH_LOGO_IMG = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "images" + File.separator + "disclawd_logo.png";
     public static final int MAX_MINE_NOT_INTERACTED_MINUTES = 2;
     public static final long CACHE_EXPIRY_MINUTES = 5;
     public static final int CACHE_PERIOD_MINUTES = 2;
