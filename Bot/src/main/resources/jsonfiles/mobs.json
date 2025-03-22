@@ -127,7 +127,7 @@
       "description": "Appears in the muddy swamps!",
       "mob_type": "NORMAL",
       "mob_sub_type": "WITCH",
-      "img_path": "src/main/resources/images/mobs/witch.png",
+      "fileName": "witch.png",
       "spawn_chance": "0.15",
       "xp_drop_amount": "1.0",
       "gold_drop_amount": "1"
@@ -138,7 +138,7 @@
       "description": "Appears in the muddy swamps!",
       "mob_type": "NORMAL",
       "mob_sub_type": "WITCH",
-      "img_path": "src/main/resources/images/mobs/witch_potion.png",
+      "fileName": "witch_potion.png",
       "spawn_chance": "0.05",
       "xp_drop_amount": "1.0",
       "gold_drop_amount": "1"
@@ -149,7 +149,7 @@
       "description": "Appears in the muddy swamps!",
       "mob_type": "NORMAL",
       "mob_sub_type": "SLIME",
-      "img_path": "src/main/resources/images/mobs/slime.png",
+      "fileName": "slime.png",
       "spawn_chance": "0.2",
       "xp_drop_amount": "1.0",
       "gold_drop_amount": "1"
@@ -160,7 +160,7 @@
       "description": "Appears in the End",
       "mob_type": "NORMAL",
       "mob_sub_type": "ENDERMAN",
-      "img_path": "src/main/resources/images/mobs/enderman.png",
+      "fileName": "enderman.png",
       "spawn_chance": "0.2",
       "xp_drop_amount": "1.0",
       "gold_drop_amount": "1"
@@ -171,7 +171,7 @@
       "description": "Appears in the End",
       "mob_type": "NORMAL",
       "mob_sub_type": "ENDERMITE",
-      "img_path": "src/main/resources/images/mobs/endermite.png",
+      "fileName": "endermite.png",
       "spawn_chance": "0.05",
       "xp_drop_amount": "1.0",
       "gold_drop_amount": "1"
