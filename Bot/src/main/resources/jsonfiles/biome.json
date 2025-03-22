@@ -1,6 +1,7 @@
 {
   "biomes": [
     {
+      "name": "The Overworld",
       "type" : "COAL",
       "hp" : "10.0",
       "fileName": "coal.png",
@@ -12,6 +13,7 @@
       ]
     },
     {
+      "name": "The Overworld",
       "type" : "IRON",
       "hp" : "10.0",
       "fileName": "iron.png",
@@ -23,6 +25,7 @@
       ]
     },
     {
+      "name": "The Overworld",
       "type" : "DIAMOND",
       "hp" : "10.0",
       "fileName": "diamond.png",
@@ -34,6 +37,7 @@
       ]
     },
     {
+      "name": "The Overworld",
       "type" : "SNOW",
       "hp" : "10.0",
       "fileName": "snow.png",
@@ -44,30 +48,61 @@
       ]
     },
     {
+      "name": "The Nether",
       "type" : "NETHERRACK",
       "hp" : "10.0",
       "fileName": "netherrack.png",
+      "hp" : "15.0",
+      "imgPath": "src/main/resources/images/biome/netherrack.png",
       "xpEnabled": false,
       "mobs": [
         "PIGLIN"
       ]
     },
     {
+      "name": "The Nether",
       "type" : "NETHER_QUARZ",
       "hp" : "10.0",
       "fileName": "nether_quarz.png",
+      "hp" : "15.0",
+      "imgPath": "src/main/resources/images/biome/nether_quarz.png",
       "xpEnabled": true,
       "mobs": [
         "PIGLIN"
       ]
     },
     {
+      "name": "The Nether",
       "type" : "NETHER_GOLD",
       "hp" : "10.0",
       "fileName": "nether_gold.png",
+      "hp" : "15.0",
+      "imgPath": "src/main/resources/images/biome/nether_gold.png",
       "xpEnabled": true,
       "mobs": [
         "PIGLIN"
+      ]
+    },
+    {
+      "name": "The Overworld",
+      "type" : "SWAMP",
+      "hp" : "5.0",
+      "imgPath": "src/main/resources/images/biome/mud.png",
+      "xpEnabled": false,
+      "mobs": [
+        "WITCH",
+        "SLIME"
+      ]
+    },
+    {
+      "name": "The End",
+      "type" : "END",
+      "hp" : "20.0",
+      "imgPath": "src/main/resources/images/biome/endstone.png",
+      "xpEnabled": false,
+      "mobs": [
+        "ENDERMAN",
+        "ENDERMITE"
       ]
     }
   ]

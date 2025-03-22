@@ -33,15 +33,11 @@ public class ItemParser {
     public List<Item> parseItems() throws FailedDataParseException {
         List<Item> items = getItemsFromJSON();
 
-        boolean isItemListValid = validateItems(items);
-        // Storing if item list is empty is for logging purposes
-        boolean isItemListEmpty = items.isEmpty();
-
-        if (!isItemListValid || isItemListEmpty)
+        if (!validateItems(items) || items.isEmpty())
             throw new FailedDataParseException(
                     "Could not parse items correctly:\n" +
-                            "- valid items = " + isItemListValid + "\n" +
-                            "- is item list empty = " + isItemListEmpty);
+                            "- valid items = " + validateItems(items) + "\n" +
+                            "- is item list empty = " + items.isEmpty());
 
         Main.LOG.info("Item parsing finished, item list size: " + items.size());
         return items;
