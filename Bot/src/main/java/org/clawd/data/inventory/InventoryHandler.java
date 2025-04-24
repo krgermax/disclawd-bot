@@ -6,7 +6,6 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
-import org.clawd.sql.SQLInventoryHandler;
 import org.clawd.tokens.Constants;
 
 
@@ -15,7 +14,6 @@ import java.util.Objects;
 public class InventoryHandler {
 
     public final InventoryCache inventoryCache = new InventoryCache();
-    private final SQLInventoryHandler sqlInventoryHandler = new SQLInventoryHandler();
     private Button nextButton = Button.secondary(Constants.NEXT_INV_BUTTON_ID, Constants.NEXT_BUTTON_EMOJI);
     private final Button homeButton = Button.secondary(Constants.HOME_INV_BUTTON_ID, Constants.HOME_BUTTON_EMOJI);
     private Button backButton = Button.secondary(Constants.BACK_INV_BUTTON_ID, Constants.BACK_BUTTON_EMOJI);
@@ -27,8 +25,11 @@ public class InventoryHandler {
      */
     public void replyWithInventoryFirstEmbedded(SlashCommandInteractionEvent event) {
         Inventory inventory = this.inventoryCache.addInventory(event);
-        if (inventory.getInventoryPages().size() < 2)
+        if (inventory.getInventoryPages().size() < 2) {
             this.nextButton = this.nextButton.asDisabled();
+        } else {
+            this.nextButton = this.nextButton.asEnabled();
+        }
         event.replyEmbeds(inventory.getInventoryPages().getFirst().build())
                 .addActionRow(
                         this.backButton.asDisabled(),
@@ -49,7 +50,7 @@ public class InventoryHandler {
      */
     public void replyToNextInvPage(ButtonInteractionEvent event, boolean back) {
         Inventory inventory = this.inventoryCache.addInventory(event);
-        String footer = Objects.requireNonNull(event.getMessage().getEmbeds().get(0).getFooter()).getText();
+        String footer = Objects.requireNonNull(event.getMessage().getEmbeds().getFirst().getFooter()).getText();
         String[] parts = footer.split("/");
         int currentPage = Integer.parseInt(parts[0].substring(6).strip());
 
