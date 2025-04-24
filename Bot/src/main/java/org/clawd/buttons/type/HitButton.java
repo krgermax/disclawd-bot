@@ -24,7 +24,11 @@ public class HitButton implements CustomButton {
             event.getMessage().delete().queue();
             event.deferEdit().queue();
 
+            double userCurrentXP = Main.sqlHandler.sqlStatsHandler.getXPCountFromUser(userID);
             Main.sqlHandler.sqlStatsHandler.updateUserStatsAfterKill(userID, spawnedMob.getGoldDrop(), spawnedMob.getXpDrop());
+            double userUpdatedXP = Main.sqlHandler.sqlStatsHandler.getXPCountFromUser(userID);
+
+            Main.sqlHandler.sqlStatsHandler.replyToUserLevelUp(userCurrentXP, userUpdatedXP, event);
 
             Main.LOGGER.info("Executed '" + Constants.HIT_BUTTON_ID + "' button");
         }
