@@ -18,7 +18,7 @@ public class SQLStatsHandler {
      * Fetches all user stats (minedCount, xpCount, goldCount, mobKills, bossKills) in one query for improved efficiency.
      *
      * @param userID The user ID
-     * @return       A UserStats object containing all relevant stats
+     * @return A UserStats object containing all relevant stats
      */
     public UserStats getUserStats(String userID) {
         UserStats userStats = new UserStats();
@@ -37,14 +37,14 @@ public class SQLStatsHandler {
                 userStats.setGoldCount(resultSet.getInt("goldCount"));
                 userStats.setMobKills(resultSet.getInt("mobKills"));
                 userStats.setBossKills(resultSet.getInt("bossKills"));
-                Main.LOG.info("Retrieved all stats for user: " + userID);
+                Main.LOGGER.info("Retrieved all stats for user: " + userID);
             }
 
             resultSet.close();
             preparedStatement.close();
 
         } catch (SQLException ex) {
-            Main.LOG.severe("Some SQL error occurred: " + ex.getMessage());
+            Main.LOGGER.severe("Some SQL error occurred: " + ex.getMessage());
         }
         return userStats;
     }
@@ -76,15 +76,15 @@ public class SQLStatsHandler {
             int rowsUpdated = preparedStatement.executeUpdate();
 
             if (rowsUpdated > 0) {
-                Main.LOG.info("Updated stats for user: " + userID + ". New mob kills: " + updatedMobKills +
+                Main.LOGGER.info("Updated stats for user: " + userID + ". New mob kills: " + updatedMobKills +
                         ", New gold count: " + updatedGoldCount + ", New XP count: " + updatedXPCount);
             } else {
-                Main.LOG.warning("Failed to update stats for user: " + userID);
+                Main.LOGGER.warning("Failed to update stats for user: " + userID);
             }
 
             preparedStatement.close();
         } catch (SQLException ex) {
-            Main.LOG.severe("Some SQL error occurred: " + ex.getMessage());
+            Main.LOGGER.severe("Some SQL error occurred: " + ex.getMessage());
         }
     }
 
@@ -115,15 +115,15 @@ public class SQLStatsHandler {
             int rowsUpdated = preparedStatement.executeUpdate();
 
             if (rowsUpdated > 0) {
-                Main.LOG.info("Updated stats for user: " + userID + ". New mine count: " + updatedMineCount +
+                Main.LOGGER.info("Updated stats for user: " + userID + ". New mine count: " + updatedMineCount +
                         ", New XP count: " + updatedXPCount + ", New gold count: " + updatedGoldCount);
             } else {
-                Main.LOG.warning("Failed to update stats for user: " + userID);
+                Main.LOGGER.warning("Failed to update stats for user: " + userID);
             }
 
             preparedStatement.close();
         } catch (SQLException ex) {
-            Main.LOG.severe("Some SQL error occurred: " + ex.getMessage());
+            Main.LOGGER.severe("Some SQL error occurred: " + ex.getMessage());
         }
     }
 
@@ -131,7 +131,7 @@ public class SQLStatsHandler {
      * Fetches a users XP count
      *
      * @param userID the user ID
-     * @return       the users XP
+     * @return the users XP
      */
     public double getXPCountFromUser(String userID) {
         double xpCount = 0.0;
@@ -148,11 +148,11 @@ public class SQLStatsHandler {
                 // Call to transformDouble() to hopefully fix 'precision issue' where doubles have to
                 // many decimal places
                 xpCount = Main.generator.transformDouble(retrievedXP);
-                Main.LOG.info("Retrieved the total XP amount: " + xpCount + ". From user:" + userID);
+                Main.LOGGER.info("Retrieved the total XP amount: " + xpCount + ". From user:" + userID);
             }
 
         } catch (SQLException ex) {
-            Main.LOG.severe("Some SQL error occurred: " + ex.getMessage());
+            Main.LOGGER.severe("Some SQL error occurred: " + ex.getMessage());
         }
         return xpCount;
     }
@@ -161,7 +161,7 @@ public class SQLStatsHandler {
      * Fetches a users gold count
      *
      * @param userID the user ID
-     * @return       the users gold count
+     * @return the users gold count
      */
     public int getGoldCountFromUser(String userID) {
         int goldCount = 0;
@@ -175,11 +175,11 @@ public class SQLStatsHandler {
 
             if (resultSet.next()) {
                 goldCount = resultSet.getInt("goldCount");
-                Main.LOG.info("Retrieved the total gold amount: " + goldCount + ". From user:" + userID);
+                Main.LOGGER.info("Retrieved the total gold amount: " + goldCount + ". From user:" + userID);
             }
 
         } catch (SQLException ex) {
-            Main.LOG.severe("Some SQL error occurred: " + ex.getMessage());
+            Main.LOGGER.severe("Some SQL error occurred: " + ex.getMessage());
         }
         return goldCount;
     }
@@ -205,12 +205,12 @@ public class SQLStatsHandler {
             int rowsUpdated = preparedStatement.executeUpdate();
 
             if (rowsUpdated > 0) {
-                Main.LOG.info("Updated gold count for user: " + userID + ". New gold count: " + newCount);
+                Main.LOGGER.info("Updated gold count for user: " + userID + ". New gold count: " + newCount);
             } else {
-                Main.LOG.warning("Failed to update gold count for user " + userID);
+                Main.LOGGER.warning("Failed to update gold count for user " + userID);
             }
         } catch (SQLException ex) {
-            Main.LOG.severe("Some SQL error occurred: " + ex.getMessage());
+            Main.LOGGER.severe("Some SQL error occurred: " + ex.getMessage());
         }
     }
 

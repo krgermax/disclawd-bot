@@ -13,8 +13,8 @@ public class ShopHomeButton implements CustomButton {
             Main.sqlHandler.registerUser(userID);
             Main.sqlHandler.sqlEmbeddedHandler.replyToNewRegisteredUser(event);
         } else {
-            Main.mineworld.shopHandler.updateToFirstEmbedded(event);
-            Main.LOG.info("Executed '"+ Constants.HOME_SHOP_BUTTON_ID +"' button");
+            Main.shopHandler.updateToFirstEmbedded(event);
+            Main.LOGGER.info("Executed '"+ Constants.HOME_SHOP_BUTTON_ID +"' button");
         }
     }
 }

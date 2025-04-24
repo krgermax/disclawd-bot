@@ -18,7 +18,7 @@ public class MineButton implements CustomButton {
             Main.sqlHandler.sqlEmbeddedHandler.replyToNewRegisteredUser(event);
         } else {
             int itemID = Main.sqlHandler.sqlInventoryHandler.getEquippedItemIDFromUser(userID);
-            Item equippedItem = Main.mineworld.getItemByID(itemID);
+            Item equippedItem = Main.shopHandler.getItemByID(itemID);
             double generatedXP = Main.generator.generateXP();
             int generatedGold = Main.generator.generateGold();
 
@@ -33,8 +33,8 @@ public class MineButton implements CustomButton {
             double combinedXP = Main.generator.roundDouble((generatedXP * itemXPMult), 2);
             int combinedGold = (int) Math.ceil(generatedGold * itemGoldMult);
 
-            Main.LOG.info("XP after multiplier : " + combinedXP);
-            Main.LOG.info("Gold after multiplier: " + combinedGold);
+            Main.LOGGER.info("XP after multiplier : " + combinedXP);
+            Main.LOGGER.info("Gold after multiplier: " + combinedGold);
 
             Main.mineworld.updateCurrentUserMultiplication(userID);
             Main.mineworld.updateBiome(event, equippedItem);
@@ -43,10 +43,10 @@ public class MineButton implements CustomButton {
             Main.sqlHandler.sqlStatsHandler.updateUserStatsAfterMining(userID, combinedXP, combinedGold);
             double userUpdatedXP = Main.sqlHandler.sqlStatsHandler.getXPCountFromUser(userID);
 
-            Main.sqlHandler.sqlStatsHandler.replyToUserLevelUp(userCurrentXP,userUpdatedXP, event);
+            Main.sqlHandler.sqlStatsHandler.replyToUserLevelUp(userCurrentXP, userUpdatedXP, event);
             Main.mobSpawner.spawnMob(event.getChannel());
 
-            Main.LOG.info("Executed '"+ Constants.MINE_BUTTON_ID  + "' button");
+            Main.LOGGER.info("Executed '" + Constants.MINE_BUTTON_ID + "' button");
         }
     }
 

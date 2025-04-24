@@ -9,7 +9,7 @@ import org.clawd.tokens.Constants;
 import java.awt.*;
 import java.io.File;
 
-public class HelpCommand implements SlashCommand{
+public class HelpCommand implements SlashCommand {
     @Override
     public void executeCommand(SlashCommandInteractionEvent event) {
         EmbedBuilder embedBuilder = new EmbedBuilder();
@@ -32,6 +32,6 @@ public class HelpCommand implements SlashCommand{
                 .setEphemeral(true)
                 .complete();
 
-        Main.LOG.info("Executed '"+ Constants.HELP_COMMAND_ID +"' command");
+        Main.LOGGER.info("Executed '" + Constants.HELP_COMMAND_ID + "' command");
     }
 }

@@ -31,7 +31,7 @@ public class InventoryCache {
             inventories.removeIf(
                     inventory -> inventory.getTimestamp().isBefore(now.minusMinutes(Constants.CACHE_EXPIRY_MINUTES))
             );
-            Main.LOG.info("Inventory cache has been cleaned up, " + previousSize + "->" + inventories.size());
+            Main.LOGGER.info("Inventory cache has been cleaned up, " + previousSize + "->" + inventories.size());
         } finally {
             lock.unlock();
         }

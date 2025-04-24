@@ -15,7 +15,6 @@ import java.util.List;
 public class ShopHandler {
     private final ShopCore shopCore;
 
-
     public ShopHandler(List<Item> itemList) {
         this.shopCore = new ShopCore(itemList);
     }
@@ -99,5 +98,37 @@ public class ShopHandler {
 
         InteractionHook hook = event.editMessageEmbeds(embedBuilder.build()).complete();
         hook.editOriginalComponents(ActionRow.of(backButton, homeButton, nextButton)).queue();
+    }
+
+    /**
+     * Searches the item by the item name in the item list
+     *
+     * @param searchTerm The item name
+     * @return Found item or null
+     */
+    public Item getItemByName(String searchTerm) {
+        searchTerm = searchTerm.replace(" ", "");
+        List<Item> itemList = shopCore.getItemList();
+        for (Item item : itemList) {
+            String itemName = item.getName().replace(" ", "");
+            if (itemName.equalsIgnoreCase(searchTerm))
+                return item;
+        }
+        return null;
+    }
+
+    /**
+     * Gets an item from the itemList by an item ID
+     *
+     * @param id The item ID we search with
+     * @return The item matching the item ID, if not found null is returned
+     */
+    public Item getItemByID(int id) {
+        List<Item> itemList = shopCore.getItemList();
+        for (Item item : itemList) {
+            if (item.getID() == id)
+                return item;
+        }
+        return null;
     }
 }

@@ -37,7 +37,7 @@ public class BiomeParser {
                             "- valid biomes = " + validateBiomes(biomes) + "\n" +
                             "- is biome list empty = " + biomes.isEmpty());
 
-        Main.LOG.info("Biome parsing finished, biome list size: " + biomes.size());
+        Main.LOGGER.info("Biome parsing finished, biome list size: " + biomes.size());
         return biomes;
     }
 
@@ -74,7 +74,7 @@ public class BiomeParser {
                 biomeList.add(new Biome(name, biomeType, biomeHP, imgPath, xpEnabled, spawnableMobs));
             }
         } catch (JSONException | IOException ex) {
-            Main.LOG.severe("Failed to parse JSON biomes file: " + ex.getMessage());
+            Main.LOGGER.severe("Failed to parse JSON biomes file: " + ex.getMessage());
         }
 
         return biomeList;
@@ -92,7 +92,7 @@ public class BiomeParser {
             if (!isValidBiome(biome))
                 return false;
         }
-        Main.LOG.info("Biome validation finished");
+        Main.LOGGER.info("Biome validation finished");
         return true;
     }
 
@@ -103,12 +103,12 @@ public class BiomeParser {
      * @return True of false, depending on the biomes validity
      */
     private boolean isValidBiome(Biome biome) {
-        if (biome.biomeHP() <= 0) {
+        if (biome.getTrueHP() <= 0) {
             return false;
         }
-        File imageFile = new File(biome.imgPath());
+        File imageFile = new File(biome.getImgPath());
         if (!imageFile.exists()) {
-            Main.LOG.severe("Biome image file not found: " + biome.imgPath());
+            Main.LOGGER.severe("Biome image file not found: " + biome.getImgPath());
             return false;
         }
         return true;

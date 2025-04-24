@@ -3,7 +3,6 @@ package org.clawd.sql;
 import org.clawd.data.items.Item;
 import org.clawd.main.Bot;
 import org.clawd.main.Main;
-import org.clawd.tokens.Constants;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,9 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class SQLInventoryHandler {
 
@@ -28,7 +24,7 @@ public class SQLInventoryHandler {
 
             preparedStatement.executeUpdate();
         } catch (SQLException ex) {
-            Main.LOG.severe("Some SQL error occurred: " + ex.getMessage());
+            Main.LOGGER.severe("Some SQL error occurred: " + ex.getMessage());
         }
     }
 
@@ -46,7 +42,7 @@ public class SQLInventoryHandler {
             itemInInventory = resultSet.next();
             resultSet.close();
         } catch (SQLException ex) {
-            Main.LOG.severe("Some SQL error occurred: " + ex.getMessage());
+            Main.LOGGER.severe("Some SQL error occurred: " + ex.getMessage());
         }
         return itemInInventory;
     }
@@ -69,14 +65,14 @@ public class SQLInventoryHandler {
             int rowsAffected = preparedStatement.executeUpdate();
 
             if (rowsAffected > 0) {
-                Main.LOG.info("Equipped item " + itemID + " for user " + userID);
+                Main.LOGGER.info("Equipped item " + itemID + " for user " + userID);
             } else {
-                Main.LOG.severe("Failed to equip item " + itemID + " for user " + userID);
+                Main.LOGGER.severe("Failed to equip item " + itemID + " for user " + userID);
             }
             preparedStatement.close();
 
         } catch (SQLException ex) {
-            Main.LOG.severe("Some SQL error occurred: " + ex.getMessage());
+            Main.LOGGER.severe("Some SQL error occurred: " + ex.getMessage());
         }
     }
 
@@ -98,14 +94,14 @@ public class SQLInventoryHandler {
 
             if (resultSet.next()) {
                 itemID = resultSet.getInt("equipedItemID");
-                Main.LOG.info("Retrieved item ID: " + itemID + ". From user: " + userID);
+                Main.LOGGER.info("Retrieved item ID: " + itemID + ". From user: " + userID);
             }
 
             resultSet.close();
             preparedStatement.close();
 
         } catch (SQLException ex) {
-            Main.LOG.severe("Some SQL error occurred: " + ex.getMessage());
+            Main.LOGGER.severe("Some SQL error occurred: " + ex.getMessage());
         }
         return itemID;
     }
@@ -129,12 +125,12 @@ public class SQLInventoryHandler {
 
             while (resultSet.next()) {
                 int itemID = resultSet.getInt("itemID");
-                Item item = Main.mineworld.getItemByID(itemID);
+                Item item = Main.shopHandler.getItemByID(itemID);
                 itemList.add(item);
             }
 
         } catch (SQLException ex) {
-            Main.LOG.severe("Some SQL error occurred: " + ex.getMessage());
+            Main.LOGGER.severe("Some SQL error occurred: " + ex.getMessage());
         }
         return itemList;
     }

@@ -13,8 +13,8 @@ public class ShopNextButton implements CustomButton {
             Main.sqlHandler.registerUser(userID);
             Main.sqlHandler.sqlEmbeddedHandler.replyToNewRegisteredUser(event);
         } else {
-            Main.mineworld.shopHandler.replyToNextShopPage(event, false);
-            Main.LOG.info("Executed '"+ Constants.NEXT_SHOP_BUTTON_ID +"' button");
+            Main.shopHandler.replyToNextShopPage(event, false);
+            Main.LOGGER.info("Executed '"+ Constants.NEXT_SHOP_BUTTON_ID +"' button");
         }
     }
 }

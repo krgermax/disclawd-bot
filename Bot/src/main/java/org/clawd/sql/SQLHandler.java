@@ -34,7 +34,7 @@ public class SQLHandler {
             resultSet.close();
             preparedStatement.close();
         } catch (SQLException ex) {
-            Main.LOG.severe("Some SQL error occurred: " + ex.getMessage());
+            Main.LOGGER.severe("Some SQL error occurred: " + ex.getMessage());
         }
         return registered;
     }
@@ -70,13 +70,13 @@ public class SQLHandler {
             int rowsAffected = preparedStatement.executeUpdate();
 
             if (rowsAffected > 0) {
-                Main.LOG.info("Registered user with ID: " + userID);
+                Main.LOGGER.info("Registered user with ID: " + userID);
             } else {
-                Main.LOG.severe("Failed to register user. ");
+                Main.LOGGER.severe("Failed to register user. ");
             }
             preparedStatement.close();
         } catch (SQLException ex) {
-            Main.LOG.severe("Some SQL error occurred: " + ex.getMessage());
+            Main.LOGGER.severe("Some SQL error occurred: " + ex.getMessage());
         }
     }
 }

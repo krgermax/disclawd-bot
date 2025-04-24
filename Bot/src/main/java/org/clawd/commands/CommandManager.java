@@ -34,13 +34,13 @@ public class CommandManager extends ListenerAdapter {
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
         String command = event.getName();
-        Main.LOG.info("Received slash command: " + command);
+        Main.LOGGER.info("Received slash command: " + command);
 
         SlashCommand slashCommand = commands.get(command);
         if (slashCommand != null) {
             slashCommand.executeCommand(event);
         } else {
-            Main.LOG.info("Command: " + command + ", does not exist.");
+            Main.LOGGER.info("Command: " + command + ", does not exist.");
             replyToNonExistingCommand(event);
         }
     }
@@ -50,7 +50,7 @@ public class CommandManager extends ListenerAdapter {
      *
      * @param event Received event
      */
-    private void replyToNonExistingCommand(SlashCommandInteractionEvent event){
+    private void replyToNonExistingCommand(SlashCommandInteractionEvent event) {
         EmbedBuilder embedBuilder = new EmbedBuilder();
 
         embedBuilder.setColor(Color.RED);

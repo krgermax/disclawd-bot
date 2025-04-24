@@ -19,7 +19,7 @@ public class EquipButton implements CustomButton {
         } else {
             String componentId = event.getComponentId();
             int itemID = Integer.parseInt(componentId.replace(Constants.EQUIP_BUTTON_ID, ""));
-            Item item = Main.mineworld.getItemByID(itemID);
+            Item item = Main.shopHandler.getItemByID(itemID);
 
             Main.sqlHandler.sqlInventoryHandler.equipItem(userID, item.getID());
 
@@ -28,7 +28,7 @@ public class EquipButton implements CustomButton {
             embedBuilder.setDescription("You're now wielding **" + item.getEmoji() + item.getName() + item.getEmoji() + "**!");
 
             event.replyEmbeds(embedBuilder.build()).setEphemeral(true).queue();
-            Main.LOG.info("Executed '" + Constants.EQUIP_BUTTON_ID + "' button");
+            Main.LOGGER.info("Executed '" + Constants.EQUIP_BUTTON_ID + "' button");
         }
     }
 }

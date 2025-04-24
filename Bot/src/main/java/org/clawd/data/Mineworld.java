@@ -22,29 +22,16 @@ import java.util.*;
 import java.util.List;
 
 public class Mineworld {
-    public final ShopHandler shopHandler;
-    public final InventoryHandler inventoryHandler;
-    private final List<Item> itemList;
-    private final List<Mob> mobList;
     private final List<Biome> biomeList;
     private Biome currentBiome;
-    private Double currentBiomeHP;
-    private Double currentBiomeFullHP;
     private final Map<String, LocalDateTime> currentUserMap;
     private int currentUserMultiplier;
 
-    public Mineworld(List<Item> itemList, List<Mob> mobList, List<Biome> biomeList) {
-        this.itemList = itemList;
-        this.mobList = mobList;
+    public Mineworld(List<Biome> biomeList) {
         this.biomeList = biomeList;
 
-        this.shopHandler = new ShopHandler(itemList);
-        this.inventoryHandler = new InventoryHandler();
         this.currentUserMap = new HashMap<>();
-
         this.currentBiome = generateBiome();
-        this.currentBiomeFullHP = currentBiome.biomeHP();
-        this.currentBiomeHP = this.currentBiomeFullHP;
 
         this.currentUserMultiplier = 1;
     }
@@ -59,25 +46,25 @@ public class Mineworld {
         int selector = (int) (Math.random() * size);
 
         Biome returnBiome = biomeList.get(selector);
-        Main.LOG.info("The current biome is: " + returnBiome.type());
+        Main.LOGGER.info("The current biome is: " + returnBiome.getType());
 
         return returnBiome;
     }
 
     private EmbedBuilder buildBiomeEmbed() {
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setTitle(currentBiome.name())
+        embedBuilder.setTitle(currentBiome.getName())
                 .setColor(Color.BLACK)
                 .setDescription("Active miners: " + currentUserMap.size() + " (Last " + Constants.MAX_MINE_NOT_INTERACTED_MINUTES + " minutes)")
-                .addField("Biome HP", currentBiomeHP + "/" + currentBiomeFullHP, false)
+                .addField("Biome HP", currentBiome.getCurrentHP() + "/" + currentBiome.getAdjustableFullHP(), false)
                 .setImage("attachment://ore.png");
         return embedBuilder;
     }
 
     private File getBiomeImageFile() {
-        File imgFile = new File(currentBiome.imgPath());
+        File imgFile = new File(currentBiome.getImgPath());
         if (!imgFile.exists()) {
-            Main.LOG.severe("Biome image not found: " + currentBiome.imgPath());
+            Main.LOGGER.severe("Biome image not found: " + currentBiome.getImgPath());
             return null;
         }
         return imgFile;
@@ -129,7 +116,7 @@ public class Mineworld {
                 .setFiles(FileUpload.fromData(imgFile, "ore.png"))
                 .setActionRow(Button.primary(Constants.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
                 .queue();
-        Main.LOG.info("Updated biome state.");
+        Main.LOGGER.info("Updated biome state.");
     }
 
     /**
@@ -137,14 +124,15 @@ public class Mineworld {
      * and the embedded message, such that the current state is displayed
      * correctly
      *
-     * @param event  Event
+     * @param event        Event
      * @param equippedItem The equipped user item
      */
     public void updateBiome(ButtonInteractionEvent event, Item equippedItem) {
-        damageBiome(equippedItem);
-        if (this.currentBiomeHP <= 0) {
-
-            this.currentBiome = generateBiome();
+        currentBiome.damage(equippedItem);
+        if (currentBiome.getCurrentHP() <= 0) {
+            // Reset the old biome and generate a new one
+            currentBiome.reset();
+            currentBiome = generateBiome();
             updateBiomeOnCompletion(event);
             /*
              * We need to update the mob spawner if a biome is completed and only if it is completed
@@ -164,35 +152,14 @@ public class Mineworld {
      */
     private void updateBiomeOnCompletion(ButtonInteractionEvent event) {
         event.getMessage().delete().queue();
-        this.currentBiomeFullHP = currentBiome.biomeHP();
+        /*
+            Since this method is called after a new biome is generated, we need to adjust its HP according to the amount
+            of interacting users
+         */
         adjustCurrentBiomeHP();
-        this.currentBiomeHP = currentBiomeFullHP;
+        currentBiome.setCurrentHP(currentBiome.getAdjustableFullHP());
         replyWithBiomeEmbedded(event);
-        Main.LOG.info("Updated biome because of completion.");
-    }
-
-    /**
-     * Calculates the damage done to a biome by a user and applies it to
-     * the current HP of the current biome
-     *
-     * @param equippedItem The equipped user item
-     */
-    private void damageBiome(Item equippedItem) {
-        double dmgMult = 1.0;
-
-        if (equippedItem != null && equippedItem.getItemType().equals(ItemType.WEAPON)) {
-            WeaponItem weaponItem = (WeaponItem) equippedItem;
-            dmgMult = weaponItem.getDmgMultiplier();
-            Main.LOG.info(String.valueOf(dmgMult));
-        }
-        //seems to be fixed with rounding the HP value and not transforming it to the form X.X before
-        double totalDamage = Constants.BASE_DAMAGE_MULTIPLIER * dmgMult;
-        double previousHP = this.currentBiomeHP;
-
-        this.currentBiomeHP -= totalDamage;
-        this.currentBiomeHP = Main.generator.roundDouble(this.currentBiomeHP, 1);
-        Main.LOG.info("Damage done to biome: " + this.currentBiome.type() + "." +
-                " Damage: " + totalDamage + ", " + previousHP + "->" + this.currentBiomeHP);
+        Main.LOGGER.info("Updated biome because of completion.");
     }
 
     /**
@@ -226,69 +193,41 @@ public class Mineworld {
     }
 
     /**
-     * Adjusts the biome HP depending on how many unique users interacted with the mine button in the last minutes
+     * Adjusts the biome HP depending on how many unique users interacted with the mine button in a specific time window
+     * <l>
+     * <li>
+     * If another user interacts and the current user map increases in size: <br>
+     * This method only increases the adjustable full HP, but not the current biome HP
+     * </li>
+     * <li>
+     * If the current user map decreases: <br>
+     * This method only decreases the current full HP, but not the adjustable full HP. As this happens in
+     * {@link #updateBiomeOnCompletion}
+     * </li>
+     * </l>
      */
     private void adjustCurrentBiomeHP() {
         int previousUserMultiplier = this.currentUserMultiplier;
         this.currentUserMultiplier = currentUserMap.size();
 
-        this.currentBiomeFullHP = Main.generator.roundDouble(currentBiome.biomeHP() * currentUserMultiplier, 1);
+        double adjustedHP = Main.generator.roundDouble(currentBiome.getTrueHP() * currentUserMultiplier, 1);
+        /*
+            If the user count increases I do not want to erase previous progress, therefore only max hp is adjusted
+         */
+        currentBiome.setAdjustableFullHP(adjustedHP);
 
         if (this.currentUserMultiplier < previousUserMultiplier) {
             double adjustment = (double) currentUserMultiplier / previousUserMultiplier;
-            this.currentBiomeHP = Main.generator.roundDouble(this.currentBiomeHP * adjustment, 1);
+            adjustedHP = Main.generator.roundDouble(currentBiome.getCurrentHP() * adjustment, 1);
+            currentBiome.setCurrentHP(adjustedHP);
         }
-    }
-
-    /**
-     * Searches the item by the item name in the item list
-     *
-     * @param name The item name
-     * @return Found item or null
-     */
-    public Item getItemByName(String name) {
-        Item foundItem = null;
-        for (Item item : itemList) {
-            if (item.getName().replace(" ", "").equalsIgnoreCase(name.replace(" ", "")))
-                foundItem = item;
-        }
-        return foundItem;
-    }
-
-    /**
-     * Gets an item from the itemList by an item ID
-     *
-     * @param id The item ID we search with
-     * @return The item matching the item ID, if not found null is returned
-     */
-    public Item getItemByID(int id) {
-        Item returnItem = null;
-        for (Item item : itemList) {
-            if (item.getID() == id)
-                returnItem = item;
-        }
-        return returnItem;
-    }
-
-    /**
-     * Gets a mob from the mob List by a mob ID
-     *
-     * @param id The mob ID we search with
-     * @return The mob matching the mob ID, if not found null is returned
-     */
-    public Mob getMobByID(int id) {
-        for (Mob mob : mobList) {
-            if (mob.getID() == id)
-                return mob;
-        }
-        return null;
     }
 
     public Biome getCurrentBiome() {
         return this.currentBiome;
     }
 
-    public List<Mob> getMobList() {
-        return this.mobList;
+    public List<Biome> getBiomeList() {
+        return this.biomeList;
     }
 }

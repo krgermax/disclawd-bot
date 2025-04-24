@@ -14,9 +14,9 @@ public class InvNextButton implements CustomButton {
             Main.sqlHandler.registerUser(userID);
             Main.sqlHandler.sqlEmbeddedHandler.replyToNewRegisteredUser(event);
         } else {
-            InventoryHandler inventoryHandler = Main.mineworld.inventoryHandler;
+            InventoryHandler inventoryHandler = Main.inventoryHandler;
             inventoryHandler.replyToNextInvPage(event, false);
-            Main.LOG.info("Executed '"+ Constants.NEXT_INV_BUTTON_ID +"' button");
+            Main.LOGGER.info("Executed '"+ Constants.NEXT_INV_BUTTON_ID +"' button");
         }
     }
 }

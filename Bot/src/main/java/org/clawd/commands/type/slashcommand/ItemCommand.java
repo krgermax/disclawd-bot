@@ -18,7 +18,7 @@ public class ItemCommand implements SlashCommand {
     public void executeCommand(SlashCommandInteractionEvent event) {
         String searchTerm = getSearchTerm(event);
 
-        Item foundItem = Main.mineworld.getItemByName(searchTerm);
+        Item foundItem = Main.shopHandler.getItemByName(searchTerm);
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setColor(Color.ORANGE);
 
@@ -42,7 +42,7 @@ public class ItemCommand implements SlashCommand {
                     .setEphemeral(true)
                     .queue();
 
-            Main.LOG.info("Executed '" + Constants.ITEM_COMMAND_ID + "' command");
+            Main.LOGGER.info("Executed '" + Constants.ITEM_COMMAND_ID + "' command");
         }
     }
 

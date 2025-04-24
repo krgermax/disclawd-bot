@@ -14,9 +14,9 @@ public class InvBackButton implements CustomButton {
             Main.sqlHandler.registerUser(userID);
             Main.sqlHandler.sqlEmbeddedHandler.replyToNewRegisteredUser(event);
         } else {
-            InventoryHandler inventoryHandler = Main.mineworld.inventoryHandler;
+            InventoryHandler inventoryHandler = Main.inventoryHandler;
             inventoryHandler.replyToNextInvPage(event, true);
-            Main.LOG.info("Executed '"+ Constants.BACK_INV_BUTTON_ID +"' button");
+            Main.LOGGER.info("Executed '"+ Constants.BACK_INV_BUTTON_ID +"' button");
         }
     }
 }

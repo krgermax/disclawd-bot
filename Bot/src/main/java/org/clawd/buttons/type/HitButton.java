@@ -17,7 +17,7 @@ public class HitButton implements CustomButton {
             String componentId = event.getComponentId();
             int mobID = Integer.parseInt(componentId.replace(Constants.HIT_BUTTON_ID, ""));
 
-            NormalMob spawnedMob = (NormalMob) Main.mineworld.getMobByID(mobID);
+            NormalMob spawnedMob = (NormalMob) Main.mobSpawner.getMobByID(mobID);
             if (spawnedMob == null)
                 return;
 
@@ -26,7 +26,7 @@ public class HitButton implements CustomButton {
 
             Main.sqlHandler.sqlStatsHandler.updateUserStatsAfterKill(userID, spawnedMob.getGoldDrop(), spawnedMob.getXpDrop());
 
-            Main.LOG.info("Executed '" + Constants.HIT_BUTTON_ID + "' button");
+            Main.LOGGER.info("Executed '" + Constants.HIT_BUTTON_ID + "' button");
         }
     }
 }

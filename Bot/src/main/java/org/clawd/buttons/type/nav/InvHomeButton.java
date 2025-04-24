@@ -14,9 +14,9 @@ public class InvHomeButton implements CustomButton {
             Main.sqlHandler.registerUser(userID);
             Main.sqlHandler.sqlEmbeddedHandler.replyToNewRegisteredUser(event);
         } else {
-            InventoryHandler inventoryHandler = Main.mineworld.inventoryHandler;
+            InventoryHandler inventoryHandler = Main.inventoryHandler;
             inventoryHandler.updateToFirstEmbedded(event);
-            Main.LOG.info("Executed '"+ Constants.HOME_INV_BUTTON_ID +"' button");
+            Main.LOGGER.info("Executed '"+ Constants.HOME_INV_BUTTON_ID +"' button");
 
         }
     }

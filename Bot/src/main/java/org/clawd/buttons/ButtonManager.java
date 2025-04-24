@@ -16,7 +16,7 @@ public class ButtonManager extends ListenerAdapter {
     private final HashMap<String, CustomButton> buttons;
     private final HashMap<String, String> buttonsWithID;
 
-    public ButtonManager () {
+    public ButtonManager() {
         this.buttons = new HashMap<>();
 
         this.buttons.put(Constants.MINE_BUTTON_ID, new MineButton());
@@ -46,7 +46,7 @@ public class ButtonManager extends ListenerAdapter {
     @Override
     public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
         String buttonID = event.getComponentId();
-        Main.LOG.info("Received button interaction: " + buttonID);
+        Main.LOGGER.info("Received button interaction: " + buttonID);
 
         String key = buttonsWithID.entrySet().stream()
                 .filter(entry -> buttonID.contains(entry.getKey()))
@@ -59,7 +59,7 @@ public class ButtonManager extends ListenerAdapter {
         if (button != null) {
             button.executeButton(event);
         } else {
-            Main.LOG.severe("Button ID not found: " + buttonID);
+            Main.LOGGER.severe("Button ID not found: " + buttonID);
         }
     }
 }

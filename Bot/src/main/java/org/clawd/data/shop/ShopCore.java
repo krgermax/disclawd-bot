@@ -21,7 +21,7 @@ public class ShopCore {
         this.shopPagesCount = (int) Math.ceil((double) itemList.size() / Constants.ITEMS_PER_PAGE);
 
         this.pages = createPages();
-        Main.LOG.info("Initialized shop core. Pages: " + this.shopPagesCount);
+        Main.LOGGER.info("Initialized shop core. Pages: " + this.shopPagesCount);
     }
 
     /**
@@ -55,6 +55,10 @@ public class ShopCore {
         embedBuilder.setColor(Color.ORANGE);
         embedBuilder.setFooter("Page: " + (i + 1) + "/" + shopPagesCount);
         return embedBuilder;
+    }
+
+    public List<Item> getItemList() {
+        return itemList;
     }
 
     public List<EmbedBuilder> getPages() {

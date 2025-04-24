@@ -107,7 +107,7 @@ public class Inventory {
         double baseDMG = Constants.BASE_GOLD_MULTIPLIER;
 
         int equippedItemID = Main.sqlHandler.sqlInventoryHandler.getEquippedItemIDFromUser(userID);
-        Item equippedItem = Main.mineworld.getItemByID(equippedItemID);
+        Item equippedItem = Main.shopHandler.getItemByID(equippedItemID);
 
         double calculatedXPMult = 1.0;
         double calculatedGoldMult = 1.0;

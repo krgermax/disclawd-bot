@@ -14,10 +14,10 @@ public class Generator {
 
     private final Set<BiomeType> xpBiomeTypes;
 
-    public Generator(List<Biome> biomeList) {
-        this.xpBiomeTypes = biomeList.stream()
-                .filter(Biome::xpEnabled)
-                .map(Biome::type)
+    public Generator() {
+        this.xpBiomeTypes = Main.mineworld.getBiomeList().stream()
+                .filter(Biome::isXpEnabled)
+                .map(Biome::getType)
                 .collect(Collectors.toSet());
     }
 
@@ -27,14 +27,14 @@ public class Generator {
      * @return XP as double
      */
     public double generateXP() {
-        BiomeType biomeType = Main.mineworld.getCurrentBiome().type();
+        BiomeType biomeType = Main.mineworld.getCurrentBiome().getType();
 
         if (!xpBiomeTypes.contains(biomeType))
             return 0d;
 
         double generatedXP = (Math.random() * 4) + 1;
         double transformedXP = transformDouble(generatedXP);
-        Main.LOG.info("Generated XP: " + transformedXP);
+        Main.LOGGER.info("Generated XP: " + transformedXP);
         return transformedXP;
     }
 
@@ -45,7 +45,7 @@ public class Generator {
      */
     public int generateGold() {
         int generatedGold = (int) (Math.random() * 3) + 1;
-        Main.LOG.info("Generated gold: " + generatedGold);
+        Main.LOGGER.info("Generated gold: " + generatedGold);
         return generatedGold;
     }
 
@@ -71,9 +71,8 @@ public class Generator {
     /**
      * Rounds a double
      *
-     * @param value The double value
+     * @param value  The double value
      * @param places How many places to round
-     *
      * @return The rounded double
      */
     public double roundDouble(double value, int places) {

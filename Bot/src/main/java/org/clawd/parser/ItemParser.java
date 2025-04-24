@@ -39,7 +39,7 @@ public class ItemParser {
                             "- valid items = " + validateItems(items) + "\n" +
                             "- is item list empty = " + items.isEmpty());
 
-        Main.LOG.info("Item parsing finished, item list size: " + items.size());
+        Main.LOGGER.info("Item parsing finished, item list size: " + items.size());
         return items;
     }
 
@@ -114,7 +114,7 @@ public class ItemParser {
             }
 
         } catch (JSONException | IOException ex) {
-            Main.LOG.severe("Failed to parse JSON items file: " + ex.getMessage());
+            Main.LOGGER.severe("Failed to parse JSON items file: " + ex.getMessage());
         }
         return items;
     }
@@ -131,7 +131,7 @@ public class ItemParser {
             if (!isValidItem(item))
                 return false;
         }
-        Main.LOG.info("Item validation finished");
+        Main.LOGGER.info("Item validation finished");
         return true;
     }
 
@@ -161,7 +161,7 @@ public class ItemParser {
 
         File imageFile = new File(item.getImgPath());
         if (!imageFile.exists()) {
-            Main.LOG.severe("Item image file not found: " + item.getImgPath());
+            Main.LOGGER.severe("Item image file not found: " + item.getImgPath());
             return false;
         }
 

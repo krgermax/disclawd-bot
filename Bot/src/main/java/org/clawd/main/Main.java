@@ -4,9 +4,11 @@ import net.dv8tion.jda.api.OnlineStatus;
 import org.clawd.data.Generator;
 import org.clawd.data.Mineworld;
 import org.clawd.data.biomes.Biome;
+import org.clawd.data.inventory.InventoryHandler;
 import org.clawd.data.items.Item;
 import org.clawd.data.mobs.Mob;
 import org.clawd.data.MobSpawner;
+import org.clawd.data.shop.ShopHandler;
 import org.clawd.parser.BiomeParser;
 import org.clawd.parser.ItemParser;
 import org.clawd.parser.MobParser;
@@ -27,36 +29,52 @@ import java.util.logging.Logger;
 public class Main {
 
     public static Bot bot;
-    public static Logger LOG;
+    public static Logger LOGGER;
+
     public static SQLHandler sqlHandler;
+    public static InventoryHandler inventoryHandler;
+    public static ShopHandler shopHandler;
+
     public static Mineworld mineworld;
     public static Generator generator;
     public static MobSpawner mobSpawner;
 
     public static void main(String[] args) {
-        LOG = Logger.getLogger(Constants.LOGGER_NAME);
+        LOGGER = Logger.getLogger(Constants.LOGGER_NAME);
         sqlHandler = new SQLHandler();
 
         try {
-            ItemParser itemParser = new ItemParser();
-            List<Item> itemList = itemParser.parseItems();
-
-            MobParser mobParser = new MobParser();
-            List<Mob> mobList = mobParser.parseMobs();
-
-            BiomeParser biomeParser = new BiomeParser();
-            List<Biome> biomeList = biomeParser.parseBiomes();
-
-            mineworld = new Mineworld(itemList, mobList, biomeList);
-            generator = new Generator(biomeList);
-            mobSpawner = new MobSpawner();
-
-            bot = Bot.getInstance();
+            initialize();
             scheduleCacheCleanUp();
             run(bot);
         } catch (FailedDataParseException ex) {
-            LOG.severe(ex.getMessage());
+            LOGGER.severe(ex.getMessage());
         }
+    }
+
+    /**
+     * Initializes everything needed to run the bot
+     *
+     * @throws FailedDataParseException If one of the parsers fails
+     */
+    private static void initialize() throws FailedDataParseException {
+        ItemParser itemParser = new ItemParser();
+        List<Item> itemList = itemParser.parseItems();
+
+        MobParser mobParser = new MobParser();
+        List<Mob> mobList = mobParser.parseMobs();
+
+        BiomeParser biomeParser = new BiomeParser();
+        List<Biome> biomeList = biomeParser.parseBiomes();
+
+        shopHandler = new ShopHandler(itemList);
+        inventoryHandler = new InventoryHandler();
+
+        mineworld = new Mineworld(biomeList);
+        mobSpawner = new MobSpawner(mobList);
+        generator = new Generator();
+
+        bot = Bot.getInstance();
     }
 
     /**
@@ -64,12 +82,19 @@ public class Main {
      */
     private static void scheduleCacheCleanUp() {
         ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
-        scheduledExecutorService.scheduleAtFixedRate(() -> Main.mineworld.inventoryHandler.inventoryCache.cleanUpCache(), 0, Constants.CACHE_PERIOD_MINUTES, TimeUnit.MINUTES);
+        scheduledExecutorService.scheduleAtFixedRate(() -> Main.inventoryHandler.inventoryCache.cleanUpCache(), 0, Constants.CACHE_PERIOD_MINUTES, TimeUnit.MINUTES);
     }
 
     /**
      * Infinite run loop
-     * - Stop bot with --exit command inside the terminal
+     * <ul>
+     *     <li>
+     *         '--exit' stops the bots execution
+     *     </li>
+     *     <li>
+     *         '--rec sql' connects to the sql database
+     *     </li>
+     * </ul>
      *
      * @param bot Bot instance
      */
@@ -89,12 +114,12 @@ public class Main {
 
                     bot.closeSQLConnection();
 
-                    LOG.info("Bot shutdown");
+                    LOGGER.info("Bot shutdown");
                     return;
                 }
             }
         } catch (IOException ex) {
-            LOG.log(Level.SEVERE, ex.getMessage());
+            LOGGER.log(Level.SEVERE, ex.getMessage());
         }
     }
 }

@@ -20,10 +20,12 @@ import java.util.Set;
 
 public class MobSpawner {
 
+    private final List<Mob> mobList;
     private List<Mob> spawnableMobs = new ArrayList<>();
     private final Random RANDOM = new Random();  // TODO: might use a seed
 
-    public MobSpawner() {
+    public MobSpawner(List<Mob> mobList) {
+        this.mobList = mobList;
         updateSpawner();
     }
 
@@ -32,7 +34,6 @@ public class MobSpawner {
      * match to the current state of the game. Note from the {@link org.clawd.data.Mineworld}
      * class: <br> We need to update the mob spawner if a biome is completed and only if it is
      * completed to update the spawnable mob list, avoids unnecessary list filtering calls
-     *
      */
     public void updateSpawner() {
         Biome currentBiome = Main.mineworld.getCurrentBiome();
@@ -47,14 +48,14 @@ public class MobSpawner {
      * @return The generated mob list
      */
     private List<Mob> generateSpawnableMobs(Biome currentBiome) {
-        Set<MobSubType> spawnableMobTypes = currentBiome.spawnableMobSubTypes();
-        return spawnableMobs = Main.mineworld.getMobList().stream()
+        Set<MobSubType> spawnableMobTypes = currentBiome.getSpawnableMobSubTypes();
+        return spawnableMobs = this.mobList.stream()
                 .filter(mob -> spawnableMobTypes.contains(mob.getMobSubType()))
                 .toList();
     }
 
     public void spawnMob(MessageChannelUnion messageChannelUnion) {
-        Main.LOG.info("Attempting to spawn a mob.");
+        Main.LOGGER.info("Attempting to spawn a mob.");
         attemptSpawn(messageChannelUnion, MobType.NORMAL);
         /*
          * TODO:
@@ -71,7 +72,7 @@ public class MobSpawner {
      * Wrapper function, holding a necessary steps to attempt to spawn a mob
      *
      * @param messageChannelUnion The channel the message should be sent to
-     * @param mobType (Maybe not needed later on)
+     * @param mobType             (Maybe not needed later on)
      */
     private void attemptSpawn(MessageChannelUnion messageChannelUnion, MobType mobType) {
         List<Mob> mobs = this.spawnableMobs.stream()
@@ -91,7 +92,7 @@ public class MobSpawner {
      * corresponding to a mob spawn
      *
      * @param messageChannelUnion The channel the message should be sent to
-     * @param mob used to generate the message
+     * @param mob                 used to generate the message
      */
     private void sendMobMessage(MessageChannelUnion messageChannelUnion, Mob mob) {
         try {
@@ -105,9 +106,9 @@ public class MobSpawner {
                     )
                     .queue();
 
-            Main.LOG.info("Mob spawned: " + mob.getName());
+            Main.LOGGER.info("Mob spawned: " + mob.getName());
         } catch (NullPointerException ex) {
-            Main.LOG.severe("Could not load image file: " + ex.getMessage());
+            Main.LOGGER.severe("Could not load image file: " + ex.getMessage());
         }
     }
 
@@ -148,5 +149,19 @@ public class MobSpawner {
      */
     private boolean shouldSpawn(Mob mob) {
         return RANDOM.nextDouble() <= mob.getSpawnChance();
+    }
+
+    /**
+     * Gets a mob from the mob List by a mob ID
+     *
+     * @param id The mob ID we search with
+     * @return The mob matching the mob ID, if not found null is returned
+     */
+    public Mob getMobByID(int id) {
+        for (Mob mob : mobList) {
+            if (mob.getID() == id)
+                return mob;
+        }
+        return null;
     }
 }

@@ -7,7 +7,7 @@ import org.clawd.tokens.Constants;
 public class ShopCommand implements SlashCommand {
     @Override
     public void executeCommand(SlashCommandInteractionEvent event) {
-        Main.mineworld.shopHandler.replyWithShopFirstEmbedded(event);
-        Main.LOG.info("Executed '"+ Constants.SHOP_COMMAND_ID +"' command");
+        Main.shopHandler.replyWithShopFirstEmbedded(event);
+        Main.LOGGER.info("Executed '" + Constants.SHOP_COMMAND_ID + "' command");
     }
 }

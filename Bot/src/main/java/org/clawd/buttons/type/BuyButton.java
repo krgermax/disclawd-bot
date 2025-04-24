@@ -22,7 +22,7 @@ public class BuyButton implements CustomButton {
         } else {
             String componentId = event.getComponentId();
             int itemID = Integer.parseInt(componentId.replace(Constants.BUY_BUTTON_ID, ""));
-            Item item = Main.mineworld.getItemByID(itemID);
+            Item item = Main.shopHandler.getItemByID(itemID);
 
             EmbedBuilder embedBuilder = new EmbedBuilder();
             embedBuilder.setTitle("Couldn't buy item");
@@ -48,7 +48,7 @@ public class BuyButton implements CustomButton {
             ).queue();
             InteractionHook hook = event.getHook();
             hook.sendMessageEmbeds(embedBuilder.build()).setEphemeral(true).queue();
-            Main.LOG.info("Executed '"+ Constants.BUY_BUTTON_ID +"' button");
+            Main.LOGGER.info("Executed '" + Constants.BUY_BUTTON_ID + "' button");
         }
     }
 }

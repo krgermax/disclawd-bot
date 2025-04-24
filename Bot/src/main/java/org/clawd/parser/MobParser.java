@@ -45,7 +45,7 @@ public class MobParser {
                             "- valid mobs = " + validateMobs(mobs) + "\n" +
                             "- is mob list empty = " + mobs.isEmpty());
 
-        Main.LOG.info("Mob parsing finished, mob list size: " + mobs.size());
+        Main.LOGGER.info("Mob parsing finished, mob list size: " + mobs.size());
         return mobs;
     }
 
@@ -92,7 +92,7 @@ public class MobParser {
             }
 
         } catch (JSONException | IOException ex) {
-            Main.LOG.severe("Failed to parse JSON mobs file: " + ex.getMessage());
+            Main.LOGGER.severe("Failed to parse JSON mobs file: " + ex.getMessage());
         }
         return mobs;
     }
@@ -180,7 +180,7 @@ public class MobParser {
             if (!isValidMob(mob))
                 return false;
         }
-        Main.LOG.info("Mob validation finished");
+        Main.LOGGER.info("Mob validation finished");
         return true;
     }
 
@@ -216,7 +216,7 @@ public class MobParser {
 
         File imageFile = new File(mob.getImgPath());
         if (!imageFile.exists()) {
-            Main.LOG.severe("Mob image file not found: " + mob.getImgPath());
+            Main.LOGGER.severe("Mob image file not found: " + mob.getImgPath());
             return false;
         }
 
