@@ -10,6 +10,19 @@ public final class Constants {
     public static final String PROPERTIES_FILE_NAME = "bot.properties";
 
     /*
+     * SQL Column labels
+     */
+
+    public static final String USER_ID_COLUMN_LABEL = "userID";
+    public static final String MINED_COLUMN_LABEL = "minedCount";
+    public static final String XP_COLUMN_LABEL = "xpCount";
+    public static final String GOLD_COLUMN_LABEL = "goldCount";
+    public static final String MOB_KILLS_COLUMN_LABEL = "mobKills";
+    public static final String BOSS_KILLS_COLUMN_LABEL = "bossKills";
+    public static final String ITEM_ID_COLUMN_LABEL = "itemID";
+    public static final String EQUIPPED_ITEM_COLUMN_LABEL = "equipedItemID"; // I know it's a typo, too lazy to fix, will do it one day
+
+    /*
      * JSON String constants
      */
 
@@ -56,8 +69,19 @@ public final class Constants {
     public static final String INV_COMMAND_ID = "inventory";
     public static final String SHOP_COMMAND_ID = "shop";
     public static final String ITEM_COMMAND_ID = "item";
-    public static final String ITEM_COMMAND_OPTION_ID = "name";
     public static final String HELP_COMMAND_ID = "help";
+    public static final String RANK_COMMAND_ID = "rank";
+
+    /*
+     * Command option Id's
+     */
+
+    public static final String ITEM_COMMAND_OPTION_ID = "name";
+    public static final String RANK_COMMAND_OPTION_ID = "category";
+    public static final String XP_OPTION_ID = "XP";
+    public static final String GOLD_OPTION_ID = "Gold";
+    public static final String KILLS_OPTION_ID = "Kills";
+    public static final String MINED_OPTION_ID = "Mined";
 
     /*
      * Button Id's

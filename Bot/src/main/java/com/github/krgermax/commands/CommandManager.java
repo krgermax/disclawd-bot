@@ -23,6 +23,7 @@ public class CommandManager extends ListenerAdapter {
         this.commands.put(Constants.SHOP_COMMAND_ID, new ShopCommand());
         this.commands.put(Constants.ITEM_COMMAND_ID, new ItemCommand());
         this.commands.put(Constants.INV_COMMAND_ID, new InvCommand());
+        this.commands.put(Constants.RANK_COMMAND_ID, new RankCommand());
     }
 
     /**

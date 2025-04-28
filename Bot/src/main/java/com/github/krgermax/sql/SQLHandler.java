@@ -1,12 +1,14 @@
 package com.github.krgermax.sql;
 
-import com.github.krgermax.main.Bot;
+import com.github.krgermax.data.inventory.UserStats;
 import com.github.krgermax.main.Main;
+import com.github.krgermax.tokens.Constants;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class SQLHandler {
 
@@ -23,8 +25,9 @@ public class SQLHandler {
     public boolean isUserRegistered(String userID) {
         boolean registered = false;
         try {
-            Connection connection = Bot.getInstance().getSQLConnection();
-            String sqlQuery = "SELECT * FROM playertable WHERE userID = ?";
+            Connection connection = Main.bot.getSQLConnection();
+            String sqlQuery = "SELECT * FROM playertable WHERE "
+                    + Constants.USER_ID_COLUMN_LABEL + " = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
             preparedStatement.setString(1, userID);
@@ -47,16 +50,16 @@ public class SQLHandler {
      */
     public void registerUser(String userID) {
         try {
-            Connection connection = Bot.getInstance().getSQLConnection();
-            String sqlQuery = "INSERT INTO playertable (" +
-                    "userID," +
-                    " minedCount," +
-                    " xpCount," +
-                    " goldCount," +
-                    " mobKills," +
-                    " bossKills," +
-                    " equipedItemID) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?)";
+            Connection connection = Main.bot.getSQLConnection();
+            String sqlQuery = "INSERT INTO playertable ("
+                    + Constants.USER_ID_COLUMN_LABEL + ", "
+                    + Constants.MINED_COLUMN_LABEL + ", "
+                    + Constants.XP_COLUMN_LABEL + ", "
+                    + Constants.GOLD_COLUMN_LABEL + ", "
+                    + Constants.MOB_KILLS_COLUMN_LABEL + ", "
+                    + Constants.BOSS_KILLS_COLUMN_LABEL + ", "
+                    + Constants.EQUIPPED_ITEM_COLUMN_LABEL + ") "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
             preparedStatement.setString(1, userID); // UserID
@@ -78,5 +81,54 @@ public class SQLHandler {
         } catch (SQLException ex) {
             Main.LOGGER.severe("Some SQL error occurred: " + ex.getMessage());
         }
+    }
+
+    /**
+     * This method retrieves the top 10 users in descending order filtered by a given category
+     *
+     * @param statQuery The filter to order by
+     *
+     * @return A list of User stats objects
+     */
+    public ArrayList<UserStats> getUsersRankedByCategory(String statQuery) {
+        ArrayList<UserStats> userStatsList = new ArrayList<>();
+        try {
+            Connection connection = Main.bot.getSQLConnection();
+
+            String sqlQuery = "SELECT " + Constants.USER_ID_COLUMN_LABEL + "," + statQuery + " FROM playertable " +
+                    "ORDER BY " + statQuery + " DESC LIMIT 10";
+
+            // no need to check for faulty sql queries, since the method is only called through internal wrapper methods
+            PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                UserStats userStats = new UserStats();
+                userStats.setUserID(resultSet.getString(Constants.USER_ID_COLUMN_LABEL));
+
+                switch (statQuery) {
+                    case Constants.XP_COLUMN_LABEL:
+                        userStats.setXpCount(Main.generator.transformDouble(resultSet.getDouble(Constants.XP_COLUMN_LABEL))); // Fix precision issue
+                        break;
+                    case Constants.GOLD_COLUMN_LABEL:
+                        userStats.setGoldCount(resultSet.getInt(Constants.GOLD_COLUMN_LABEL));
+                        break;
+                    case Constants.MOB_KILLS_COLUMN_LABEL:
+                        userStats.setMobKills(resultSet.getInt(Constants.MOB_KILLS_COLUMN_LABEL));
+                        break;
+                    case Constants.MINED_COLUMN_LABEL:
+                        userStats.setMinedCount(resultSet.getInt(Constants.MINED_COLUMN_LABEL));
+                        break;
+                    default: throw new IllegalStateException("Unexpected value: " + statQuery);
+                }
+
+                userStatsList.add(userStats);
+            }
+
+        } catch (SQLException | IllegalStateException ex) {
+            Main.LOGGER.severe("Some SQL error occurred: " + ex.getMessage());
+        }
+        return userStatsList;
     }
 }

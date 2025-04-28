@@ -1,9 +1,9 @@
 package com.github.krgermax.sql;
 
 import com.github.krgermax.data.inventory.UserStats;
+import com.github.krgermax.tokens.Constants;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
-import com.github.krgermax.main.Bot;
 import com.github.krgermax.main.Main;
 
 import java.awt.*;
@@ -23,8 +23,9 @@ public class SQLStatsHandler {
     public UserStats getUserStats(String userID) {
         UserStats userStats = new UserStats();
         try {
-            Connection connection = Bot.getInstance().getSQLConnection();
-            String sqlQuery = "SELECT minedCount, xpCount, goldCount, mobKills, bossKills FROM playertable WHERE userID = ?";
+            Connection connection = Main.bot.getSQLConnection();
+            String sqlQuery = "SELECT * FROM playertable WHERE "
+                    + Constants.USER_ID_COLUMN_LABEL + " = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
             preparedStatement.setString(1, userID);
@@ -32,11 +33,11 @@ public class SQLStatsHandler {
 
             if (resultSet.next()) {
                 userStats.setUserID(userID);
-                userStats.setMinedCount(resultSet.getInt("minedCount"));
-                userStats.setXpCount(Main.generator.transformDouble(resultSet.getDouble("xpCount"))); // Fix precision issue
-                userStats.setGoldCount(resultSet.getInt("goldCount"));
-                userStats.setMobKills(resultSet.getInt("mobKills"));
-                userStats.setBossKills(resultSet.getInt("bossKills"));
+                userStats.setMinedCount(resultSet.getInt(Constants.MINED_COLUMN_LABEL));
+                userStats.setXpCount(Main.generator.transformDouble(resultSet.getDouble(Constants.XP_COLUMN_LABEL))); // Fix precision issue
+                userStats.setGoldCount(resultSet.getInt(Constants.GOLD_COLUMN_LABEL));
+                userStats.setMobKills(resultSet.getInt(Constants.MOB_KILLS_COLUMN_LABEL));
+                userStats.setBossKills(resultSet.getInt(Constants.BOSS_KILLS_COLUMN_LABEL));
                 Main.LOGGER.info("Retrieved all stats for user: " + userID);
             }
 
@@ -64,8 +65,12 @@ public class SQLStatsHandler {
         double updatedXPCount = Main.generator.transformDouble(currentStats.getXpCount() + xp);  // Fix precision issue
 
         try {
-            Connection connection = Bot.getInstance().getSQLConnection();
-            String sqlQuery = "UPDATE playertable SET mobKills = ?, goldCount = ?, xpCount = ? WHERE userID = ?";
+            Connection connection = Main.bot.getSQLConnection();
+            String sqlQuery = "UPDATE playertable SET "
+                    + Constants.MOB_KILLS_COLUMN_LABEL + " = ?, "
+                    + Constants.GOLD_COLUMN_LABEL + " = ?, "
+                    + Constants.XP_COLUMN_LABEL + " = ? WHERE "
+                    + Constants.USER_ID_COLUMN_LABEL + " = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
             preparedStatement.setInt(1, updatedMobKills);
@@ -103,8 +108,12 @@ public class SQLStatsHandler {
         int updatedGoldCount = currentStats.getGoldCount() + gold;
 
         try {
-            Connection connection = Bot.getInstance().getSQLConnection();
-            String sqlQuery = "UPDATE playertable SET minedCount = ?, xpCount = ?, goldCount = ? WHERE userID = ?";
+            Connection connection = Main.bot.getSQLConnection();
+            String sqlQuery = "UPDATE playertable SET "
+                    + Constants.MINED_COLUMN_LABEL + " = ?, "
+                    + Constants.XP_COLUMN_LABEL + " = ?, "
+                    + Constants.GOLD_COLUMN_LABEL + " = ? WHERE "
+                    + Constants.USER_ID_COLUMN_LABEL + " = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
             preparedStatement.setInt(1, updatedMineCount);
@@ -136,8 +145,10 @@ public class SQLStatsHandler {
     public double getXPCountFromUser(String userID) {
         double xpCount = 0.0;
         try {
-            Connection connection = Bot.getInstance().getSQLConnection();
-            String sqlQuery = "SELECT xpCount FROM playertable WHERE userID = ?";
+            Connection connection = Main.bot.getSQLConnection();
+            String sqlQuery = "SELECT "
+                    + Constants.XP_COLUMN_LABEL + " FROM playertable WHERE "
+                    + Constants.USER_ID_COLUMN_LABEL + " = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
             preparedStatement.setString(1, userID);
@@ -166,8 +177,10 @@ public class SQLStatsHandler {
     public int getGoldCountFromUser(String userID) {
         int goldCount = 0;
         try {
-            Connection connection = Bot.getInstance().getSQLConnection();
-            String sqlQuery = "SELECT goldCount FROM playertable WHERE userID = ?";
+            Connection connection = Main.bot.getSQLConnection();
+            String sqlQuery = "SELECT "
+                    + Constants.GOLD_COLUMN_LABEL + " FROM playertable WHERE "
+                    + Constants.USER_ID_COLUMN_LABEL + " = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
             preparedStatement.setString(1, userID);
@@ -193,8 +206,10 @@ public class SQLStatsHandler {
     public void changeGoldCount(String userID, int gold) {
         int currentGold = this.getGoldCountFromUser(userID);
         try {
-            Connection connection = Bot.getInstance().getSQLConnection();
-            String sqlQuery = "UPDATE playertable SET goldCount = ? WHERE userID = ?";
+            Connection connection = Main.bot.getSQLConnection();
+            String sqlQuery = "UPDATE playertable SET "
+                    + Constants.GOLD_COLUMN_LABEL + " = ? WHERE "
+                    + Constants.USER_ID_COLUMN_LABEL + " = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
             int newCount = currentGold + gold;

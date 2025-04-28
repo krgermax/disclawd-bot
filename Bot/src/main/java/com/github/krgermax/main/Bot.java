@@ -1,6 +1,7 @@
 package com.github.krgermax.main;
 
 import com.github.krgermax.buttons.ButtonManager;
+import com.github.krgermax.commands.AutoCompleteListener;
 import com.github.krgermax.commands.CommandManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -25,7 +26,6 @@ public class Bot {
     private Connection connection;
 
     private Bot() {
-
         Properties botProperties = loadProperties();
 
         establishSQLConnection();
@@ -105,6 +105,8 @@ public class Bot {
         jda.addEventListener(new CommandManager());
         jda.addEventListener(new ButtonManager());
 
+        jda.addEventListener(new AutoCompleteListener());
+
         Main.LOGGER.info("Added listeners");
     }
 
@@ -118,7 +120,22 @@ public class Bot {
         jda.upsertCommand(Constants.SHOP_COMMAND_ID, "List me everything you have")
                 .queue();
         jda.upsertCommand(Constants.ITEM_COMMAND_ID, "This one looks interesting")
-                .addOption(OptionType.STRING, Constants.ITEM_COMMAND_OPTION_ID, "Yes exactly this one!", true, false)
+                .addOption(
+                        OptionType.STRING,
+                        Constants.ITEM_COMMAND_OPTION_ID,
+                        "Yes exactly this one!",
+                        true,
+                        false
+                )
+                .queue();
+        jda.upsertCommand(Constants.RANK_COMMAND_ID, "Am I on the top?!")
+                .addOption(
+                        OptionType.STRING,
+                        Constants.RANK_COMMAND_OPTION_ID,
+                        "Filter",
+                        true,
+                        true
+                )
                 .queue();
         Main.LOGGER.info("Added commands");
     }

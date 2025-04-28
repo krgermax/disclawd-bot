@@ -30,6 +30,12 @@ public class SQLEmbeddedHandler {
         event.replyEmbeds(embedBuilder.build()).setEphemeral(true).queue();
     }
 
+    /**
+     * Creates and replies to the slash command interaction event, if a user was not registered
+     * in the SQL database before
+     *
+     * @param event The button interaction event
+     */
     public void replyToNewRegisteredUser(SlashCommandInteractionEvent event) {
         String userName = event.getUser().getName();
 

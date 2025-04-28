@@ -1,8 +1,8 @@
 package com.github.krgermax.sql;
 
 import com.github.krgermax.data.items.Item;
-import com.github.krgermax.main.Bot;
 import com.github.krgermax.main.Main;
+import com.github.krgermax.tokens.Constants;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,8 +15,12 @@ public class SQLInventoryHandler {
 
     public void addItemToPlayer(String userID, int itemID) {
         try {
-            Connection connection = Bot.getInstance().getSQLConnection();
-            String sqlQuery = "INSERT INTO inventory (userID, itemID) VALUES (?, ?)";
+            Connection connection = Main.bot.getSQLConnection();
+            String sqlQuery = "INSERT INTO inventory ("
+                    + Constants.USER_ID_COLUMN_LABEL + ", "
+                    + Constants.ITEM_ID_COLUMN_LABEL + ") "
+                    + "VALUES (?, ?)";
+
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
             preparedStatement.setString(1, userID);
@@ -31,8 +35,10 @@ public class SQLInventoryHandler {
     public boolean isItemInUserInventory(String userID, int itemID) {
         boolean itemInInventory = false;
         try {
-            Connection connection = Bot.getInstance().getSQLConnection();
-            String sqlQuery = "SELECT * FROM inventory WHERE userID = ? AND itemID = ?";
+            Connection connection = Main.bot.getSQLConnection();
+            String sqlQuery = "SELECT * FROM inventory WHERE "
+                    + Constants.USER_ID_COLUMN_LABEL + " = ? AND "
+                    + Constants.ITEM_ID_COLUMN_LABEL + " = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
             preparedStatement.setString(1, userID);
@@ -55,8 +61,10 @@ public class SQLInventoryHandler {
      */
     public void equipItem(String userID, int itemID) {
         try {
-            Connection connection = Bot.getInstance().getSQLConnection();
-            String sqlQuery = "UPDATE playertable SET equipedItemID = ? WHERE userID = ?";
+            Connection connection = Main.bot.getSQLConnection();
+            String sqlQuery = "UPDATE playertable SET "
+                    + Constants.EQUIPPED_ITEM_COLUMN_LABEL + " = ? WHERE "
+                    + Constants.USER_ID_COLUMN_LABEL + " = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
             preparedStatement.setInt(1, itemID);
@@ -85,8 +93,10 @@ public class SQLInventoryHandler {
     public int getEquippedItemIDFromUser(String userID) {
         int itemID = -1;
         try {
-            Connection connection = Bot.getInstance().getSQLConnection();
-            String sqlQuery = "SELECT equipedItemID FROM playertable WHERE userID = ?";
+            Connection connection = Main.bot.getSQLConnection();
+            String sqlQuery = "SELECT "
+                    + Constants.EQUIPPED_ITEM_COLUMN_LABEL + " FROM playertable WHERE "
+                    + Constants.USER_ID_COLUMN_LABEL + " = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
             preparedStatement.setString(1, userID);
@@ -116,8 +126,9 @@ public class SQLInventoryHandler {
         List<Item> itemList = new ArrayList<>();
 
         try {
-            Connection connection = Bot.getInstance().getSQLConnection();
-            String sqlQuery = "SELECT * FROM inventory WHERE userID = ?";
+            Connection connection = Main.bot.getSQLConnection();
+            String sqlQuery = "SELECT * FROM inventory WHERE "
+                    + Constants.USER_ID_COLUMN_LABEL + " = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
             preparedStatement.setString(1, userID);
