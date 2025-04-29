@@ -7,6 +7,7 @@ public class UserStats {
     private int goldCount;
     private int mobKills;
     private int bossKills;
+    private int rank = -1;
 
     public String getUserID() {
         return userID;
@@ -54,5 +55,13 @@ public class UserStats {
 
     public void setBossKills(int bossKills) {
         this.bossKills = bossKills;
+    }
+
+    public int getRank() {
+        return rank;
+    }
+
+    public void setRank(int rank) {
+        this.rank = rank;
     }
 }

@@ -95,10 +95,13 @@ public class SQLHandler {
         try {
             Connection connection = Main.bot.getSQLConnection();
 
-            String sqlQuery = "SELECT " + Constants.USER_ID_COLUMN_LABEL + "," + statQuery + " FROM playertable " +
-                    "ORDER BY " + statQuery + " DESC LIMIT 10";
+            String sqlQuery = "SELECT " + Constants.USER_ID_COLUMN_LABEL + ", " + statQuery + ", " +
+                    "RANK() OVER (ORDER BY " + statQuery + " DESC, " + Constants.USER_ID_COLUMN_LABEL + " ASC) AS rank " +
+                    "FROM playertable " +
+                    "ORDER BY " + statQuery + " DESC, " + Constants.USER_ID_COLUMN_LABEL + " ASC " +
+                    "LIMIT 10";
 
-            // no need to check for faulty sql queries, since the method is only called through internal wrapper methods
+            // no need to check for faulty sql queries, since the sqlQuery is user input mapped to actual columns
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -106,22 +109,9 @@ public class SQLHandler {
             while (resultSet.next()) {
                 UserStats userStats = new UserStats();
                 userStats.setUserID(resultSet.getString(Constants.USER_ID_COLUMN_LABEL));
+                userStats.setRank(resultSet.getInt("rank"));
 
-                switch (statQuery) {
-                    case Constants.XP_COLUMN_LABEL:
-                        userStats.setXpCount(Main.generator.transformDouble(resultSet.getDouble(Constants.XP_COLUMN_LABEL))); // Fix precision issue
-                        break;
-                    case Constants.GOLD_COLUMN_LABEL:
-                        userStats.setGoldCount(resultSet.getInt(Constants.GOLD_COLUMN_LABEL));
-                        break;
-                    case Constants.MOB_KILLS_COLUMN_LABEL:
-                        userStats.setMobKills(resultSet.getInt(Constants.MOB_KILLS_COLUMN_LABEL));
-                        break;
-                    case Constants.MINED_COLUMN_LABEL:
-                        userStats.setMinedCount(resultSet.getInt(Constants.MINED_COLUMN_LABEL));
-                        break;
-                    default: throw new IllegalStateException("Unexpected value: " + statQuery);
-                }
+                setUserStats(statQuery, userStats, resultSet);
 
                 userStatsList.add(userStats);
             }
@@ -130,5 +120,62 @@ public class SQLHandler {
             Main.LOGGER.severe("Some SQL error occurred: " + ex.getMessage());
         }
         return userStatsList;
+    }
+
+    /**
+     * This method retrieves a users stats based on a given category and the user id
+     *
+     * @param statQuery The filter to determine the users ranking
+     * @param userID The user ID
+     *
+     * @return A user stat object with a set rank value
+     */
+    public UserStats getUserStatsRanked(String statQuery, String userID) {
+        UserStats userStats = new UserStats();
+        try {
+            Connection connection = Main.bot.getSQLConnection();
+
+            String sqlQuery = "SELECT ranked." + statQuery + ", ranked." + Constants.USER_ID_COLUMN_LABEL + ", ranked.rank " +
+                    "FROM ( " +
+                    "    SELECT " + Constants.USER_ID_COLUMN_LABEL + ", " + statQuery + ", " +
+                    "           RANK() OVER (ORDER BY " + statQuery + " DESC, " + Constants.USER_ID_COLUMN_LABEL + " ASC) AS rank " +
+                    "    FROM playertable " +
+                    ") AS ranked " +
+                    "WHERE ranked." + Constants.USER_ID_COLUMN_LABEL + " = ?";
+
+            // no need to check for faulty sql queries, since the sqlQuery is user input mapped to actual columns
+            PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
+            preparedStatement.setString(1, userID);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                userStats.setUserID(userID);
+                userStats.setRank(resultSet.getInt("rank"));
+                setUserStats(statQuery, userStats, resultSet);
+            }
+
+        } catch (SQLException ex) {
+            Main.LOGGER.severe("Some SQL error occurred: " + ex.getMessage());
+        }
+        return userStats;
+    }
+
+    private void setUserStats(String statQuery, UserStats userStats, ResultSet resultSet) throws SQLException {
+        switch (statQuery) {
+            case Constants.XP_COLUMN_LABEL:
+                userStats.setXpCount(Main.generator.transformDouble(resultSet.getDouble(Constants.XP_COLUMN_LABEL))); // Fix precision issue
+                break;
+            case Constants.GOLD_COLUMN_LABEL:
+                userStats.setGoldCount(resultSet.getInt(Constants.GOLD_COLUMN_LABEL));
+                break;
+            case Constants.MOB_KILLS_COLUMN_LABEL:
+                userStats.setMobKills(resultSet.getInt(Constants.MOB_KILLS_COLUMN_LABEL));
+                break;
+            case Constants.MINED_COLUMN_LABEL:
+                userStats.setMinedCount(resultSet.getInt(Constants.MINED_COLUMN_LABEL));
+                break;
+            default: throw new IllegalStateException("Unexpected value: " + statQuery);
+        }
     }
 }

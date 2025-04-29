@@ -8,73 +8,99 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class RankCommand implements SlashCommand {
+
+    private static final Map<String, String> optionStatQueryMap = Map.of(
+            Constants.KILLS_OPTION_ID, Constants.MOB_KILLS_COLUMN_LABEL,
+            Constants.XP_OPTION_ID, Constants.XP_COLUMN_LABEL,
+            Constants.GOLD_OPTION_ID, Constants.GOLD_COLUMN_LABEL,
+            Constants.MINED_OPTION_ID, Constants.MINED_COLUMN_LABEL
+    );
+
     @Override
     public void executeCommand(SlashCommandInteractionEvent event) {
+        String userID = event.getUser().getId();
+        if (!Main.sqlHandler.isUserRegistered(userID)) {
+            Main.sqlHandler.registerUser(userID);
+        }
 
         String option = event.getOption(Constants.RANK_COMMAND_OPTION_ID).getAsString();
-        Main.LOGGER.info(option);
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setColor(Color.ORANGE);
 
         ArrayList<UserStats> userStatsList;
-        switch (option) {
-            case Constants.XP_OPTION_ID:
-                userStatsList = getUserStatsList(Constants.XP_COLUMN_LABEL);
-                break;
-            case Constants.GOLD_OPTION_ID:
-                userStatsList = getUserStatsList(Constants.GOLD_COLUMN_LABEL);
-                break;
-            case Constants.KILLS_OPTION_ID:
-                userStatsList = getUserStatsList(Constants.MOB_KILLS_COLUMN_LABEL);
-                break;
-            case Constants.MINED_OPTION_ID:
-                userStatsList = getUserStatsList(Constants.MINED_COLUMN_LABEL);
-                break;
-            default:
-                embedBuilder.setDescription("Option **" + option + "** was not found, maybe you mistyped something :/");
-                event.replyEmbeds(embedBuilder.build()).setEphemeral(true).queue();
-                return;
+        String statQuery = optionStatQueryMap.get(option);
+
+        if (statQuery == null) {
+            embedBuilder.setDescription("Option **" + option + "** was not found, maybe you mistyped something :/");
+            event.replyEmbeds(embedBuilder.build()).setEphemeral(true).queue();
+            return;
         }
-        buildRankEmbed(event, embedBuilder, userStatsList, option);
+
+        userStatsList = Main.sqlHandler.getUsersRankedByCategory(statQuery);
+        boolean isUserInTop10 = userStatsList.stream().anyMatch(stats -> stats.getUserID().equals(userID));
+
+        UserStats userStats = null;
+        if (!isUserInTop10) {
+            userStats = Main.sqlHandler.getUserStatsRanked(statQuery, userID);
+        }
+
+        buildRankEmbed(embedBuilder, userStatsList, option, userID, userStats);
         event.replyEmbeds(embedBuilder.build()).setEphemeral(true).queue();
+        Main.LOGGER.info("Executed '" + Constants.RANK_COMMAND_ID + "' command");
     }
 
-    // TODO: make embedded message prettier
-    private void buildRankEmbed(SlashCommandInteractionEvent event, EmbedBuilder embedBuilder, ArrayList<UserStats> userStatsList, String option) {
-        embedBuilder.setTitle("** Ranked by" + option + "**");
+    private void buildRankEmbed(
+            EmbedBuilder embedBuilder,
+            ArrayList<UserStats> userStatsList,
+            String option,
+            String userID,
+            UserStats execUserStats
+    ) {
+        embedBuilder.setTitle("** Ranked by " + option + "**");
         StringBuilder messageBody = new StringBuilder();
-        for (int i = 0; i < userStatsList.size(); i++) {
-            UserStats userStats = userStatsList.get(i);
+        for (UserStats userStats : userStatsList) {
+            // TODO: It might be better to store usernames in the db and update them periodically
             String userName = Main.bot.getJda().retrieveUserById(userStats.getUserID()).complete().getName();
-            String stat = switch (option) {
-                case Constants.XP_OPTION_ID -> String.valueOf(userStats.getXpCount());
-                case Constants.GOLD_OPTION_ID -> String.valueOf(userStats.getGoldCount());
-                case Constants.KILLS_OPTION_ID -> String.valueOf(userStats.getMobKills());
-                case Constants.MINED_OPTION_ID -> String.valueOf(userStats.getMinedCount());
-                default -> "";
-            };
-
-            if (event.getUser().getId().equals(userStats.getUserID())) {
-                messageBody.append(getMedal(i)).append("**").append(userName).append("**").append(" *(").append(stat).append("*)\n");
-            } else {
-                messageBody.append(getMedal(i)).append(userName).append(" *(").append(stat).append("*)\n");
-            }
+            messageBody.append(formatUserLine(userStats, option, userID, userName));
         }
-        embedBuilder.addField("** Top 10 players by " + option + "**", messageBody.toString(), true);
+        embedBuilder.addField("** Top 10 **", messageBody.toString(), false);
+        if (execUserStats != null) {
+            String userName = Main.bot.getJda().retrieveUserById(execUserStats.getUserID()).complete().getName();
+            embedBuilder.addField(
+                    "** Your position **",
+                    getMedal(execUserStats.getRank()) + "— " + userName + " *(" + getStatByOption(execUserStats, option) + ")*",
+                    false
+            );
+        }
     }
 
-    private String getMedal(int pos) {
-        return switch (pos) {
-            case 0 -> ":first_place_medal: ";
-            case 1 -> ":second_place_medal: ";
-            case 2 -> ":third_place_medal: ";
-            default -> pos + ". ";
+    private String getStatByOption(UserStats userStats, String option) {
+        return switch (option) {
+            case Constants.XP_OPTION_ID -> String.valueOf(userStats.getXpCount());
+            case Constants.GOLD_OPTION_ID -> String.valueOf(userStats.getGoldCount());
+            case Constants.KILLS_OPTION_ID -> String.valueOf(userStats.getMobKills());
+            case Constants.MINED_OPTION_ID -> String.valueOf(userStats.getMinedCount());
+            default -> "";
         };
     }
 
-    private ArrayList<UserStats> getUserStatsList(String statQuery) {
-        return Main.sqlHandler.getUsersRankedByCategory(statQuery);
+    private String formatUserLine(UserStats stats, String option, String currentUserID, String userName) {
+        String stat = getStatByOption(stats, option);
+        String prefix = getMedal(stats.getRank());
+        String name = stats.getUserID().equals(currentUserID) ? "**" + userName + "**" : userName;
+        return String.format("%s— %s *(%s)*\n", prefix, name, stat);
+    }
+
+
+    private String getMedal(int pos) {
+        return switch (pos) {
+            case 1 -> ":first_place_medal: ";
+            case 2 -> ":second_place_medal: ";
+            case 3 -> ":third_place_medal: ";
+            default -> "`" + pos + ".` ";
+        };
     }
 }
