@@ -25,10 +25,10 @@ public class BuyButton implements CustomButton {
             Item item = Main.shopManager.getItemByID(itemID);
 
             EmbedBuilder embedBuilder = new EmbedBuilder();
-            embedBuilder.setTitle("Couldn't buy item");
             embedBuilder.setColor(Color.ORANGE);
 
             if (item == null) {
+                embedBuilder.setColor(Color.RED);
                 embedBuilder.setDescription("Something went wrong, the cake is a lie!");
                 event.replyEmbeds(embedBuilder.build()).setEphemeral(true).queue();
                 return;
@@ -43,7 +43,7 @@ public class BuyButton implements CustomButton {
             event.editComponents(
                     ActionRow.of(
                             Button.success(Constants.BUY_BUTTON_ID, "Buy").asDisabled(),
-                            Button.success(Constants.EQUIP_BUTTON_ID, "Equip").asEnabled()
+                            Button.success(Constants.EQUIP_BUTTON_ID + itemID, "Equip").asEnabled()
                     )
             ).queue();
             InteractionHook hook = event.getHook();

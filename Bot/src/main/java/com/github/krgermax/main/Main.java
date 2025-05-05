@@ -43,6 +43,7 @@ public class Main {
         LOGGER = Logger.getLogger(Constants.LOGGER_NAME);
         try {
             initialize();
+            scheduleMineworldManagerCleanUp();
             scheduleInventoryCacheCleanUp();
             run(bot);
         } catch (FailedDataParseException ex) {
@@ -76,19 +77,19 @@ public class Main {
     }
 
     /**
-     * This method schedules the timing for inventory cache clean up periodically specified by CACHE_PERIOD_MINUTES
+     * This method schedules the timing for inventory cache cleanups periodically
      */
     private static void scheduleInventoryCacheCleanUp() {
         ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
         scheduledExecutorService.scheduleAtFixedRate(() -> inventoryManager.inventoryCache.cleanUpCache(), 0, Constants.INV_CACHE_PERIOD_MINUTES, TimeUnit.MINUTES);
     }
 
+    /**
+     * This method schedules the timing for mineworld cache cleanups periodically
+     */
     private static void scheduleMineworldManagerCleanUp() {
-        // TODO: extend MineworldManager class
-        /*
         ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
-        scheduledExecutorService.scheduleAtFixedRate(() -> mineworldManager.removeMineworld(), 0, Constants.MINE_CACHE_PERIOD_MINUTES, TimeUnit.MINUTES);
-        */
+        scheduledExecutorService.scheduleAtFixedRate(() -> mineworldManager.cleanupCache(), 0, Constants.MINE_CACHE_PERIOD_MINUTES, TimeUnit.MINUTES);
     }
 
     /**

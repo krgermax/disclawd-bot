@@ -3,7 +3,9 @@ package com.github.krgermax.data.mineworld;
 import com.github.krgermax.data.biomes.Biome;
 import com.github.krgermax.data.mobs.Mob;
 import com.github.krgermax.main.Main;
+import com.github.krgermax.tokens.Constants;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -35,10 +37,19 @@ public class MineworldManager {
         return INSTANCE;
     }
 
+    /**
+     * This method returns a mineworld by either retrieving it from the concurrent {@link #mineworldMap}
+     * using the provided guild id, or it creates a new mineworld instance and maps it to the given guild id
+     *
+     * @param guildId The guild id used to retrieve or create a new map entry
+     *
+     * @return The mineworld corresponding to the provided guild id
+     */
     public Mineworld getMineworld(String guildId) {
         return mineworldMap.compute(guildId, (id, existing) -> {
             if (existing != null) {
                 Main.LOGGER.info("Retrieved existing Mineworld for guild: " + id);
+                existing.setTimestamp(LocalDateTime.now());
                 return existing;
             } else {
                 Main.LOGGER.info("Creating new Mineworld for guild: " + id);
@@ -47,8 +58,18 @@ public class MineworldManager {
         });
     }
 
-    public void removeMineworld() {
-        //TODO: remove by timestamp
+    /**
+     * This method cleanups the mineworld map by removing all mineworld map entries for which the lifetime of the
+     * associated mineworld is expired
+     */
+    public void cleanupCache() {
+        int before = mineworldMap.size();
+        LocalDateTime now = LocalDateTime.now();
+
+        mineworldMap.entrySet().removeIf(entry ->
+                entry.getValue().getTimestamp().isBefore(now.minusMinutes(Constants.MINE_CACHE_EXPIRY_MINUTES)));
+
+        Main.LOGGER.info("Mineworld cache cleaned: " + before + " -> " + mineworldMap.size());
     }
 
     /**

@@ -36,7 +36,7 @@ public class ItemCommand implements SlashCommand {
             Button equipButton = createEquipButton(foundItem, userID);
 
             File imgFile = new File(foundItem.getImgPath());
-            event.replyEmbeds(foundItem.createInspectEmbed(userStats, buyButton, equipButton).build())
+            event.replyEmbeds(foundItem.createInspectEmbed(userStats, buyButton).build())
                     .addFiles(FileUpload.fromData(imgFile, "item.png"))
                     .addActionRow(buyButton, equipButton)
                     .setEphemeral(true)

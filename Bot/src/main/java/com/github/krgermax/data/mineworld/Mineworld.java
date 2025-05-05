@@ -20,6 +20,7 @@ import java.util.List;
 
 public class Mineworld {
 
+    private LocalDateTime timestamp;
     /*
         Mob spawner
      */
@@ -38,6 +39,8 @@ public class Mineworld {
     private int currentUserMultiplier;
 
     public Mineworld(List<Biome> biomeList, List<Mob> mobList) {
+        this.timestamp = LocalDateTime.now();
+
         this.biomeList = biomeList;
         this.currentBiome = generateBiome();
 
@@ -237,5 +240,13 @@ public class Mineworld {
 
     public Biome getCurrentBiome() {
         return currentBiome;
+    }
+
+    public LocalDateTime getTimestamp() {
+        return this.timestamp;
+    }
+
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
     }
 }

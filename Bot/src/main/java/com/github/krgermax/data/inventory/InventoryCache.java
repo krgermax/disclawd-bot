@@ -17,7 +17,7 @@ public class InventoryCache {
         LocalDateTime now = LocalDateTime.now();
 
         inventories.entrySet().removeIf(entry ->
-                entry.getValue().getTimestamp().isBefore(now.minusMinutes(Constants.CACHE_EXPIRY_MINUTES)));
+                entry.getValue().getTimestamp().isBefore(now.minusMinutes(Constants.INV_CACHE_EXPIRY_MINUTES)));
 
         Main.LOGGER.info("Inventory cache cleaned: " + before + " -> " + inventories.size());
     }

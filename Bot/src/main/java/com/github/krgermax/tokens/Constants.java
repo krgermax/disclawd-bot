@@ -127,8 +127,9 @@ public final class Constants {
     public static final int ITEMS_PER_PAGE = 3;
     public static final String PATH_LOGO_IMG = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "images" + File.separator + "disclawd_logo.png";
     public static final int MAX_MINE_NOT_INTERACTED_MINUTES = 2;
-    public static final long CACHE_EXPIRY_MINUTES = 5;
+    public static final long INV_CACHE_EXPIRY_MINUTES = 5;
     public static final int INV_CACHE_PERIOD_MINUTES = 2;
+    public static final long MINE_CACHE_EXPIRY_MINUTES = 120;
     public static final int MINE_CACHE_PERIOD_MINUTES = 60;
 
     /*

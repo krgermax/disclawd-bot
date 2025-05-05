@@ -29,6 +29,7 @@ public class Inventory {
 
     public Inventory(String userID, ButtonInteractionEvent event) {
         this.userID = userID;
+        this.timestamp = LocalDateTime.now();
         this.inventoryPages = new ArrayList<>();
         createPagesWrapper(event);
     }

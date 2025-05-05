@@ -41,7 +41,7 @@ public class UtilItem extends Item {
     }
 
     @Override
-    public EmbedBuilder createInspectEmbed(UserStats userStats, Button buyButton, Button equipButton) {
+    public EmbedBuilder createInspectEmbed(UserStats userStats, Button buyButton) {
         String priceEmoji = Constants.BLACK_SMALL_SQUARE;
         String lvlEmoji = Constants.BLACK_SMALL_SQUARE;
         if (buyButton.isDisabled()) {

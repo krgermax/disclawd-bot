@@ -66,7 +66,7 @@ public abstract class Item extends DataObject {
 
     public abstract Field createShopField();
 
-    public abstract EmbedBuilder createInspectEmbed(UserStats userStats, Button buyButton, Button equipButton);
+    public abstract EmbedBuilder createInspectEmbed(UserStats userStats, Button buyButton);
 
     public double getDropChance() {
         return dropChance;
