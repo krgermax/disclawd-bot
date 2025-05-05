@@ -125,7 +125,7 @@ public class Bot {
                         Constants.ITEM_COMMAND_OPTION_ID,
                         "Yes exactly this one!",
                         true,
-                        false
+                        true
                 )
                 .queue();
         jda.upsertCommand(Constants.RANK_COMMAND_ID, "Am I on the top?!")

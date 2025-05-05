@@ -140,4 +140,8 @@ public class ShopManager {
         }
         return null;
     }
+
+    public List<Item> getItemList() {
+        return this.shopCore.getItemList();
+    }
 }

@@ -23,6 +23,7 @@ public class ItemCommand implements SlashCommand {
         embedBuilder.setColor(Color.ORANGE);
 
         if (foundItem == null) {
+            embedBuilder.setColor(Color.RED);
             embedBuilder.setDescription("Item **" + searchTerm + "** was not found, maybe you mistyped something :/");
             event.replyEmbeds(embedBuilder.build()).setEphemeral(true).queue();
         } else {
