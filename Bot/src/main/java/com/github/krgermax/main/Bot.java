@@ -5,7 +5,9 @@ import com.github.krgermax.commands.AutoCompleteListener;
 import com.github.krgermax.commands.CommandManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import com.github.krgermax.tokens.BotTokens;
@@ -114,6 +116,7 @@ public class Bot {
         jda.upsertCommand(Constants.HELP_COMMAND_ID, "How does this work here?")
                 .queue();
         jda.upsertCommand(Constants.BIOME_COMMAND_ID, "What do I have to mine?")
+                .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.ADMINISTRATOR))
                 .queue();
         jda.upsertCommand(Constants.INV_COMMAND_ID, "Show me my stuff!")
                 .queue();

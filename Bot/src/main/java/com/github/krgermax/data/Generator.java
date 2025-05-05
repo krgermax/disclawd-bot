@@ -68,12 +68,23 @@ public class Generator {
     }
 
     /**
-     * Compute level from XP 'XP = (level/0.07)^2'
+     * Compute level from XP 'level = (0.07 * sqrt(XP)) '
      *
      * @param XP XP
      */
     public int computeLevel(double XP) {
         return (int) transformDouble((0.07 * Math.sqrt(XP)));
+    }
+
+    /**
+     * Computes XP from level 'XP = (level/0.07)^2'
+     *
+     * @param level The level to convert into XP
+     *
+     * @return The needed XP for the provided level
+     */
+    public double computeXP(int level) {
+        return transformDouble((level/0.07) * (level/0.07));
     }
 
     /**

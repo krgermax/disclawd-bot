@@ -103,6 +103,9 @@ public class Inventory {
         double xpCount = userStats.getXpCount();
         int goldCount = userStats.getGoldCount();
 
+        int currentLevel = Main.generator.computeLevel(xpCount);
+        int nextLevel = currentLevel + 1;
+
         double baseXP = Constants.BASE_XP_MULTIPLIER;
         double baseGold = Constants.BASE_GOLD_MULTIPLIER;
         double baseDMG = Constants.BASE_GOLD_MULTIPLIER;
@@ -136,8 +139,7 @@ public class Inventory {
         embedBuilder.setTitle("Inventory - " + userName);
         embedBuilder.setColor(Color.GREEN);
         embedBuilder.setThumbnail(userAvatarURL);
-
-        embedBuilder.setDescription("Level " + Main.generator.computeLevel(xpCount));
+        addXPProgressBar(embedBuilder, xpCount, currentLevel, nextLevel);
         embedBuilder.addField(
                 ":bar_chart:Stats",
                 "> Times Mined: " + minedCount + " \n" +
@@ -157,6 +159,40 @@ public class Inventory {
                 true);
         embedBuilder.setFooter("Page: 1/" + inventoryPagesCount);
         return embedBuilder;
+    }
+
+    /**
+     * This method generates a field for embedded messages, which displays the users progress towards the next level
+     * in the form of a bar chart
+     *
+     * @param embedBuilder Embedded builder to extend
+     *
+     * @param currentXp The users current XP
+     * @param currentLevel The users current level
+     * @param nextLevel The users next level
+     */
+    private void addXPProgressBar(EmbedBuilder embedBuilder, double currentXp, int currentLevel, int nextLevel) {
+        StringBuilder fieldBody = new StringBuilder();
+
+        double currentLevelXp = Main.generator.computeXP(currentLevel);
+        double nextLevelXp = Main.generator.computeXP(nextLevel);
+
+        double xpIntoLevel = currentXp - currentLevelXp;
+        double xpNeeded  = nextLevelXp - currentLevelXp;
+
+        // Clamp values
+        xpIntoLevel = Math.max(0, xpIntoLevel);
+        xpNeeded = Math.max(1, xpNeeded);
+
+        // Calculate progress segments
+        int filledSegments = (int) Math.round((xpIntoLevel / xpNeeded) * 10);
+        for (int i = 1; i <= filledSegments; i++) {fieldBody.append(":green_square:");}
+        for (int i = filledSegments + 1; i <= 10; i++) {fieldBody.append(":black_large_square:");}
+        embedBuilder.addField(
+                "Progress to level " + nextLevel,
+                fieldBody.toString(),
+                false
+        );
     }
 
     public String getUserID() {
