@@ -13,21 +13,19 @@ public final class Constants {
      * SQL Column labels
      */
 
-    public static final String USER_ID_COLUMN_LABEL = "userID";
-    public static final String MINED_COLUMN_LABEL = "minedCount";
-    public static final String XP_COLUMN_LABEL = "xpCount";
-    public static final String GOLD_COLUMN_LABEL = "goldCount";
+    public static final String USER_ID_COLUMN_LABEL = "id";
+    public static final String MINED_COLUMN_LABEL = "mined";
+    public static final String XP_COLUMN_LABEL = "xp";
+    public static final String GOLD_COLUMN_LABEL = "gold";
     public static final String MOB_KILLS_COLUMN_LABEL = "mobKills";
     public static final String BOSS_KILLS_COLUMN_LABEL = "bossKills";
-    public static final String ITEM_ID_COLUMN_LABEL = "itemID";
-    public static final String EQUIPPED_ITEM_COLUMN_LABEL = "equipedItemID"; // I know it's a typo, too lazy to fix, will do it one day
-
+    public static final String EQUIPPED_ITEM_COLUMN_LABEL = "equippedItem";
+    public static final String ITEM_ID_COLUMN_LABEL = "itemId";
     /*
      * JSON String constants
      */
 
     public static final String JSON_BASE_PATH = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "jsonfiles";
-
     public static final String ITEMS_JSON_FILEPATH = File.separator + "items.json";
     public static final String ITEMS_JSON_ITEMS = "items";
     public static final String MOBS_JSON_FILEPATH = File.separator + "mobs.json";
@@ -130,17 +128,26 @@ public final class Constants {
     public static final String PATH_LOGO_IMG = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "images" + File.separator + "disclawd_logo.png";
     public static final int MAX_MINE_NOT_INTERACTED_MINUTES = 2;
     public static final long CACHE_EXPIRY_MINUTES = 5;
-    public static final int CACHE_PERIOD_MINUTES = 2;
+    public static final int INV_CACHE_PERIOD_MINUTES = 2;
+    public static final int MINE_CACHE_PERIOD_MINUTES = 60;
 
     /*
      * Help command description
      */
 
-    public static final String HELP_COMMAND_DESC = ">>> Hi there again :sloth: Welcome to the **Helpcenter**! From here" +
-            " I will try to guide you trough the basics of **Disclawd**, this sounds great right? So let's begin!";
-    public static final String HELP_WHAT_IS = ">>> What is **Disclawd**? Simple put, it is a clicker game for Discord. Ore's" +
-            " from a pretty familiar game are to be mined! While doings this collect, **XP :sparkles:**, **GOLD :coin:** and Items. Also do not" +
-            " forget to fight the **monsters** that can spawn!";
-    public static final String HELP_END_TEXT = ">>> But now enough of reading! On the next page you will find the most important commands" +
-            " and more to get started. Have fun! ~ max";
+    public static final String HELP_COMMAND_DESC = """
+        >>> Hi there again :sloth: Welcome to the **Helpcenter**! From here I will try to guide you \
+        through the basics of **Disclawd**, this sounds great right? So let's begin!
+        """;
+
+    public static final String HELP_WHAT_IS = """
+        >>> What is **Disclawd**? Simply put, it is a clicker game for Discord. Ores from a pretty \
+        familiar game are to be mined! While doing this, collect **XP :sparkles:**, **GOLD :coin:** \
+        and items. Also, do not forget to fight the **monsters** that can spawn!
+        """;
+
+    public static final String HELP_END_TEXT = """
+        >>> But now enough of reading! On the next page you will find the most important commands \
+        and more to get started. Have fun! ~ max
+        """;
 }

@@ -1,15 +1,14 @@
 package com.github.krgermax.main;
 
 import com.github.krgermax.data.Generator;
-import com.github.krgermax.data.Mineworld;
-import com.github.krgermax.data.MobSpawner;
 import com.github.krgermax.data.biomes.Biome;
-import com.github.krgermax.data.inventory.InventoryHandler;
+import com.github.krgermax.data.inventory.InventoryManager;
 import com.github.krgermax.data.items.Item;
+import com.github.krgermax.data.mineworld.MineworldManager;
 import com.github.krgermax.data.mobs.Mob;
-import com.github.krgermax.data.shop.ShopHandler;
+import com.github.krgermax.data.shop.ShopManager;
 import com.github.krgermax.parser.exceptions.FailedDataParseException;
-import com.github.krgermax.sql.SQLHandler;
+import com.github.krgermax.sql.SQLManager;
 import net.dv8tion.jda.api.OnlineStatus;
 import com.github.krgermax.parser.BiomeParser;
 import com.github.krgermax.parser.ItemParser;
@@ -31,21 +30,20 @@ public class Main {
     public static Bot bot;
     public static Logger LOGGER;
 
-    public static SQLHandler sqlHandler;
-    public static InventoryHandler inventoryHandler;
-    public static ShopHandler shopHandler;
+    public static SQLManager sqlHandler;
 
-    public static Mineworld mineworld;
+    public static MineworldManager mineworldManager;
+
+    public static InventoryManager inventoryManager;
+    public static ShopManager shopManager;
+
     public static Generator generator;
-    public static MobSpawner mobSpawner;
 
     public static void main(String[] args) {
         LOGGER = Logger.getLogger(Constants.LOGGER_NAME);
-        sqlHandler = new SQLHandler();
-
         try {
             initialize();
-            scheduleCacheCleanUp();
+            scheduleInventoryCacheCleanUp();
             run(bot);
         } catch (FailedDataParseException ex) {
             LOGGER.severe(ex.getMessage());
@@ -58,6 +56,8 @@ public class Main {
      * @throws FailedDataParseException If one of the parsers fails
      */
     private static void initialize() throws FailedDataParseException {
+        sqlHandler = SQLManager.getInstance();
+
         ItemParser itemParser = new ItemParser();
         List<Item> itemList = itemParser.parseItems();
 
@@ -67,12 +67,10 @@ public class Main {
         BiomeParser biomeParser = new BiomeParser();
         List<Biome> biomeList = biomeParser.parseBiomes();
 
-        shopHandler = new ShopHandler(itemList);
-        inventoryHandler = new InventoryHandler();
-
-        mineworld = new Mineworld(biomeList);
-        mobSpawner = new MobSpawner(mobList);
-        generator = new Generator();
+        shopManager = ShopManager.getInstance(itemList);
+        inventoryManager = InventoryManager.getInstance();
+        mineworldManager = MineworldManager.getInstance(biomeList, mobList);
+        generator = Generator.getInstance();
 
         bot = Bot.getInstance();
     }
@@ -80,9 +78,17 @@ public class Main {
     /**
      * This method schedules the timing for inventory cache clean up periodically specified by CACHE_PERIOD_MINUTES
      */
-    private static void scheduleCacheCleanUp() {
+    private static void scheduleInventoryCacheCleanUp() {
         ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
-        scheduledExecutorService.scheduleAtFixedRate(() -> Main.inventoryHandler.inventoryCache.cleanUpCache(), 0, Constants.CACHE_PERIOD_MINUTES, TimeUnit.MINUTES);
+        scheduledExecutorService.scheduleAtFixedRate(() -> inventoryManager.inventoryCache.cleanUpCache(), 0, Constants.INV_CACHE_PERIOD_MINUTES, TimeUnit.MINUTES);
+    }
+
+    private static void scheduleMineworldManagerCleanUp() {
+        // TODO: extend MineworldManager class
+        /*
+        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
+        scheduledExecutorService.scheduleAtFixedRate(() -> mineworldManager.removeMineworld(), 0, Constants.MINE_CACHE_PERIOD_MINUTES, TimeUnit.MINUTES);
+        */
     }
 
     /**

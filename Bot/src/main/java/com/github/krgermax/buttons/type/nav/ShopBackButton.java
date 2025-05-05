@@ -13,7 +13,7 @@ public class ShopBackButton implements CustomButton {
             Main.sqlHandler.registerUser(userID);
             Main.sqlHandler.sqlEmbeddedHandler.replyToNewRegisteredUser(event);
         } else {
-            Main.shopHandler.replyToNextShopPage(event, true);
+            Main.shopManager.replyToNextShopPage(event, true);
             Main.LOGGER.info("Executed '"+ Constants.BACK_SHOP_BUTTON_ID +"' button");
         }
     }

@@ -12,11 +12,20 @@ import com.github.krgermax.tokens.Constants;
 import java.util.*;
 import java.util.List;
 
-public class ShopHandler {
+public class ShopManager {
+
+    private static ShopManager INSTANCE;
     private final ShopCore shopCore;
 
-    public ShopHandler(List<Item> itemList) {
+    private ShopManager(List<Item> itemList) {
         this.shopCore = new ShopCore(itemList);
+    }
+
+    public static ShopManager getInstance(List<Item> itemList) {
+        if (INSTANCE == null) {
+            INSTANCE = new ShopManager(itemList);
+        }
+        return INSTANCE;
     }
 
     /**

@@ -18,7 +18,7 @@ public class ItemCommand implements SlashCommand {
     public void executeCommand(SlashCommandInteractionEvent event) {
         String searchTerm = getSearchTerm(event);
 
-        Item foundItem = Main.shopHandler.getItemByName(searchTerm);
+        Item foundItem = Main.shopManager.getItemByName(searchTerm);
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setColor(Color.ORANGE);
 

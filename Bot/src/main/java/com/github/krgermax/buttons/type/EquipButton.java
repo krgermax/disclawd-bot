@@ -19,7 +19,7 @@ public class EquipButton implements CustomButton {
         } else {
             String componentId = event.getComponentId();
             int itemID = Integer.parseInt(componentId.replace(Constants.EQUIP_BUTTON_ID, ""));
-            Item item = Main.shopHandler.getItemByID(itemID);
+            Item item = Main.shopManager.getItemByID(itemID);
 
             Main.sqlHandler.sqlInventoryHandler.equipItem(userID, item.getID());
 

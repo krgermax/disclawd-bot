@@ -10,11 +10,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class SQLHandler {
+public class SQLManager {
+
+    private static SQLManager INSTANCE;
 
     public final SQLEmbeddedHandler sqlEmbeddedHandler = new SQLEmbeddedHandler();
     public final SQLInventoryHandler sqlInventoryHandler = new SQLInventoryHandler();
     public final SQLStatsHandler sqlStatsHandler = new SQLStatsHandler();
+
+    private SQLManager() {}
+
+    public static SQLManager getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new SQLManager();
+        }
+        return INSTANCE;
+    }
 
     /**
      * This method returns if a user ID can be found inside the table.
@@ -26,7 +37,7 @@ public class SQLHandler {
         boolean registered = false;
         try {
             Connection connection = Main.bot.getSQLConnection();
-            String sqlQuery = "SELECT * FROM playertable WHERE "
+            String sqlQuery = "SELECT * FROM players WHERE "
                     + Constants.USER_ID_COLUMN_LABEL + " = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
@@ -51,7 +62,7 @@ public class SQLHandler {
     public void registerUser(String userID) {
         try {
             Connection connection = Main.bot.getSQLConnection();
-            String sqlQuery = "INSERT INTO playertable ("
+            String sqlQuery = "INSERT INTO players ("
                     + Constants.USER_ID_COLUMN_LABEL + ", "
                     + Constants.MINED_COLUMN_LABEL + ", "
                     + Constants.XP_COLUMN_LABEL + ", "
@@ -97,7 +108,7 @@ public class SQLHandler {
 
             String sqlQuery = "SELECT " + Constants.USER_ID_COLUMN_LABEL + ", " + statQuery + ", " +
                     "RANK() OVER (ORDER BY " + statQuery + " DESC, " + Constants.USER_ID_COLUMN_LABEL + " ASC) AS rank " +
-                    "FROM playertable " +
+                    "FROM players " +
                     "ORDER BY " + statQuery + " DESC, " + Constants.USER_ID_COLUMN_LABEL + " ASC " +
                     "LIMIT 10";
 
@@ -139,7 +150,7 @@ public class SQLHandler {
                     "FROM ( " +
                     "    SELECT " + Constants.USER_ID_COLUMN_LABEL + ", " + statQuery + ", " +
                     "           RANK() OVER (ORDER BY " + statQuery + " DESC, " + Constants.USER_ID_COLUMN_LABEL + " ASC) AS rank " +
-                    "    FROM playertable " +
+                    "    FROM players " +
                     ") AS ranked " +
                     "WHERE ranked." + Constants.USER_ID_COLUMN_LABEL + " = ?";
 

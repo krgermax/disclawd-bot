@@ -1,6 +1,7 @@
 package com.github.krgermax.data;
 
 import com.github.krgermax.data.biomes.Biome;
+import com.github.krgermax.data.mineworld.Mineworld;
 import com.github.krgermax.data.mobs.Mob;
 import com.github.krgermax.data.mobs.enums.MobSubType;
 import com.github.krgermax.data.mobs.enums.MobType;
@@ -20,11 +21,13 @@ import java.util.Set;
 
 public class MobSpawner {
 
+    private final Mineworld mineworld;
     private final List<Mob> mobList;
     private List<Mob> spawnableMobs = new ArrayList<>();
     private final Random RANDOM = new Random();  // TODO: might use a seed
 
-    public MobSpawner(List<Mob> mobList) {
+    public MobSpawner(Mineworld mineworld, List<Mob> mobList) {
+        this.mineworld = mineworld;
         this.mobList = mobList;
         updateSpawner();
     }
@@ -36,7 +39,7 @@ public class MobSpawner {
      * completed to update the spawnable mob list, avoids unnecessary list filtering calls
      */
     public void updateSpawner() {
-        Biome currentBiome = Main.mineworld.getCurrentBiome();
+        Biome currentBiome = mineworld.getCurrentBiome();
         this.spawnableMobs = generateSpawnableMobs(currentBiome);
     }
 
@@ -60,7 +63,6 @@ public class MobSpawner {
         /*
          * TODO:
          *  - Adjust biomes those mob types arent entered anywhere yet
-         *  - Think of allowing multiple spawns or single ones
          *  - The function doesnt need to be called three times, could change that in
          *    combination with other changes
          */
@@ -149,19 +151,5 @@ public class MobSpawner {
      */
     private boolean shouldSpawn(Mob mob) {
         return RANDOM.nextDouble() <= mob.getSpawnChance();
-    }
-
-    /**
-     * Gets a mob from the mob List by a mob ID
-     *
-     * @param id The mob ID we search with
-     * @return The mob matching the mob ID, if not found null is returned
-     */
-    public Mob getMobByID(int id) {
-        for (Mob mob : mobList) {
-            if (mob.getID() == id)
-                return mob;
-        }
-        return null;
     }
 }

@@ -12,7 +12,7 @@ public class InvCommand implements SlashCommand {
         if (!Main.sqlHandler.isUserRegistered(userID)) {
             Main.sqlHandler.registerUser(userID);
         }
-        Main.inventoryHandler.replyWithInventoryFirstEmbedded(event);
+        Main.inventoryManager.replyWithInventoryFirstEmbedded(event);
         Main.LOGGER.info("Executed '" + Constants.INV_COMMAND_ID + "' button");
     }
 }

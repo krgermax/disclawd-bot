@@ -76,7 +76,7 @@ public class Bot {
     public void establishSQLConnection() {
         try {
             Class.forName(Constants.SQL_CLASS_NAME);
-            connection = DriverManager.getConnection("jdbc:mysql://" + BotTokens.JDBC_URL, BotTokens.SQL_USERNAME, "");
+            connection = DriverManager.getConnection("jdbc:mysql://" + BotTokens.JDBC_URL, BotTokens.SQL_USERNAME, BotTokens.SQL_PASSWORD);
 
             if (connection != null && !connection.isClosed())
                 Main.LOGGER.info("Successfully connected to SQL Database");

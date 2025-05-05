@@ -22,7 +22,7 @@ public class BuyButton implements CustomButton {
         } else {
             String componentId = event.getComponentId();
             int itemID = Integer.parseInt(componentId.replace(Constants.BUY_BUTTON_ID, ""));
-            Item item = Main.shopHandler.getItemByID(itemID);
+            Item item = Main.shopManager.getItemByID(itemID);
 
             EmbedBuilder embedBuilder = new EmbedBuilder();
             embedBuilder.setTitle("Couldn't buy item");

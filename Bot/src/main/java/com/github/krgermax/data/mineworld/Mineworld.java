@@ -1,7 +1,9 @@
-package com.github.krgermax.data;
+package com.github.krgermax.data.mineworld;
 
+import com.github.krgermax.data.MobSpawner;
 import com.github.krgermax.data.biomes.Biome;
 import com.github.krgermax.data.items.Item;
+import com.github.krgermax.data.mobs.Mob;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
@@ -17,18 +19,32 @@ import java.util.*;
 import java.util.List;
 
 public class Mineworld {
+
+    /*
+        Mob spawner
+     */
+    private final MobSpawner mobSpawner;
+
+    /*
+        Biome
+     */
     private final List<Biome> biomeList;
     private Biome currentBiome;
+
+    /*
+        Current user map
+     */
     private final Map<String, LocalDateTime> currentUserMap;
     private int currentUserMultiplier;
 
-    public Mineworld(List<Biome> biomeList) {
+    public Mineworld(List<Biome> biomeList, List<Mob> mobList) {
         this.biomeList = biomeList;
-
-        this.currentUserMap = new HashMap<>();
         this.currentBiome = generateBiome();
 
+        this.currentUserMap = new HashMap<>();
         this.currentUserMultiplier = 1;
+
+        this.mobSpawner = new MobSpawner(this, mobList);
     }
 
     /**
@@ -124,6 +140,7 @@ public class Mineworld {
      */
     public void updateBiome(ButtonInteractionEvent event, Item equippedItem) {
         currentBiome.damage(equippedItem);
+        mobSpawner.spawnMob(event.getChannel());
         if (currentBiome.getCurrentHP() <= 0) {
             // Reset the old biome and generate a new one
             currentBiome.reset();
@@ -133,7 +150,7 @@ public class Mineworld {
              * We need to update the mob spawner if a biome is completed and only if it is completed
              * to update the spawnable mob list, avoids unnecessary list filtering calls
              */
-            Main.mobSpawner.updateSpawner();
+            mobSpawner.updateSpawner();
             return;
         }
         updateBiomeMsg(event);
@@ -219,10 +236,6 @@ public class Mineworld {
     }
 
     public Biome getCurrentBiome() {
-        return this.currentBiome;
-    }
-
-    public List<Biome> getBiomeList() {
-        return this.biomeList;
+        return currentBiome;
     }
 }

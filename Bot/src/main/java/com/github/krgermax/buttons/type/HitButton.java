@@ -17,7 +17,7 @@ public class HitButton implements CustomButton {
             String componentId = event.getComponentId();
             int mobID = Integer.parseInt(componentId.replace(Constants.HIT_BUTTON_ID, ""));
 
-            NormalMob spawnedMob = (NormalMob) Main.mobSpawner.getMobByID(mobID);
+            NormalMob spawnedMob = (NormalMob) Main.mineworldManager.getMobByID(mobID);
             if (spawnedMob == null)
                 return;
 

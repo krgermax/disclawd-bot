@@ -1,6 +1,6 @@
 package com.github.krgermax.buttons.type.nav;
 
-import com.github.krgermax.data.inventory.InventoryHandler;
+import com.github.krgermax.data.inventory.InventoryManager;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import com.github.krgermax.buttons.CustomButton;
 import com.github.krgermax.main.Main;
@@ -14,8 +14,8 @@ public class InvBackButton implements CustomButton {
             Main.sqlHandler.registerUser(userID);
             Main.sqlHandler.sqlEmbeddedHandler.replyToNewRegisteredUser(event);
         } else {
-            InventoryHandler inventoryHandler = Main.inventoryHandler;
-            inventoryHandler.replyToNextInvPage(event, true);
+            InventoryManager inventoryManager = Main.inventoryManager;
+            inventoryManager.replyToNextInvPage(event, true);
             Main.LOGGER.info("Executed '"+ Constants.BACK_INV_BUTTON_ID +"' button");
         }
     }

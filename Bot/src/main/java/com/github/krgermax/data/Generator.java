@@ -2,6 +2,7 @@ package com.github.krgermax.data;
 
 import com.github.krgermax.data.biomes.Biome;
 import com.github.krgermax.data.biomes.BiomeType;
+import com.github.krgermax.data.mineworld.Mineworld;
 import com.github.krgermax.main.Main;
 
 import java.math.BigDecimal;
@@ -11,13 +12,21 @@ import java.util.stream.Collectors;
 
 public class Generator {
 
+    private static Generator INSTANCE;
     private final Set<BiomeType> xpBiomeTypes;
 
-    public Generator() {
-        this.xpBiomeTypes = Main.mineworld.getBiomeList().stream()
+    private Generator() {
+        this.xpBiomeTypes = Main.mineworldManager.getBiomes().stream()
                 .filter(Biome::isXpEnabled)
                 .map(Biome::getType)
                 .collect(Collectors.toSet());
+    }
+
+    public static Generator getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new Generator();
+        }
+        return INSTANCE;
     }
 
     /**
@@ -25,8 +34,8 @@ public class Generator {
      *
      * @return XP as double
      */
-    public double generateXP() {
-        BiomeType biomeType = Main.mineworld.getCurrentBiome().getType();
+    public double generateXP(Mineworld mineworld) {
+        BiomeType biomeType = mineworld.getCurrentBiome().getType();
 
         if (!xpBiomeTypes.contains(biomeType))
             return 0d;

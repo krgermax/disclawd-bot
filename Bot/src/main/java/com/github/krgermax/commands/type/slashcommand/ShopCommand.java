@@ -7,7 +7,7 @@ import com.github.krgermax.tokens.Constants;
 public class ShopCommand implements SlashCommand {
     @Override
     public void executeCommand(SlashCommandInteractionEvent event) {
-        Main.shopHandler.replyWithShopFirstEmbedded(event);
+        Main.shopManager.replyWithShopFirstEmbedded(event);
         Main.LOGGER.info("Executed '" + Constants.SHOP_COMMAND_ID + "' command");
     }
 }

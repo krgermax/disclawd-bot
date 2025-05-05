@@ -62,7 +62,7 @@ public class SQLInventoryHandler {
     public void equipItem(String userID, int itemID) {
         try {
             Connection connection = Main.bot.getSQLConnection();
-            String sqlQuery = "UPDATE playertable SET "
+            String sqlQuery = "UPDATE players SET "
                     + Constants.EQUIPPED_ITEM_COLUMN_LABEL + " = ? WHERE "
                     + Constants.USER_ID_COLUMN_LABEL + " = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
@@ -95,7 +95,7 @@ public class SQLInventoryHandler {
         try {
             Connection connection = Main.bot.getSQLConnection();
             String sqlQuery = "SELECT "
-                    + Constants.EQUIPPED_ITEM_COLUMN_LABEL + " FROM playertable WHERE "
+                    + Constants.EQUIPPED_ITEM_COLUMN_LABEL + " FROM players WHERE "
                     + Constants.USER_ID_COLUMN_LABEL + " = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
@@ -103,7 +103,7 @@ public class SQLInventoryHandler {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                itemID = resultSet.getInt("equipedItemID");
+                itemID = resultSet.getInt(Constants.EQUIPPED_ITEM_COLUMN_LABEL);
                 Main.LOGGER.info("Retrieved item ID: " + itemID + ". From user: " + userID);
             }
 
@@ -135,8 +135,8 @@ public class SQLInventoryHandler {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                int itemID = resultSet.getInt("itemID");
-                Item item = Main.shopHandler.getItemByID(itemID);
+                int itemID = resultSet.getInt(Constants.ITEM_ID_COLUMN_LABEL);
+                Item item = Main.shopManager.getItemByID(itemID);
                 itemList.add(item);
             }
 

@@ -24,7 +24,7 @@ public class SQLStatsHandler {
         UserStats userStats = new UserStats();
         try {
             Connection connection = Main.bot.getSQLConnection();
-            String sqlQuery = "SELECT * FROM playertable WHERE "
+            String sqlQuery = "SELECT * FROM players WHERE "
                     + Constants.USER_ID_COLUMN_LABEL + " = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
@@ -66,7 +66,7 @@ public class SQLStatsHandler {
 
         try {
             Connection connection = Main.bot.getSQLConnection();
-            String sqlQuery = "UPDATE playertable SET "
+            String sqlQuery = "UPDATE players SET "
                     + Constants.MOB_KILLS_COLUMN_LABEL + " = ?, "
                     + Constants.GOLD_COLUMN_LABEL + " = ?, "
                     + Constants.XP_COLUMN_LABEL + " = ? WHERE "
@@ -109,7 +109,7 @@ public class SQLStatsHandler {
 
         try {
             Connection connection = Main.bot.getSQLConnection();
-            String sqlQuery = "UPDATE playertable SET "
+            String sqlQuery = "UPDATE players SET "
                     + Constants.MINED_COLUMN_LABEL + " = ?, "
                     + Constants.XP_COLUMN_LABEL + " = ?, "
                     + Constants.GOLD_COLUMN_LABEL + " = ? WHERE "
@@ -147,7 +147,7 @@ public class SQLStatsHandler {
         try {
             Connection connection = Main.bot.getSQLConnection();
             String sqlQuery = "SELECT "
-                    + Constants.XP_COLUMN_LABEL + " FROM playertable WHERE "
+                    + Constants.XP_COLUMN_LABEL + " FROM players WHERE "
                     + Constants.USER_ID_COLUMN_LABEL + " = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
@@ -155,7 +155,7 @@ public class SQLStatsHandler {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                double retrievedXP = resultSet.getDouble("xpCount");
+                double retrievedXP = resultSet.getDouble(Constants.XP_COLUMN_LABEL);
                 // Call to transformDouble() to hopefully fix 'precision issue' where doubles have to
                 // many decimal places
                 xpCount = Main.generator.transformDouble(retrievedXP);
@@ -179,7 +179,7 @@ public class SQLStatsHandler {
         try {
             Connection connection = Main.bot.getSQLConnection();
             String sqlQuery = "SELECT "
-                    + Constants.GOLD_COLUMN_LABEL + " FROM playertable WHERE "
+                    + Constants.GOLD_COLUMN_LABEL + " FROM players WHERE "
                     + Constants.USER_ID_COLUMN_LABEL + " = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
@@ -187,7 +187,7 @@ public class SQLStatsHandler {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                goldCount = resultSet.getInt("goldCount");
+                goldCount = resultSet.getInt(Constants.GOLD_COLUMN_LABEL);
                 Main.LOGGER.info("Retrieved the total gold amount: " + goldCount + ". From user:" + userID);
             }
 
@@ -207,7 +207,7 @@ public class SQLStatsHandler {
         int currentGold = this.getGoldCountFromUser(userID);
         try {
             Connection connection = Main.bot.getSQLConnection();
-            String sqlQuery = "UPDATE playertable SET "
+            String sqlQuery = "UPDATE players SET "
                     + Constants.GOLD_COLUMN_LABEL + " = ? WHERE "
                     + Constants.USER_ID_COLUMN_LABEL + " = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
