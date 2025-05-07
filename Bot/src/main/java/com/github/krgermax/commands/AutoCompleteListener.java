@@ -20,9 +20,9 @@ public class AutoCompleteListener extends ListenerAdapter {
     };
 
     /**
-     * Handles auto complete for slash commands
+     * Handles auto complete interactions for commands
      *
-     * @param event CommandAutoCompleteInteractionEvent
+     * @param event The CommandAutoCompleteInteractionEvent event
      */
     @Override
     public void onCommandAutoCompleteInteraction(CommandAutoCompleteInteractionEvent event) {
@@ -42,6 +42,13 @@ public class AutoCompleteListener extends ListenerAdapter {
         }
     }
 
+    /**
+     * Generates a list of Command.Choice objects based on the provided strings
+     *
+     * @param event   The CommandAutoCompleteInteractionEvent event
+     * @param strings The list of strings to filter
+     * @return A list of Command.Choice objects
+     */
     private List<Command.Choice> generateStringChoiceList(CommandAutoCompleteInteractionEvent event, List<String> strings) {
         String userInput = event.getFocusedOption().getValue().toLowerCase();
         return strings.stream()
@@ -51,6 +58,13 @@ public class AutoCompleteListener extends ListenerAdapter {
                 .toList();
     }
 
+    /**
+     * Generates a list of Command.Choice objects based on the provided Item objects
+     *
+     * @param event       The CommandAutoCompleteInteractionEvent event
+     * @param dataObjects The list of Item objects to filter
+     * @return A list of Command.Choice objects
+     */
     private List<Command.Choice> generateItemChoiceList(CommandAutoCompleteInteractionEvent event, List<Item> dataObjects) {
         List<String> names = dataObjects.stream().map(Item::getName).toList();
         return generateStringChoiceList(event, names);

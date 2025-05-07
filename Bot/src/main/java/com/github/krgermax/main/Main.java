@@ -7,13 +7,13 @@ import com.github.krgermax.data.items.Item;
 import com.github.krgermax.data.mineworld.MineworldManager;
 import com.github.krgermax.data.mobs.Mob;
 import com.github.krgermax.data.shop.ShopManager;
-import com.github.krgermax.parser.exceptions.FailedDataParseException;
-import com.github.krgermax.sql.SQLManager;
-import net.dv8tion.jda.api.OnlineStatus;
 import com.github.krgermax.parser.BiomeParser;
 import com.github.krgermax.parser.ItemParser;
 import com.github.krgermax.parser.MobParser;
+import com.github.krgermax.parser.exceptions.FailedDataParseException;
+import com.github.krgermax.sql.SQLManager;
 import com.github.krgermax.tokens.Constants;
+import net.dv8tion.jda.api.OnlineStatus;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -84,8 +84,9 @@ public class Main {
         scheduledExecutorService.scheduleAtFixedRate(() -> inventoryManager.inventoryCache.cleanUpCache(), 0, Constants.INV_CACHE_PERIOD_MINUTES, TimeUnit.MINUTES);
     }
 
+
     /**
-     * This method schedules the timing for mineworld cache cleanups periodically
+     * This method schedules the timing for mineworld manager cleanups periodically
      */
     private static void scheduleMineworldManagerCleanUp() {
         ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);

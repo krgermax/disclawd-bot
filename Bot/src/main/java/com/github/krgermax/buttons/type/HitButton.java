@@ -1,10 +1,11 @@
 package com.github.krgermax.buttons.type;
 
-import com.github.krgermax.data.mobs.NormalMob;
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import com.github.krgermax.buttons.CustomButton;
+import com.github.krgermax.data.mobs.NormalMob;
 import com.github.krgermax.main.Main;
 import com.github.krgermax.tokens.Constants;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+
 
 public class HitButton implements CustomButton {
     @Override
@@ -21,16 +22,27 @@ public class HitButton implements CustomButton {
             if (spawnedMob == null)
                 return;
 
-            event.getMessage().delete().queue();
+            /*
+                Defer the interaction immediately to acknowledge it within Discord's 3-second timeout window.
+                Execute the rest of the logic only after the message is successfully deleted.
+
+                Placing the XP and gold update logic inside the success callback ensures that:
+                - A user cannot receive rewards multiple times from the same mob.
+                - If the message deletion fails (e.g., due to the button being used more than once),
+                  no stats are updated and the interaction is safely aborted.
+            */
             event.deferEdit().queue();
+            event.getMessage().delete().queue(
+                    success -> {
+                        double userCurrentXP = Main.sqlHandler.sqlStatsHandler.getXPCountFromUser(userID);
+                        Main.sqlHandler.sqlStatsHandler.updateUserStatsAfterKill(userID, spawnedMob.getGoldDrop(), spawnedMob.getXpDrop());
+                        double userUpdatedXP = Main.sqlHandler.sqlStatsHandler.getXPCountFromUser(userID);
 
-            double userCurrentXP = Main.sqlHandler.sqlStatsHandler.getXPCountFromUser(userID);
-            Main.sqlHandler.sqlStatsHandler.updateUserStatsAfterKill(userID, spawnedMob.getGoldDrop(), spawnedMob.getXpDrop());
-            double userUpdatedXP = Main.sqlHandler.sqlStatsHandler.getXPCountFromUser(userID);
-
-            Main.sqlHandler.sqlStatsHandler.replyToUserLevelUp(userCurrentXP, userUpdatedXP, event);
-
-            Main.LOGGER.info("Executed '" + Constants.HIT_BUTTON_ID + "' button");
+                        Main.sqlHandler.sqlStatsHandler.replyToUserLevelUp(userCurrentXP, userUpdatedXP, event);
+                        Main.LOGGER.info("Executed '" + Constants.HIT_BUTTON_ID + "' button");
+                    },
+                    failure -> Main.LOGGER.severe("Did not execute '" + Constants.HIT_BUTTON_ID + "' button. Failed to delete message: " + failure.getMessage())
+            );
         }
     }
 }

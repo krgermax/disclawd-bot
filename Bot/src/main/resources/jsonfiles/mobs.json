@@ -79,7 +79,7 @@
     },
     {
       "id": "8",
-      "name": "Snow golem",
+      "name": "Snow Golem",
       "description": "Appears in snowy places!",
       "mob_type": "NORMAL",
       "mob_sub_type": "SNOW_GOLEM",
@@ -90,7 +90,7 @@
     },
     {
       "id": "9",
-      "name": "Snow golem :)",
+      "name": "Snow Golem :)",
       "description": "Appears in snowy places!",
       "mob_type": "NORMAL",
       "mob_sub_type": "SNOW_GOLEM",

@@ -2,21 +2,24 @@ package com.github.krgermax.data.mineworld;
 
 import com.github.krgermax.data.MobSpawner;
 import com.github.krgermax.data.biomes.Biome;
+import com.github.krgermax.data.biomes.BiomeType;
 import com.github.krgermax.data.items.Item;
 import com.github.krgermax.data.mobs.Mob;
+import com.github.krgermax.main.Main;
+import com.github.krgermax.tokens.Constants;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.utils.FileUpload;
-import com.github.krgermax.main.Main;
-import com.github.krgermax.tokens.Constants;
 
 import java.awt.*;
 import java.io.File;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class Mineworld {
 
@@ -31,6 +34,7 @@ public class Mineworld {
      */
     private final List<Biome> biomeList;
     private Biome currentBiome;
+    private BiomeType previousBiomeType;
 
     /*
         Current user map
@@ -43,6 +47,7 @@ public class Mineworld {
 
         this.biomeList = biomeList;
         this.currentBiome = generateBiome();
+        this.previousBiomeType = BiomeType.VOID;
 
         this.currentUserMap = new HashMap<>();
         this.currentUserMultiplier = 1;
@@ -61,8 +66,10 @@ public class Mineworld {
 
         Biome returnBiome = biomeList.get(selector);
         Main.LOGGER.info("The current biome is: " + returnBiome.getType());
-
-        return returnBiome;
+        /*
+            The biome is copied to avoid shared mutable state between Mineworld instances
+         */
+        return returnBiome.copy();
     }
 
     private EmbedBuilder buildBiomeEmbed() {
@@ -91,13 +98,20 @@ public class Mineworld {
      * @param event Event
      */
     public void replyWithBiomeEmbedded(SlashCommandInteractionEvent event) {
-        File imgFile = getBiomeImageFile();
-        if (imgFile == null) return;
+        if (currentBiome.getType().equals(previousBiomeType)) {
+            event.replyEmbeds(buildBiomeEmbed().build())
+                    .addActionRow(Button.primary(Constants.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
+                    .queue();
+        } else {
+            File imgFile = getBiomeImageFile();
+            if (imgFile == null) return;
 
-        event.replyEmbeds(buildBiomeEmbed().build())
-                .addFiles(FileUpload.fromData(imgFile, "ore.png"))
-                .addActionRow(Button.primary(Constants.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
-                .queue();
+            event.replyEmbeds(buildBiomeEmbed().build())
+                    .addFiles(FileUpload.fromData(imgFile, "ore.png"))
+                    .addActionRow(Button.primary(Constants.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
+                    .queue();
+            previousBiomeType = currentBiome.getType();
+        }
     }
 
     /**
@@ -108,13 +122,20 @@ public class Mineworld {
      * @param event Event
      */
     public void replyWithBiomeEmbedded(ButtonInteractionEvent event) {
-        File imgFile = getBiomeImageFile();
-        if (imgFile == null) return;
+        if (currentBiome.getType().equals(previousBiomeType)) {
+            event.replyEmbeds(buildBiomeEmbed().build())
+                    .addActionRow(Button.primary(Constants.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
+                    .queue();
+        } else {
+            File imgFile = getBiomeImageFile();
+            if (imgFile == null) return;
 
-        event.replyEmbeds(buildBiomeEmbed().build())
-                .addFiles(FileUpload.fromData(imgFile, "ore.png"))
-                .addActionRow(Button.primary(Constants.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
-                .queue();
+            event.replyEmbeds(buildBiomeEmbed().build())
+                    .addFiles(FileUpload.fromData(imgFile, "ore.png"))
+                    .addActionRow(Button.primary(Constants.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
+                    .queue();
+            previousBiomeType = currentBiome.getType();
+        }
     }
 
     /**
@@ -123,14 +144,20 @@ public class Mineworld {
      * @param event Event
      */
     private void updateBiomeMsg(ButtonInteractionEvent event) {
-        File imgFile = getBiomeImageFile();
-        if (imgFile == null) return;
+        if (currentBiome.getType().equals(previousBiomeType)) {
+            event.editMessageEmbeds(buildBiomeEmbed().build())
+                    .setActionRow(Button.primary(Constants.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
+                    .queue();
+        } else {
+            File imgFile = getBiomeImageFile();
+            if (imgFile == null) return;
 
-        event.editMessageEmbeds(buildBiomeEmbed().build())
-                .setFiles(FileUpload.fromData(imgFile, "ore.png"))
-                .setActionRow(Button.primary(Constants.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
-                .queue();
-        Main.LOGGER.info("Updated biome state.");
+            event.editMessageEmbeds(buildBiomeEmbed().build())
+                    .setFiles(FileUpload.fromData(imgFile, "ore.png"))
+                    .setActionRow(Button.primary(Constants.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
+                    .queue();
+            previousBiomeType = currentBiome.getType();
+        }
     }
 
     /**
@@ -146,7 +173,7 @@ public class Mineworld {
         mobSpawner.spawnMob(event.getChannel());
         if (currentBiome.getCurrentHP() <= 0) {
             // Reset the old biome and generate a new one
-            currentBiome.reset();
+            previousBiomeType = BiomeType.VOID;
             currentBiome = generateBiome();
             updateBiomeOnCompletion(event);
             /*

@@ -59,8 +59,8 @@
     },
     {
       "name": "The Nether",
-      "type" : "NETHER_QUARZ",
-      "fileName": "nether_quarz.png",
+      "type" : "NETHER_QUARTZ",
+      "fileName": "nether_quartz.png",
       "hp" : "15.0",
       "xpEnabled": true,
       "mobs": [

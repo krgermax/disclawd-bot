@@ -8,6 +8,7 @@ public enum BiomeType {
     SWAMP,
     END,
     NETHERRACK,
-    NETHER_QUARZ,
-    NETHER_GOLD
+    NETHER_QUARTZ,
+    NETHER_GOLD,
+    VOID
 }

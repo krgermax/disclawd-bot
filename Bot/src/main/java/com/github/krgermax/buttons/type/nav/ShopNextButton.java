@@ -8,13 +8,7 @@ import com.github.krgermax.tokens.Constants;
 public class ShopNextButton implements CustomButton {
     @Override
     public void executeButton(ButtonInteractionEvent event) {
-        String userID = event.getUser().getId();
-        if (!Main.sqlHandler.isUserRegistered(userID)) {
-            Main.sqlHandler.registerUser(userID);
-            Main.sqlHandler.sqlEmbeddedHandler.replyToNewRegisteredUser(event);
-        } else {
-            Main.shopManager.replyToNextShopPage(event, false);
-            Main.LOGGER.info("Executed '"+ Constants.NEXT_SHOP_BUTTON_ID +"' button");
-        }
+        Main.shopManager.replyToNextShopPage(event, false);
+        Main.LOGGER.info("Executed '"+ Constants.NEXT_SHOP_BUTTON_ID +"' button");
     }
 }

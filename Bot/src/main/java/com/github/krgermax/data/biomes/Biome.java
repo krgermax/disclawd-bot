@@ -1,8 +1,8 @@
 package com.github.krgermax.data.biomes;
 
 import com.github.krgermax.data.items.Item;
-import com.github.krgermax.data.items.enums.ItemType;
 import com.github.krgermax.data.items.WeaponItem;
+import com.github.krgermax.data.items.enums.ItemType;
 import com.github.krgermax.data.mobs.enums.MobSubType;
 import com.github.krgermax.main.Main;
 import com.github.krgermax.tokens.Constants;
@@ -84,7 +84,7 @@ public class Biome {
         if (equippedItem != null && equippedItem.getItemType().equals(ItemType.WEAPON)) {
             WeaponItem weaponItem = (WeaponItem) equippedItem;
             dmgMult = weaponItem.getDmgMultiplier();
-            Main.LOGGER.info(String.valueOf(dmgMult));
+            Main.LOGGER.info("Damage: " + dmgMult);
         }
         //seems to be fixed with rounding the HP value and not transforming it to the form X.X before
         double totalDamage = Constants.BASE_DAMAGE_MULTIPLIER * dmgMult;
@@ -97,10 +97,18 @@ public class Biome {
     }
 
     /**
-     * Instead of destroying a biome object, one can choose to reset its HP
+     * Creates a copy of the current biome object
+     *
+     * @return A new instance of the Biome object
      */
-    public void reset() {
-        currentHP = biomeHP;
-        adjustableFullHP = biomeHP;
+    public Biome copy() {
+        return new Biome(
+                name,
+                type,
+                biomeHP,
+                imgPath,
+                xpEnabled,
+                spawnableMobSubTypes
+        );
     }
 }

@@ -76,6 +76,10 @@ public final class Constants {
 
     public static final String ITEM_COMMAND_OPTION_ID = "name";
     public static final String RANK_COMMAND_OPTION_ID = "category";
+
+    /*
+     * Command option values
+     */
     public static final String XP_OPTION_ID = "XP";
     public static final String GOLD_OPTION_ID = "Gold";
     public static final String KILLS_OPTION_ID = "Kills";
@@ -130,7 +134,7 @@ public final class Constants {
     public static final long INV_CACHE_EXPIRY_MINUTES = 5;
     public static final int INV_CACHE_PERIOD_MINUTES = 2;
     public static final long MINE_CACHE_EXPIRY_MINUTES = 120;
-    public static final int MINE_CACHE_PERIOD_MINUTES = 60;
+    public static final int MINE_CACHE_PERIOD_MINUTES = 2;
 
     /*
      * Help command description
