@@ -2,7 +2,6 @@ package com.github.krgermax.commands;
 
 import com.github.krgermax.data.items.Item;
 import com.github.krgermax.main.Main;
-import com.github.krgermax.tokens.Constants;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.Command;
@@ -12,11 +11,18 @@ import java.util.stream.Stream;
 
 public class AutoCompleteListener extends ListenerAdapter {
 
+    /*
+     * Command option values
+     */
+    public static final String MINED_OPTION_ID = "Mined";
+    public static final String KILLS_OPTION_ID = "Kills";
+    public static final String GOLD_OPTION_ID = "Gold";
+    public static final String XP_OPTION_ID = "XP";
     private final String[] rankOptions = new String[]{
-            Constants.MINED_OPTION_ID,
-            Constants.XP_OPTION_ID,
-            Constants.GOLD_OPTION_ID,
-            Constants.KILLS_OPTION_ID,
+            MINED_OPTION_ID,
+            XP_OPTION_ID,
+            GOLD_OPTION_ID,
+            KILLS_OPTION_ID,
     };
 
     /**
@@ -29,14 +35,14 @@ public class AutoCompleteListener extends ListenerAdapter {
         /*
             Handles auto complete for the '/rank' command
          */
-        if (event.getName().equals(Constants.RANK_COMMAND_ID) && event.getFocusedOption().getName().equals(Constants.RANK_COMMAND_OPTION_ID)) {
+        if (event.getName().equals(CommandManager.RANK_COMMAND_ID) && event.getFocusedOption().getName().equals(CommandManager.RANK_COMMAND_OPTION_ID)) {
             List<Command.Choice> options = generateStringChoiceList(event, Stream.of(rankOptions).toList());
             event.replyChoices(options).queue();
         }
         /*
             Handles auto complete for the '/item' command
          */
-        if (event.getName().equals(Constants.ITEM_COMMAND_ID) && event.getFocusedOption().getName().equals(Constants.ITEM_COMMAND_OPTION_ID)) {
+        if (event.getName().equals(CommandManager.ITEM_COMMAND_ID) && event.getFocusedOption().getName().equals(CommandManager.ITEM_COMMAND_OPTION_ID)) {
             List<Command.Choice> options = generateItemChoiceList(event, Main.shopManager.getItemList());
             event.replyChoices(options).queue();
         }

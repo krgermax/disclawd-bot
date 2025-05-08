@@ -2,6 +2,7 @@ package com.github.krgermax.main;
 
 import com.github.krgermax.data.Generator;
 import com.github.krgermax.data.biomes.Biome;
+import com.github.krgermax.data.inventory.InventoryCache;
 import com.github.krgermax.data.inventory.InventoryManager;
 import com.github.krgermax.data.items.Item;
 import com.github.krgermax.data.mineworld.MineworldManager;
@@ -33,7 +34,6 @@ public class Main {
     public static SQLManager sqlHandler;
 
     public static MineworldManager mineworldManager;
-
     public static InventoryManager inventoryManager;
     public static ShopManager shopManager;
 
@@ -81,7 +81,7 @@ public class Main {
      */
     private static void scheduleInventoryCacheCleanUp() {
         ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
-        scheduledExecutorService.scheduleAtFixedRate(() -> inventoryManager.inventoryCache.cleanUpCache(), 0, Constants.INV_CACHE_PERIOD_MINUTES, TimeUnit.MINUTES);
+        scheduledExecutorService.scheduleAtFixedRate(() -> inventoryManager.inventoryCache.cleanUpCache(), 0, InventoryCache.INV_CACHE_PERIOD_MINUTES, TimeUnit.MINUTES);
     }
 
 
@@ -90,7 +90,7 @@ public class Main {
      */
     private static void scheduleMineworldManagerCleanUp() {
         ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
-        scheduledExecutorService.scheduleAtFixedRate(() -> mineworldManager.cleanupCache(), 0, Constants.MINE_CACHE_PERIOD_MINUTES, TimeUnit.MINUTES);
+        scheduledExecutorService.scheduleAtFixedRate(() -> mineworldManager.cleanupCache(), 0, MineworldManager.MINE_CACHE_PERIOD_MINUTES, TimeUnit.MINUTES);
     }
 
     /**

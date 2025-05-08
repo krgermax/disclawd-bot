@@ -1,5 +1,6 @@
 package com.github.krgermax.data.inventory;
 
+import com.github.krgermax.buttons.ButtonManager;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
@@ -15,9 +16,9 @@ public class InventoryManager {
 
     private static InventoryManager INSTANCE;
     public final InventoryCache inventoryCache = new InventoryCache();
-    private Button nextButton = Button.secondary(Constants.NEXT_INV_BUTTON_ID, Constants.NEXT_BUTTON_EMOJI);
-    private final Button homeButton = Button.secondary(Constants.HOME_INV_BUTTON_ID, Constants.HOME_BUTTON_EMOJI);
-    private Button backButton = Button.secondary(Constants.BACK_INV_BUTTON_ID, Constants.BACK_BUTTON_EMOJI);
+    private Button nextButton = Button.secondary(ButtonManager.NEXT_INV_BUTTON_ID, Constants.NEXT_BUTTON_EMOJI);
+    private final Button homeButton = Button.secondary(ButtonManager.HOME_INV_BUTTON_ID, Constants.HOME_BUTTON_EMOJI);
+    private Button backButton = Button.secondary(ButtonManager.BACK_INV_BUTTON_ID, Constants.BACK_BUTTON_EMOJI);
 
     private InventoryManager(){}
 

@@ -1,5 +1,7 @@
 package com.github.krgermax.commands.type.slashcommand;
 
+import com.github.krgermax.buttons.ButtonManager;
+import com.github.krgermax.commands.CommandManager;
 import com.github.krgermax.data.inventory.UserStats;
 import com.github.krgermax.data.items.Item;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -7,7 +9,6 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.utils.FileUpload;
 import com.github.krgermax.main.Main;
-import com.github.krgermax.tokens.Constants;
 
 import java.awt.*;
 import java.io.File;
@@ -43,16 +44,16 @@ public class ItemCommand implements SlashCommand {
                     .setEphemeral(true)
                     .queue();
 
-            Main.LOGGER.info("Executed '" + Constants.ITEM_COMMAND_ID + "' command");
+            Main.LOGGER.info("Executed '" + CommandManager.ITEM_COMMAND_ID + "' command");
         }
     }
 
     private String getSearchTerm(SlashCommandInteractionEvent event) {
-        return Objects.requireNonNull(event.getOption(Constants.ITEM_COMMAND_OPTION_ID)).getAsString();
+        return Objects.requireNonNull(event.getOption(CommandManager.ITEM_COMMAND_OPTION_ID)).getAsString();
     }
 
     private Button createBuyButton(Item foundItem, int userLvl, int userGold, String userID) {
-        Button buyButton = Button.success(Constants.BUY_BUTTON_ID + foundItem.getID(), "Buy");
+        Button buyButton = Button.success(ButtonManager.BUY_BUTTON_ID + foundItem.getID(), "Buy");
         boolean isItemInUserInv = Main.sqlHandler.sqlInventoryHandler.isItemInUserInventory(userID, foundItem.getID());
         if (isItemInUserInv || userLvl < foundItem.getReqLvl() || userGold < foundItem.getPrice()) {
             buyButton = buyButton.asDisabled();
@@ -61,7 +62,7 @@ public class ItemCommand implements SlashCommand {
     }
 
     private Button createEquipButton(Item foundItem, String userID) {
-        Button equipButton = Button.success(Constants.EQUIP_BUTTON_ID + foundItem.getID(), "Equip");
+        Button equipButton = Button.success(ButtonManager.EQUIP_BUTTON_ID + foundItem.getID(), "Equip");
         boolean isItemInUserInv = Main.sqlHandler.sqlInventoryHandler.isItemInUserInventory(userID, foundItem.getID());
         if (!isItemInUserInv) {
             equipButton = equipButton.asDisabled();

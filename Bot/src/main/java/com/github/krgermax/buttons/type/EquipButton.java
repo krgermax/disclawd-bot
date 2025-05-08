@@ -1,11 +1,11 @@
 package com.github.krgermax.buttons.type;
 
+import com.github.krgermax.buttons.ButtonManager;
 import com.github.krgermax.data.items.Item;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import com.github.krgermax.buttons.CustomButton;
 import com.github.krgermax.main.Main;
-import com.github.krgermax.tokens.Constants;
 
 import java.awt.*;
 
@@ -18,7 +18,7 @@ public class EquipButton implements CustomButton {
             Main.sqlHandler.sqlEmbeddedHandler.replyToNewRegisteredUser(event);
         } else {
             String componentId = event.getComponentId();
-            int itemID = Integer.parseInt(componentId.replace(Constants.EQUIP_BUTTON_ID, ""));
+            int itemID = Integer.parseInt(componentId.replace(ButtonManager.EQUIP_BUTTON_ID, ""));
             Item item = Main.shopManager.getItemByID(itemID);
 
             Main.sqlHandler.sqlInventoryHandler.equipItem(userID, item.getID());
@@ -28,7 +28,7 @@ public class EquipButton implements CustomButton {
             embedBuilder.setDescription("You're now wielding **" + item.getEmoji() + item.getName() + item.getEmoji() + "**!");
 
             event.replyEmbeds(embedBuilder.build()).setEphemeral(true).queue();
-            Main.LOGGER.info("Executed '" + Constants.EQUIP_BUTTON_ID + "' button");
+            Main.LOGGER.info("Executed '" + ButtonManager.EQUIP_BUTTON_ID + "' button");
         }
     }
 }

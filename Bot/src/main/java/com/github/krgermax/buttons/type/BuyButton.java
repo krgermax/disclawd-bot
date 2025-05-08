@@ -1,5 +1,6 @@
 package com.github.krgermax.buttons.type;
 
+import com.github.krgermax.buttons.ButtonManager;
 import com.github.krgermax.data.items.Item;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
@@ -8,7 +9,6 @@ import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import com.github.krgermax.buttons.CustomButton;
 import com.github.krgermax.main.Main;
-import com.github.krgermax.tokens.Constants;
 
 import java.awt.*;
 
@@ -21,7 +21,7 @@ public class BuyButton implements CustomButton {
             Main.sqlHandler.sqlEmbeddedHandler.replyToNewRegisteredUser(event);
         } else {
             String componentId = event.getComponentId();
-            int itemID = Integer.parseInt(componentId.replace(Constants.BUY_BUTTON_ID, ""));
+            int itemID = Integer.parseInt(componentId.replace(ButtonManager.BUY_BUTTON_ID, ""));
             Item item = Main.shopManager.getItemByID(itemID);
 
             EmbedBuilder embedBuilder = new EmbedBuilder();
@@ -42,13 +42,13 @@ public class BuyButton implements CustomButton {
 
             event.editComponents(
                     ActionRow.of(
-                            Button.success(Constants.BUY_BUTTON_ID, "Buy").asDisabled(),
-                            Button.success(Constants.EQUIP_BUTTON_ID + itemID, "Equip").asEnabled()
+                            Button.success(ButtonManager.BUY_BUTTON_ID, "Buy").asDisabled(),
+                            Button.success(ButtonManager.EQUIP_BUTTON_ID + itemID, "Equip").asEnabled()
                     )
             ).queue();
             InteractionHook hook = event.getHook();
             hook.sendMessageEmbeds(embedBuilder.build()).setEphemeral(true).queue();
-            Main.LOGGER.info("Executed '" + Constants.BUY_BUTTON_ID + "' button");
+            Main.LOGGER.info("Executed '" + ButtonManager.BUY_BUTTON_ID + "' button");
         }
     }
 }

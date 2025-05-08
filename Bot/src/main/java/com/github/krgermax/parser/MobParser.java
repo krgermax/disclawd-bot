@@ -29,6 +29,18 @@ public class MobParser {
     private  final  Factory factory = new Factory();
     private final List<Integer> idList = new ArrayList<>();
 
+    /*
+     * THRESHOLDS for mob params
+     */
+    public static final double MOB_SPAWN_CHANCE_LOWER_B = 0;
+    public static final double MOB_SPAWN_CHANCE_UPPER_B = 1;
+    public static final double XP_DROP_AMOUNT_LOWER_B = 1;
+    public static final double GOLD_DROP_AMOUNT_LOWER_B = 1;
+
+    public static final String MOB_IMAGE_BASE_PATH = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "images" + File.separator + "mobs";
+    public static final String MOBS_JSON_FILEPATH = File.separator + "mobs.json";
+    public static final String MOBS_JSON_MOBS = "mobs";
+
     /**
      * Wrapper function to parse the Mobs out of a JSON file
      *
@@ -58,10 +70,10 @@ public class MobParser {
 
         List<Mob> mobs = new ArrayList<>();
 
-        try(FileReader fileReader = new FileReader(Constants.JSON_BASE_PATH + Constants.MOBS_JSON_FILEPATH)) {
+        try(FileReader fileReader = new FileReader(Constants.JSON_BASE_PATH + MOBS_JSON_FILEPATH)) {
 
             JSONObject obj = new JSONObject(new JSONTokener(fileReader));
-            JSONArray arr = obj.getJSONArray(Constants.MOBS_JSON_MOBS);
+            JSONArray arr = obj.getJSONArray(MOBS_JSON_MOBS);
 
             for (Object o : arr) {
 
@@ -74,7 +86,7 @@ public class MobParser {
                 MobType mobType = MobType.valueOf(jsonItem.getString("mob_type"));
                 MobSubType mobSubType = MobSubType.valueOf(jsonItem.getString("mob_sub_type"));
                 String fileName = jsonItem.getString("fileName");
-                String imgPath = Constants.MOB_IMAGE_BASE_PATH + File.separator + fileName;
+                String imgPath = MOB_IMAGE_BASE_PATH + File.separator + fileName;
                 double spawnChance = jsonItem.getDouble("spawn_chance");
 
                 if (mobType.equals(MobType.NORMAL)) {
@@ -193,8 +205,8 @@ public class MobParser {
     private boolean isValidMob(Mob mob) {
         int uniqueID = mob.getID();
         if (uniqueID < 0
-                || mob.getSpawnChance() < Constants.MOB_SPAWN_CHANCE_LOWER_B
-                || mob.getSpawnChance() > Constants.MOB_SPAWN_CHANCE_UPPER_B
+                || mob.getSpawnChance() < MOB_SPAWN_CHANCE_LOWER_B
+                || mob.getSpawnChance() > MOB_SPAWN_CHANCE_UPPER_B
                 || checkIsIDUnique(uniqueID)) {
             return false;
         }
@@ -204,14 +216,14 @@ public class MobParser {
             NormalMob normalMob = (NormalMob) mob;
             double xpDrop = normalMob.getXpDrop();
             double goldDrop = normalMob.getGoldDrop();
-            return xpDrop >= Constants.XP_DROP_AMOUNT_LOWER_B || goldDrop >= Constants.GOLD_DROP_AMOUNT_LOWER_B;
+            return xpDrop >= XP_DROP_AMOUNT_LOWER_B || goldDrop >= GOLD_DROP_AMOUNT_LOWER_B;
 
         } else if (mob.getMobType().equals(MobType.BOSS)) {
             BossMob bossMob = (BossMob) mob;
             double xpDrop = bossMob.getXpDrop();
             double goldDrop = bossMob.getGoldDrop();
             double health = bossMob.getHealth();
-            return health > 0 || xpDrop >= Constants.XP_DROP_AMOUNT_LOWER_B || goldDrop >= Constants.GOLD_DROP_AMOUNT_LOWER_B;
+            return health > 0 || xpDrop >= XP_DROP_AMOUNT_LOWER_B || goldDrop >= GOLD_DROP_AMOUNT_LOWER_B;
         }
 
         File imageFile = new File(mob.getImgPath());

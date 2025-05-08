@@ -11,7 +11,6 @@ import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import com.github.krgermax.tokens.BotTokens;
-import com.github.krgermax.tokens.Constants;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -26,6 +25,8 @@ public class Bot {
     private static Bot INSTANCE;
     private final JDA jda;
     private Connection connection;
+    public static final String PROPERTIES_FILE_NAME = "config.properties";
+    public static final String SQL_CLASS_NAME = "com.mysql.cj.jdbc.Driver";
 
     private Bot() {
         Properties botProperties = loadProperties();
@@ -54,7 +55,7 @@ public class Bot {
     }
 
     /**
-     * Creates a properties object using the bot.properties file
+     * Creates a properties object using the config.properties file
      *
      * @return Properties object
      */
@@ -63,7 +64,7 @@ public class Bot {
         try {
             String rootPath = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("")).getPath();
 
-            String configPath = rootPath + Constants.PROPERTIES_FILE_NAME;
+            String configPath = rootPath + PROPERTIES_FILE_NAME;
             botProps.load(new FileInputStream(configPath));
 
         } catch (NullPointerException | IOException ex) {
@@ -77,7 +78,7 @@ public class Bot {
      */
     public void establishSQLConnection() {
         try {
-            Class.forName(Constants.SQL_CLASS_NAME);
+            Class.forName(SQL_CLASS_NAME);
             connection = DriverManager.getConnection("jdbc:mysql://" + BotTokens.JDBC_URL, BotTokens.SQL_USERNAME, BotTokens.SQL_PASSWORD);
 
             if (connection != null && !connection.isClosed())
@@ -113,28 +114,28 @@ public class Bot {
     }
 
     private void upsertCommands() {
-        jda.upsertCommand(Constants.HELP_COMMAND_ID, "How does this work here?")
+        jda.upsertCommand(CommandManager.HELP_COMMAND_ID, "How does this work here?")
                 .queue();
-        jda.upsertCommand(Constants.BIOME_COMMAND_ID, "What do I have to mine?")
+        jda.upsertCommand(CommandManager.BIOME_COMMAND_ID, "What do I have to mine?")
                 .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.ADMINISTRATOR))
                 .queue();
-        jda.upsertCommand(Constants.INV_COMMAND_ID, "Show me my stuff!")
+        jda.upsertCommand(CommandManager.INV_COMMAND_ID, "Show me my stuff!")
                 .queue();
-        jda.upsertCommand(Constants.SHOP_COMMAND_ID, "List me everything you have")
+        jda.upsertCommand(CommandManager.SHOP_COMMAND_ID, "List me everything you have")
                 .queue();
-        jda.upsertCommand(Constants.ITEM_COMMAND_ID, "This one looks interesting")
+        jda.upsertCommand(CommandManager.ITEM_COMMAND_ID, "This one looks interesting")
                 .addOption(
                         OptionType.STRING,
-                        Constants.ITEM_COMMAND_OPTION_ID,
+                        CommandManager.ITEM_COMMAND_OPTION_ID,
                         "Yes exactly this one!",
                         true,
                         true
                 )
                 .queue();
-        jda.upsertCommand(Constants.RANK_COMMAND_ID, "Am I on the top?!")
+        jda.upsertCommand(CommandManager.RANK_COMMAND_ID, "Am I on the top?!")
                 .addOption(
                         OptionType.STRING,
-                        Constants.RANK_COMMAND_OPTION_ID,
+                        CommandManager.RANK_COMMAND_OPTION_ID,
                         "Filter",
                         true,
                         true

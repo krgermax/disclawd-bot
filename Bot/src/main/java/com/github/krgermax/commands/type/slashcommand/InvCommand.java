@@ -1,8 +1,8 @@
 package com.github.krgermax.commands.type.slashcommand;
 
+import com.github.krgermax.commands.CommandManager;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import com.github.krgermax.main.Main;
-import com.github.krgermax.tokens.Constants;
 
 public class InvCommand implements SlashCommand {
 
@@ -13,6 +13,6 @@ public class InvCommand implements SlashCommand {
             Main.sqlHandler.registerUser(userID);
         }
         Main.inventoryManager.replyWithInventoryFirstEmbedded(event);
-        Main.LOGGER.info("Executed '" + Constants.INV_COMMAND_ID + "' button");
+        Main.LOGGER.info("Executed '" + CommandManager.INV_COMMAND_ID + "' button");
     }
 }

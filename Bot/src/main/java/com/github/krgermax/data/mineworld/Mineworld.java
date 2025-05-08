@@ -1,5 +1,6 @@
 package com.github.krgermax.data.mineworld;
 
+import com.github.krgermax.buttons.ButtonManager;
 import com.github.krgermax.data.MobSpawner;
 import com.github.krgermax.data.biomes.Biome;
 import com.github.krgermax.data.biomes.BiomeType;
@@ -41,6 +42,8 @@ public class Mineworld {
      */
     private final Map<String, LocalDateTime> currentUserMap;
     private int currentUserMultiplier;
+    private final int MAX_MINE_NOT_INTERACTED_MINUTES = 2;
+
 
     public Mineworld(List<Biome> biomeList, List<Mob> mobList) {
         this.timestamp = LocalDateTime.now();
@@ -76,7 +79,7 @@ public class Mineworld {
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle(currentBiome.getName())
                 .setColor(Color.BLACK)
-                .setDescription("Active miners: " + currentUserMap.size() + " (Last " + Constants.MAX_MINE_NOT_INTERACTED_MINUTES + " minutes)")
+                .setDescription("Active miners: " + currentUserMap.size() + " (Last " + MAX_MINE_NOT_INTERACTED_MINUTES + " minutes)")
                 .addField("Biome HP", currentBiome.getCurrentHP() + "/" + currentBiome.getAdjustableFullHP(), false)
                 .setImage("attachment://ore.png");
         return embedBuilder;
@@ -100,7 +103,7 @@ public class Mineworld {
     public void replyWithBiomeEmbedded(SlashCommandInteractionEvent event) {
         if (currentBiome.getType().equals(previousBiomeType)) {
             event.replyEmbeds(buildBiomeEmbed().build())
-                    .addActionRow(Button.primary(Constants.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
+                    .addActionRow(Button.primary(ButtonManager.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
                     .queue();
         } else {
             File imgFile = getBiomeImageFile();
@@ -108,7 +111,7 @@ public class Mineworld {
 
             event.replyEmbeds(buildBiomeEmbed().build())
                     .addFiles(FileUpload.fromData(imgFile, "ore.png"))
-                    .addActionRow(Button.primary(Constants.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
+                    .addActionRow(Button.primary(ButtonManager.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
                     .queue();
             previousBiomeType = currentBiome.getType();
         }
@@ -124,7 +127,7 @@ public class Mineworld {
     public void replyWithBiomeEmbedded(ButtonInteractionEvent event) {
         if (currentBiome.getType().equals(previousBiomeType)) {
             event.replyEmbeds(buildBiomeEmbed().build())
-                    .addActionRow(Button.primary(Constants.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
+                    .addActionRow(Button.primary(ButtonManager.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
                     .queue();
         } else {
             File imgFile = getBiomeImageFile();
@@ -132,7 +135,7 @@ public class Mineworld {
 
             event.replyEmbeds(buildBiomeEmbed().build())
                     .addFiles(FileUpload.fromData(imgFile, "ore.png"))
-                    .addActionRow(Button.primary(Constants.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
+                    .addActionRow(Button.primary(ButtonManager.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
                     .queue();
             previousBiomeType = currentBiome.getType();
         }
@@ -146,7 +149,7 @@ public class Mineworld {
     private void updateBiomeMsg(ButtonInteractionEvent event) {
         if (currentBiome.getType().equals(previousBiomeType)) {
             event.editMessageEmbeds(buildBiomeEmbed().build())
-                    .setActionRow(Button.primary(Constants.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
+                    .setActionRow(Button.primary(ButtonManager.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
                     .queue();
         } else {
             File imgFile = getBiomeImageFile();
@@ -154,7 +157,7 @@ public class Mineworld {
 
             event.editMessageEmbeds(buildBiomeEmbed().build())
                     .setFiles(FileUpload.fromData(imgFile, "ore.png"))
-                    .setActionRow(Button.primary(Constants.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
+                    .setActionRow(Button.primary(ButtonManager.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
                     .queue();
             previousBiomeType = currentBiome.getType();
         }
@@ -228,7 +231,7 @@ public class Mineworld {
             Map.Entry<String, LocalDateTime> entry = iterator.next();
             LocalDateTime lastInteractionTime = entry.getValue();
 
-            if (lastInteractionTime.isBefore(LocalDateTime.now().minusMinutes(Constants.MAX_MINE_NOT_INTERACTED_MINUTES))) {
+            if (lastInteractionTime.isBefore(LocalDateTime.now().minusMinutes(MAX_MINE_NOT_INTERACTED_MINUTES))) {
                 iterator.remove();
             }
         }

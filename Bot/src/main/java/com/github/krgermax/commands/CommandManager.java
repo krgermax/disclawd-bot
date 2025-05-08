@@ -5,7 +5,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import com.github.krgermax.main.Main;
-import com.github.krgermax.tokens.Constants;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -15,15 +14,31 @@ public class CommandManager extends ListenerAdapter {
 
     private final HashMap<String, SlashCommand> commands;
 
+    /*
+     * Command Id's
+     */
+    public static final String BIOME_COMMAND_ID = "biome";
+    public static final String INV_COMMAND_ID = "inventory";
+    public static final String SHOP_COMMAND_ID = "shop";
+    public static final String ITEM_COMMAND_ID = "item";
+    public static final String HELP_COMMAND_ID = "help";
+    public static final String RANK_COMMAND_ID = "rank";
+
+    /*
+     * Command option Id's
+     */
+    public static final String ITEM_COMMAND_OPTION_ID = "name";
+    public static final String RANK_COMMAND_OPTION_ID = "category";
+
     public CommandManager() {
         this.commands = new HashMap<>();
 
-        this.commands.put(Constants.HELP_COMMAND_ID, new HelpCommand());
-        this.commands.put(Constants.BIOME_COMMAND_ID, new BiomeCommand());
-        this.commands.put(Constants.SHOP_COMMAND_ID, new ShopCommand());
-        this.commands.put(Constants.ITEM_COMMAND_ID, new ItemCommand());
-        this.commands.put(Constants.INV_COMMAND_ID, new InvCommand());
-        this.commands.put(Constants.RANK_COMMAND_ID, new RankCommand());
+        this.commands.put(HELP_COMMAND_ID, new HelpCommand());
+        this.commands.put(BIOME_COMMAND_ID, new BiomeCommand());
+        this.commands.put(SHOP_COMMAND_ID, new ShopCommand());
+        this.commands.put(ITEM_COMMAND_ID, new ItemCommand());
+        this.commands.put(INV_COMMAND_ID, new InvCommand());
+        this.commands.put(RANK_COMMAND_ID, new RankCommand());
     }
 
     /**

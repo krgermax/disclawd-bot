@@ -1,5 +1,6 @@
 package com.github.krgermax.buttons.type;
 
+import com.github.krgermax.buttons.ButtonManager;
 import com.github.krgermax.data.items.Item;
 import com.github.krgermax.data.items.UtilItem;
 import com.github.krgermax.data.items.enums.ItemType;
@@ -49,7 +50,7 @@ public class MineButton implements CustomButton {
 
             Main.sqlHandler.sqlStatsHandler.replyToUserLevelUp(userCurrentXP, userUpdatedXP, event);
 
-            Main.LOGGER.info("Executed '" + Constants.MINE_BUTTON_ID + "' button");
+            Main.LOGGER.info("Executed '" + ButtonManager.MINE_BUTTON_ID + "' button");
         }
     }
 

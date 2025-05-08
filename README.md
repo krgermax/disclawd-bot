@@ -11,12 +11,13 @@ What is Disclawd?  **Disclawd** is a clicker game for Discord. It's possible to 
 > The bot is **guild-aware**, each server that interacts with biomes generates its own world instance. This ensures server-specific biome progress and mob spawning. (*Note: Instances are automatically cleared after 2 hours of inactivity*).
 
 >[!CAUTION]
-> While Disclawd has core gameplay features implemented and is functional in its base state, the project is not yet ready for third-party deployment. Use at your own risk. Community deployment support will be considered once the project reaches a more stable release. Visit [Disclawd Test Server](https://discord.gg/U7HjdbSEPT) to test Disclawd.
+> While Disclawd has core gameplay features implemented and is functional in its base state, the project is not yet ready for third-party deployment. Community deployment support will be considered once the project reaches a more stable release. Visit [Disclawd Test Server](https://discord.gg/U7HjdbSEPT) to test Disclawd.
 
 ## Table of Contents
 - [Commands](#commands)
 - [Biomes](#biomes)
 - [Mobs](#mobs)
+- [License](#license)
 - [Acknowledgments](#acknowledgments)
 
 ## Commands

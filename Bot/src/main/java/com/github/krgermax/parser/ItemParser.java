@@ -23,6 +23,18 @@ public class ItemParser {
     private final Factory factory = new Factory();
     private final List<Integer> idList = new ArrayList<>();
 
+    /*
+     * THRESHOLDS for item params
+     */
+    public static final double ITEM_DROP_CHANCE_UPPER_B = 1;
+    public static final double XP_MULTIPLIER_LOWER_B = 1;
+    public static final double GOLD_MULTIPLIER_LOWER_B = 0;
+    public static final double DMG_MULTIPLIER_LOWER_B = 0;
+
+    public static final String ITEM_IMAGE_BASE_PATH = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "images" + File.separator + "items";
+    public static final String ITEMS_JSON_FILEPATH = File.separator + "items.json";
+    public static final String ITEMS_JSON_ITEMS = "items";
+
     /**
      * Wrapper function to parse the Items out of a JSON file
      *
@@ -52,10 +64,10 @@ public class ItemParser {
 
         List<Item> items = new ArrayList<>();
 
-        try (FileReader fileReader = new FileReader(Constants.JSON_BASE_PATH + Constants.ITEMS_JSON_FILEPATH)) {
+        try (FileReader fileReader = new FileReader(Constants.JSON_BASE_PATH + ITEMS_JSON_FILEPATH)) {
 
             JSONObject obj = new JSONObject(new JSONTokener(fileReader));
-            JSONArray arr = obj.getJSONArray(Constants.ITEMS_JSON_ITEMS);
+            JSONArray arr = obj.getJSONArray(ITEMS_JSON_ITEMS);
 
             for (Object o : arr) {
 
@@ -66,7 +78,7 @@ public class ItemParser {
                 String itemEmoji = jsonItem.getString("emoji");
                 String itemDesc = jsonItem.getString("description");
                 String fileName = jsonItem.getString("fileName");
-                String imgPath = Constants.ITEM_IMAGE_BASE_PATH + File.separator + fileName;
+                String imgPath = ITEM_IMAGE_BASE_PATH + File.separator + fileName;
                 int reqLvl = jsonItem.getInt("reqLvl");
                 ItemType itemType = ItemType.valueOf(jsonItem.getString("item_type"));
 
@@ -144,19 +156,19 @@ public class ItemParser {
     private boolean isValidItem(Item item) {
         int uniqueID = item.getID();
         if (uniqueID < 0
-                || item.getDropChance() > Constants.ITEM_DROP_CHANCE_UPPER_B
-                || item.getXpMultiplier() < Constants.XP_MULTIPLIER_LOWER_B
+                || item.getDropChance() > ITEM_DROP_CHANCE_UPPER_B
+                || item.getXpMultiplier() < XP_MULTIPLIER_LOWER_B
                 || checkIsIDUnique(uniqueID)) {
             return false;
         }
 
         if (item.getItemType().equals(ItemType.UTILITY)) {
             UtilItem utilItem = (UtilItem) item;
-            return utilItem.getGoldMultiplier() >= Constants.GOLD_MULTIPLIER_LOWER_B;
+            return utilItem.getGoldMultiplier() >= GOLD_MULTIPLIER_LOWER_B;
 
         } else if (item.getItemType().equals(ItemType.WEAPON)) {
             WeaponItem weaponItem = (WeaponItem) item;
-            return weaponItem.getDmgMultiplier() >= Constants.DMG_MULTIPLIER_LOWER_B;
+            return weaponItem.getDmgMultiplier() >= DMG_MULTIPLIER_LOWER_B;
         }
 
         File imageFile = new File(item.getImgPath());

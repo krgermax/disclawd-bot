@@ -2,7 +2,6 @@ package com.github.krgermax.sql;
 
 import com.github.krgermax.data.items.Item;
 import com.github.krgermax.main.Main;
-import com.github.krgermax.tokens.Constants;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,8 +16,8 @@ public class SQLInventoryHandler {
         try {
             Connection connection = Main.bot.getSQLConnection();
             String sqlQuery = "INSERT INTO inventory ("
-                    + Constants.USER_ID_COLUMN_LABEL + ", "
-                    + Constants.ITEM_ID_COLUMN_LABEL + ") "
+                    + SQLManager.USER_ID_COLUMN_LABEL + ", "
+                    + SQLManager.ITEM_ID_COLUMN_LABEL + ") "
                     + "VALUES (?, ?)";
 
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
@@ -37,8 +36,8 @@ public class SQLInventoryHandler {
         try {
             Connection connection = Main.bot.getSQLConnection();
             String sqlQuery = "SELECT * FROM inventory WHERE "
-                    + Constants.USER_ID_COLUMN_LABEL + " = ? AND "
-                    + Constants.ITEM_ID_COLUMN_LABEL + " = ?";
+                    + SQLManager.USER_ID_COLUMN_LABEL + " = ? AND "
+                    + SQLManager.ITEM_ID_COLUMN_LABEL + " = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
             preparedStatement.setString(1, userID);
@@ -63,8 +62,8 @@ public class SQLInventoryHandler {
         try {
             Connection connection = Main.bot.getSQLConnection();
             String sqlQuery = "UPDATE players SET "
-                    + Constants.EQUIPPED_ITEM_COLUMN_LABEL + " = ? WHERE "
-                    + Constants.USER_ID_COLUMN_LABEL + " = ?";
+                    + SQLManager.EQUIPPED_ITEM_COLUMN_LABEL + " = ? WHERE "
+                    + SQLManager.USER_ID_COLUMN_LABEL + " = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
             preparedStatement.setInt(1, itemID);
@@ -95,15 +94,15 @@ public class SQLInventoryHandler {
         try {
             Connection connection = Main.bot.getSQLConnection();
             String sqlQuery = "SELECT "
-                    + Constants.EQUIPPED_ITEM_COLUMN_LABEL + " FROM players WHERE "
-                    + Constants.USER_ID_COLUMN_LABEL + " = ?";
+                    + SQLManager.EQUIPPED_ITEM_COLUMN_LABEL + " FROM players WHERE "
+                    + SQLManager.USER_ID_COLUMN_LABEL + " = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
             preparedStatement.setString(1, userID);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                itemID = resultSet.getInt(Constants.EQUIPPED_ITEM_COLUMN_LABEL);
+                itemID = resultSet.getInt(SQLManager.EQUIPPED_ITEM_COLUMN_LABEL);
                 Main.LOGGER.info("Retrieved item ID: " + itemID + ". From user: " + userID);
             }
 
@@ -128,14 +127,14 @@ public class SQLInventoryHandler {
         try {
             Connection connection = Main.bot.getSQLConnection();
             String sqlQuery = "SELECT * FROM inventory WHERE "
-                    + Constants.USER_ID_COLUMN_LABEL + " = ?";
+                    + SQLManager.USER_ID_COLUMN_LABEL + " = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
             preparedStatement.setString(1, userID);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                int itemID = resultSet.getInt(Constants.ITEM_ID_COLUMN_LABEL);
+                int itemID = resultSet.getInt(SQLManager.ITEM_ID_COLUMN_LABEL);
                 Item item = Main.shopManager.getItemByID(itemID);
                 itemList.add(item);
             }

@@ -5,100 +5,13 @@ import net.dv8tion.jda.api.entities.emoji.Emoji;
 import java.io.File;
 
 public final class Constants {
-    public static final String LOGGER_NAME = "DISCLAWD BOT";
-    public static final String SQL_CLASS_NAME = "com.mysql.cj.jdbc.Driver";
-    public static final String PROPERTIES_FILE_NAME = "bot.properties";
+    public static final String LOGGER_NAME = "DISCLAWD";
 
-    /*
-     * SQL Column labels
-     */
-
-    public static final String USER_ID_COLUMN_LABEL = "id";
-    public static final String MINED_COLUMN_LABEL = "mined";
-    public static final String XP_COLUMN_LABEL = "xp";
-    public static final String GOLD_COLUMN_LABEL = "gold";
-    public static final String MOB_KILLS_COLUMN_LABEL = "mobKills";
-    public static final String BOSS_KILLS_COLUMN_LABEL = "bossKills";
-    public static final String EQUIPPED_ITEM_COLUMN_LABEL = "equippedItem";
-    public static final String ITEM_ID_COLUMN_LABEL = "itemId";
     /*
      * JSON String constants
      */
 
     public static final String JSON_BASE_PATH = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "jsonfiles";
-    public static final String ITEMS_JSON_FILEPATH = File.separator + "items.json";
-    public static final String ITEMS_JSON_ITEMS = "items";
-    public static final String MOBS_JSON_FILEPATH = File.separator + "mobs.json";
-    public static final String MOBS_JSON_MOBS = "mobs";
-    public static final String BIOMES_JSON_FILEPATH = File.separator + "biome.json";
-    public static final String BIOMES_JSON_BIOMES = "biomes";
-
-    /*
-     * Image base paths
-     */
-
-    public static final String BIOME_IMAGE_BASE_PATH = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "images" + File.separator + "biomes";
-    public static final String ITEM_IMAGE_BASE_PATH = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "images" + File.separator + "items";
-    public static final String MOB_IMAGE_BASE_PATH = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "images" + File.separator + "mobs";
-
-    /*
-     * THRESHOLDS for item params
-     */
-
-    public static final double ITEM_DROP_CHANCE_UPPER_B = 1;
-    public static final double XP_MULTIPLIER_LOWER_B = 1;
-    public static final double GOLD_MULTIPLIER_LOWER_B = 0;
-    public static final double DMG_MULTIPLIER_LOWER_B = 0;
-
-    /*
-     * THRESHOLDS for mob params
-     */
-
-    public static final double MOB_SPAWN_CHANCE_LOWER_B = 0;
-    public static final double MOB_SPAWN_CHANCE_UPPER_B = 1;
-    public static final double XP_DROP_AMOUNT_LOWER_B = 1;
-    public static final double GOLD_DROP_AMOUNT_LOWER_B = 1;
-
-    /*
-     * Command Id's
-     */
-
-    public static final String BIOME_COMMAND_ID = "biome";
-    public static final String INV_COMMAND_ID = "inventory";
-    public static final String SHOP_COMMAND_ID = "shop";
-    public static final String ITEM_COMMAND_ID = "item";
-    public static final String HELP_COMMAND_ID = "help";
-    public static final String RANK_COMMAND_ID = "rank";
-
-    /*
-     * Command option Id's
-     */
-
-    public static final String ITEM_COMMAND_OPTION_ID = "name";
-    public static final String RANK_COMMAND_OPTION_ID = "category";
-
-    /*
-     * Command option values
-     */
-    public static final String XP_OPTION_ID = "XP";
-    public static final String GOLD_OPTION_ID = "Gold";
-    public static final String KILLS_OPTION_ID = "Kills";
-    public static final String MINED_OPTION_ID = "Mined";
-
-    /*
-     * Button Id's
-     */
-
-    public static final String MINE_BUTTON_ID = "mine";
-    public static final String NEXT_SHOP_BUTTON_ID = "next-shop";
-    public static final String BACK_SHOP_BUTTON_ID = "back-shop";
-    public static final String HOME_SHOP_BUTTON_ID = "home-shop";
-    public static final String NEXT_INV_BUTTON_ID = "next-inv";
-    public static final String HOME_INV_BUTTON_ID = "home-inv";
-    public static final String BACK_INV_BUTTON_ID = "back-inv";
-    public static final String BUY_BUTTON_ID = "buy-";
-    public static final String EQUIP_BUTTON_ID = "equip-";
-    public static final String HIT_BUTTON_ID = "hit-mob-";
 
     /*
      * Button emoji's
@@ -130,11 +43,6 @@ public final class Constants {
 
     public static final int ITEMS_PER_PAGE = 3;
     public static final String PATH_LOGO_IMG = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "images" + File.separator + "disclawd_logo.png";
-    public static final int MAX_MINE_NOT_INTERACTED_MINUTES = 2;
-    public static final long INV_CACHE_EXPIRY_MINUTES = 5;
-    public static final int INV_CACHE_PERIOD_MINUTES = 2;
-    public static final long MINE_CACHE_EXPIRY_MINUTES = 120;
-    public static final int MINE_CACHE_PERIOD_MINUTES = 2;
 
     /*
      * Help command description

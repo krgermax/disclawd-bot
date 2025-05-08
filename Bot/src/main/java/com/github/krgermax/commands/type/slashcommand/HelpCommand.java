@@ -1,5 +1,6 @@
 package com.github.krgermax.commands.type.slashcommand;
 
+import com.github.krgermax.commands.CommandManager;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.utils.FileUpload;
@@ -32,6 +33,6 @@ public class HelpCommand implements SlashCommand {
                 .setEphemeral(true)
                 .complete();
 
-        Main.LOGGER.info("Executed '" + Constants.HELP_COMMAND_ID + "' command");
+        Main.LOGGER.info("Executed '" + CommandManager.HELP_COMMAND_ID + "' command");
     }
 }

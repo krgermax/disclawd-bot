@@ -3,7 +3,6 @@ package com.github.krgermax.data.mineworld;
 import com.github.krgermax.data.biomes.Biome;
 import com.github.krgermax.data.mobs.Mob;
 import com.github.krgermax.main.Main;
-import com.github.krgermax.tokens.Constants;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,6 +15,9 @@ public class MineworldManager {
     private final Map<String, Mineworld> mineworldMap = new ConcurrentHashMap<>();
     private final List<Biome> biomeList;
     private final List<Mob> mobList;
+
+    private static final long MINE_CACHE_EXPIRY_MINUTES = 120;
+    public static final int MINE_CACHE_PERIOD_MINUTES = 2;
 
     private MineworldManager(List<Biome> biomeList, List<Mob> mobList) {
         this.biomeList = biomeList;
@@ -67,7 +69,7 @@ public class MineworldManager {
         LocalDateTime now = LocalDateTime.now();
 
         mineworldMap.entrySet().removeIf(entry ->
-                entry.getValue().getTimestamp().isBefore(now.minusMinutes(Constants.MINE_CACHE_EXPIRY_MINUTES)));
+                entry.getValue().getTimestamp().isBefore(now.minusMinutes(MINE_CACHE_EXPIRY_MINUTES)));
 
         Main.LOGGER.info("Mineworld cache cleaned: " + before + " -> " + mineworldMap.size());
     }

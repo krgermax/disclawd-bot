@@ -1,8 +1,10 @@
 package com.github.krgermax.commands.type.slashcommand;
 
+import com.github.krgermax.commands.AutoCompleteListener;
+import com.github.krgermax.commands.CommandManager;
 import com.github.krgermax.data.inventory.UserStats;
 import com.github.krgermax.main.Main;
-import com.github.krgermax.tokens.Constants;
+import com.github.krgermax.sql.SQLManager;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
@@ -13,10 +15,10 @@ import java.util.Map;
 public class RankCommand implements SlashCommand {
 
     private static final Map<String, String> optionStatQueryMap = Map.of(
-            Constants.KILLS_OPTION_ID, Constants.MOB_KILLS_COLUMN_LABEL,
-            Constants.XP_OPTION_ID, Constants.XP_COLUMN_LABEL,
-            Constants.GOLD_OPTION_ID, Constants.GOLD_COLUMN_LABEL,
-            Constants.MINED_OPTION_ID, Constants.MINED_COLUMN_LABEL
+            AutoCompleteListener.KILLS_OPTION_ID, SQLManager.MOB_KILLS_COLUMN_LABEL,
+            AutoCompleteListener.XP_OPTION_ID, SQLManager.XP_COLUMN_LABEL,
+            AutoCompleteListener.GOLD_OPTION_ID, SQLManager.GOLD_COLUMN_LABEL,
+            AutoCompleteListener.MINED_OPTION_ID, SQLManager.MINED_COLUMN_LABEL
     );
 
     @Override
@@ -26,7 +28,7 @@ public class RankCommand implements SlashCommand {
             Main.sqlHandler.registerUser(userID);
         }
 
-        String option = event.getOption(Constants.RANK_COMMAND_OPTION_ID).getAsString();
+        String option = event.getOption(CommandManager.RANK_COMMAND_OPTION_ID).getAsString();
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setColor(Color.ORANGE);
 
@@ -49,7 +51,7 @@ public class RankCommand implements SlashCommand {
 
         buildRankEmbed(embedBuilder, userStatsList, option, userID, userStats);
         event.replyEmbeds(embedBuilder.build()).setEphemeral(true).queue();
-        Main.LOGGER.info("Executed '" + Constants.RANK_COMMAND_ID + "' command");
+        Main.LOGGER.info("Executed '" + CommandManager.RANK_COMMAND_ID + "' command");
     }
 
     private void buildRankEmbed(
@@ -79,10 +81,10 @@ public class RankCommand implements SlashCommand {
 
     private String getStatByOption(UserStats userStats, String option) {
         return switch (option) {
-            case Constants.XP_OPTION_ID -> String.valueOf(userStats.getXpCount());
-            case Constants.GOLD_OPTION_ID -> String.valueOf(userStats.getGoldCount());
-            case Constants.KILLS_OPTION_ID -> String.valueOf(userStats.getMobKills());
-            case Constants.MINED_OPTION_ID -> String.valueOf(userStats.getMinedCount());
+            case AutoCompleteListener.XP_OPTION_ID -> String.valueOf(userStats.getXpCount());
+            case AutoCompleteListener.GOLD_OPTION_ID -> String.valueOf(userStats.getGoldCount());
+            case AutoCompleteListener.KILLS_OPTION_ID -> String.valueOf(userStats.getMobKills());
+            case AutoCompleteListener.MINED_OPTION_ID -> String.valueOf(userStats.getMinedCount());
             default -> "";
         };
     }

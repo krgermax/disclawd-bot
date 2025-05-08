@@ -8,7 +8,6 @@ import com.github.krgermax.buttons.type.nav.*;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import com.github.krgermax.main.Main;
-import com.github.krgermax.tokens.Constants;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -19,25 +18,39 @@ public class ButtonManager extends ListenerAdapter {
     private final HashMap<String, CustomButton> buttons;
     private final HashMap<String, String> buttonsWithID;
 
+    /*
+     * Button Id's
+     */
+    public static final String MINE_BUTTON_ID = "mine";
+    public static final String NEXT_SHOP_BUTTON_ID = "next-shop";
+    public static final String BACK_SHOP_BUTTON_ID = "back-shop";
+    public static final String HOME_SHOP_BUTTON_ID = "home-shop";
+    public static final String NEXT_INV_BUTTON_ID = "next-inv";
+    public static final String HOME_INV_BUTTON_ID = "home-inv";
+    public static final String BACK_INV_BUTTON_ID = "back-inv";
+    public static final String BUY_BUTTON_ID = "buy-";
+    public static final String EQUIP_BUTTON_ID = "equip-";
+    public static final String HIT_BUTTON_ID = "hit-mob-";
+
     public ButtonManager() {
         this.buttons = new HashMap<>();
 
-        this.buttons.put(Constants.MINE_BUTTON_ID, new MineButton());
-        this.buttons.put(Constants.NEXT_SHOP_BUTTON_ID, new ShopNextButton());
-        this.buttons.put(Constants.BACK_SHOP_BUTTON_ID, new ShopBackButton());
-        this.buttons.put(Constants.HOME_SHOP_BUTTON_ID, new ShopHomeButton());
-        this.buttons.put(Constants.BUY_BUTTON_ID, new BuyButton());
-        this.buttons.put(Constants.EQUIP_BUTTON_ID, new EquipButton());
-        this.buttons.put(Constants.NEXT_INV_BUTTON_ID, new InvNextButton());
-        this.buttons.put(Constants.BACK_INV_BUTTON_ID, new InvBackButton());
-        this.buttons.put(Constants.HOME_INV_BUTTON_ID, new InvHomeButton());
-        this.buttons.put(Constants.HIT_BUTTON_ID, new HitButton());
+        this.buttons.put(MINE_BUTTON_ID, new MineButton());
+        this.buttons.put(NEXT_SHOP_BUTTON_ID, new ShopNextButton());
+        this.buttons.put(BACK_SHOP_BUTTON_ID, new ShopBackButton());
+        this.buttons.put(HOME_SHOP_BUTTON_ID, new ShopHomeButton());
+        this.buttons.put(BUY_BUTTON_ID, new BuyButton());
+        this.buttons.put(EQUIP_BUTTON_ID, new EquipButton());
+        this.buttons.put(NEXT_INV_BUTTON_ID, new InvNextButton());
+        this.buttons.put(BACK_INV_BUTTON_ID, new InvBackButton());
+        this.buttons.put(HOME_INV_BUTTON_ID, new InvHomeButton());
+        this.buttons.put(HIT_BUTTON_ID, new HitButton());
 
         this.buttonsWithID = new HashMap<>();
 
-        this.buttonsWithID.put(Constants.HIT_BUTTON_ID, Constants.HIT_BUTTON_ID);
-        this.buttonsWithID.put(Constants.EQUIP_BUTTON_ID, Constants.EQUIP_BUTTON_ID);
-        this.buttonsWithID.put(Constants.BUY_BUTTON_ID, Constants.BUY_BUTTON_ID);
+        this.buttonsWithID.put(HIT_BUTTON_ID, HIT_BUTTON_ID);
+        this.buttonsWithID.put(EQUIP_BUTTON_ID, EQUIP_BUTTON_ID);
+        this.buttonsWithID.put(BUY_BUTTON_ID, BUY_BUTTON_ID);
     }
 
     /**

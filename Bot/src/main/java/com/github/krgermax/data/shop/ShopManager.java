@@ -1,5 +1,6 @@
 package com.github.krgermax.data.shop;
 
+import com.github.krgermax.buttons.ButtonManager;
 import com.github.krgermax.data.items.Item;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -36,9 +37,9 @@ public class ShopManager {
     public void replyWithShopFirstEmbedded(SlashCommandInteractionEvent event) {
 
         EmbedBuilder embedBuilder = this.shopCore.getPages().getFirst();
-        Button nextButton = Button.secondary(Constants.NEXT_SHOP_BUTTON_ID, Constants.NEXT_BUTTON_EMOJI);
-        Button homeButton = Button.secondary(Constants.HOME_SHOP_BUTTON_ID, Constants.HOME_BUTTON_EMOJI);
-        Button backButton = Button.secondary(Constants.BACK_SHOP_BUTTON_ID, Constants.BACK_BUTTON_EMOJI);
+        Button nextButton = Button.secondary(ButtonManager.NEXT_SHOP_BUTTON_ID, Constants.NEXT_BUTTON_EMOJI);
+        Button homeButton = Button.secondary(ButtonManager.HOME_SHOP_BUTTON_ID, Constants.HOME_BUTTON_EMOJI);
+        Button backButton = Button.secondary(ButtonManager.BACK_SHOP_BUTTON_ID, Constants.BACK_BUTTON_EMOJI);
         if (this.shopCore.getShopPagesCount() < 2)
             nextButton = nextButton.asDisabled();
 
@@ -64,9 +65,9 @@ public class ShopManager {
         String footer = Objects.requireNonNull(event.getMessage().getEmbeds().getFirst().getFooter()).getText();
         String[] parts = footer.split("/");
         int currentPage = Integer.parseInt(parts[0].substring(6).strip());
-        Button nextButton = Button.secondary(Constants.NEXT_SHOP_BUTTON_ID, Constants.NEXT_BUTTON_EMOJI);
-        Button homeButton = Button.secondary(Constants.HOME_SHOP_BUTTON_ID, Constants.HOME_BUTTON_EMOJI);
-        Button backButton = Button.secondary(Constants.BACK_SHOP_BUTTON_ID, Constants.BACK_BUTTON_EMOJI);
+        Button nextButton = Button.secondary(ButtonManager.NEXT_SHOP_BUTTON_ID, Constants.NEXT_BUTTON_EMOJI);
+        Button homeButton = Button.secondary(ButtonManager.HOME_SHOP_BUTTON_ID, Constants.HOME_BUTTON_EMOJI);
+        Button backButton = Button.secondary(ButtonManager.BACK_SHOP_BUTTON_ID, Constants.BACK_BUTTON_EMOJI);
 
         if (back) {
             currentPage--;
@@ -99,9 +100,9 @@ public class ShopManager {
     public void updateToFirstEmbedded(ButtonInteractionEvent event) {
         EmbedBuilder embedBuilder;
         embedBuilder = this.shopCore.getPages().getFirst();
-        Button nextButton = Button.secondary(Constants.NEXT_SHOP_BUTTON_ID, Constants.NEXT_BUTTON_EMOJI);
-        Button homeButton = Button.secondary(Constants.HOME_SHOP_BUTTON_ID, Constants.HOME_BUTTON_EMOJI);
-        Button backButton = Button.secondary(Constants.BACK_SHOP_BUTTON_ID, Constants.BACK_BUTTON_EMOJI);
+        Button nextButton = Button.secondary(ButtonManager.NEXT_SHOP_BUTTON_ID, Constants.NEXT_BUTTON_EMOJI);
+        Button homeButton = Button.secondary(ButtonManager.HOME_SHOP_BUTTON_ID, Constants.HOME_BUTTON_EMOJI);
+        Button backButton = Button.secondary(ButtonManager.BACK_SHOP_BUTTON_ID, Constants.BACK_BUTTON_EMOJI);
         nextButton = nextButton.asEnabled();
         backButton = backButton.asDisabled();
 

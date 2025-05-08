@@ -2,7 +2,6 @@ package com.github.krgermax.sql;
 
 import com.github.krgermax.data.inventory.UserStats;
 import com.github.krgermax.main.Main;
-import com.github.krgermax.tokens.Constants;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,10 +12,21 @@ import java.util.ArrayList;
 public class SQLManager {
 
     private static SQLManager INSTANCE;
-
     public final SQLEmbeddedHandler sqlEmbeddedHandler = new SQLEmbeddedHandler();
     public final SQLInventoryHandler sqlInventoryHandler = new SQLInventoryHandler();
     public final SQLStatsHandler sqlStatsHandler = new SQLStatsHandler();
+
+    /*
+     * SQL Column labels
+     */
+    public static final String USER_ID_COLUMN_LABEL = "id";
+    public static final String MINED_COLUMN_LABEL = "mined";
+    public static final String XP_COLUMN_LABEL = "xp";
+    public static final String GOLD_COLUMN_LABEL = "gold";
+    public static final String MOB_KILLS_COLUMN_LABEL = "mobKills";
+    public static final String BOSS_KILLS_COLUMN_LABEL = "bossKills";
+    public static final String EQUIPPED_ITEM_COLUMN_LABEL = "equippedItem";
+    public static final String ITEM_ID_COLUMN_LABEL = "itemId";
 
     private SQLManager() {}
 
@@ -38,7 +48,7 @@ public class SQLManager {
         try {
             Connection connection = Main.bot.getSQLConnection();
             String sqlQuery = "SELECT * FROM players WHERE "
-                    + Constants.USER_ID_COLUMN_LABEL + " = ?";
+                    + USER_ID_COLUMN_LABEL + " = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
             preparedStatement.setString(1, userID);
@@ -63,13 +73,13 @@ public class SQLManager {
         try {
             Connection connection = Main.bot.getSQLConnection();
             String sqlQuery = "INSERT INTO players ("
-                    + Constants.USER_ID_COLUMN_LABEL + ", "
-                    + Constants.MINED_COLUMN_LABEL + ", "
-                    + Constants.XP_COLUMN_LABEL + ", "
-                    + Constants.GOLD_COLUMN_LABEL + ", "
-                    + Constants.MOB_KILLS_COLUMN_LABEL + ", "
-                    + Constants.BOSS_KILLS_COLUMN_LABEL + ", "
-                    + Constants.EQUIPPED_ITEM_COLUMN_LABEL + ") "
+                    + USER_ID_COLUMN_LABEL + ", "
+                    + MINED_COLUMN_LABEL + ", "
+                    + XP_COLUMN_LABEL + ", "
+                    + GOLD_COLUMN_LABEL + ", "
+                    + MOB_KILLS_COLUMN_LABEL + ", "
+                    + BOSS_KILLS_COLUMN_LABEL + ", "
+                    + EQUIPPED_ITEM_COLUMN_LABEL + ") "
                     + "VALUES (?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
@@ -106,10 +116,10 @@ public class SQLManager {
         try {
             Connection connection = Main.bot.getSQLConnection();
 
-            String sqlQuery = "SELECT " + Constants.USER_ID_COLUMN_LABEL + ", " + statQuery + ", " +
-                    "RANK() OVER (ORDER BY " + statQuery + " DESC, " + Constants.USER_ID_COLUMN_LABEL + " ASC) AS rank " +
+            String sqlQuery = "SELECT " + USER_ID_COLUMN_LABEL + ", " + statQuery + ", " +
+                    "RANK() OVER (ORDER BY " + statQuery + " DESC, " + USER_ID_COLUMN_LABEL + " ASC) AS rank " +
                     "FROM players " +
-                    "ORDER BY " + statQuery + " DESC, " + Constants.USER_ID_COLUMN_LABEL + " ASC " +
+                    "ORDER BY " + statQuery + " DESC, " + USER_ID_COLUMN_LABEL + " ASC " +
                     "LIMIT 10";
 
             // no need to check for faulty sql queries, since the sqlQuery is user input mapped to actual columns
@@ -119,7 +129,7 @@ public class SQLManager {
 
             while (resultSet.next()) {
                 UserStats userStats = new UserStats();
-                userStats.setUserID(resultSet.getString(Constants.USER_ID_COLUMN_LABEL));
+                userStats.setUserID(resultSet.getString(USER_ID_COLUMN_LABEL));
                 userStats.setRank(resultSet.getInt("rank"));
 
                 setUserStats(statQuery, userStats, resultSet);
@@ -146,13 +156,13 @@ public class SQLManager {
         try {
             Connection connection = Main.bot.getSQLConnection();
 
-            String sqlQuery = "SELECT ranked." + statQuery + ", ranked." + Constants.USER_ID_COLUMN_LABEL + ", ranked.rank " +
+            String sqlQuery = "SELECT ranked." + statQuery + ", ranked." + USER_ID_COLUMN_LABEL + ", ranked.rank " +
                     "FROM ( " +
-                    "    SELECT " + Constants.USER_ID_COLUMN_LABEL + ", " + statQuery + ", " +
-                    "           RANK() OVER (ORDER BY " + statQuery + " DESC, " + Constants.USER_ID_COLUMN_LABEL + " ASC) AS rank " +
+                    "    SELECT " + USER_ID_COLUMN_LABEL + ", " + statQuery + ", " +
+                    "           RANK() OVER (ORDER BY " + statQuery + " DESC, " + USER_ID_COLUMN_LABEL + " ASC) AS rank " +
                     "    FROM players " +
                     ") AS ranked " +
-                    "WHERE ranked." + Constants.USER_ID_COLUMN_LABEL + " = ?";
+                    "WHERE ranked." + USER_ID_COLUMN_LABEL + " = ?";
 
             // no need to check for faulty sql queries, since the sqlQuery is user input mapped to actual columns
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
@@ -174,17 +184,17 @@ public class SQLManager {
 
     private void setUserStats(String statQuery, UserStats userStats, ResultSet resultSet) throws SQLException {
         switch (statQuery) {
-            case Constants.XP_COLUMN_LABEL:
-                userStats.setXpCount(Main.generator.transformDouble(resultSet.getDouble(Constants.XP_COLUMN_LABEL))); // Fix precision issue
+            case XP_COLUMN_LABEL:
+                userStats.setXpCount(Main.generator.transformDouble(resultSet.getDouble(XP_COLUMN_LABEL))); // Fix precision issue
                 break;
-            case Constants.GOLD_COLUMN_LABEL:
-                userStats.setGoldCount(resultSet.getInt(Constants.GOLD_COLUMN_LABEL));
+            case GOLD_COLUMN_LABEL:
+                userStats.setGoldCount(resultSet.getInt(GOLD_COLUMN_LABEL));
                 break;
-            case Constants.MOB_KILLS_COLUMN_LABEL:
-                userStats.setMobKills(resultSet.getInt(Constants.MOB_KILLS_COLUMN_LABEL));
+            case MOB_KILLS_COLUMN_LABEL:
+                userStats.setMobKills(resultSet.getInt(MOB_KILLS_COLUMN_LABEL));
                 break;
-            case Constants.MINED_COLUMN_LABEL:
-                userStats.setMinedCount(resultSet.getInt(Constants.MINED_COLUMN_LABEL));
+            case MINED_COLUMN_LABEL:
+                userStats.setMinedCount(resultSet.getInt(MINED_COLUMN_LABEL));
                 break;
             default: throw new IllegalStateException("Unexpected value: " + statQuery);
         }

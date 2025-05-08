@@ -1,9 +1,9 @@
 package com.github.krgermax.buttons.type;
 
+import com.github.krgermax.buttons.ButtonManager;
 import com.github.krgermax.buttons.CustomButton;
 import com.github.krgermax.data.mobs.NormalMob;
 import com.github.krgermax.main.Main;
-import com.github.krgermax.tokens.Constants;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
 
@@ -16,7 +16,7 @@ public class HitButton implements CustomButton {
             Main.sqlHandler.sqlEmbeddedHandler.replyToNewRegisteredUser(event);
         } else {
             String componentId = event.getComponentId();
-            int mobID = Integer.parseInt(componentId.replace(Constants.HIT_BUTTON_ID, ""));
+            int mobID = Integer.parseInt(componentId.replace(ButtonManager.HIT_BUTTON_ID, ""));
 
             NormalMob spawnedMob = (NormalMob) Main.mineworldManager.getMobByID(mobID);
             if (spawnedMob == null)
@@ -39,9 +39,9 @@ public class HitButton implements CustomButton {
                         double userUpdatedXP = Main.sqlHandler.sqlStatsHandler.getXPCountFromUser(userID);
 
                         Main.sqlHandler.sqlStatsHandler.replyToUserLevelUp(userCurrentXP, userUpdatedXP, event);
-                        Main.LOGGER.info("Executed '" + Constants.HIT_BUTTON_ID + "' button");
+                        Main.LOGGER.info("Executed '" + ButtonManager.HIT_BUTTON_ID + "' button");
                     },
-                    failure -> Main.LOGGER.severe("Did not execute '" + Constants.HIT_BUTTON_ID + "' button. Failed to delete message: " + failure.getMessage())
+                    failure -> Main.LOGGER.severe("Did not execute '" + ButtonManager.HIT_BUTTON_ID + "' button. Failed to delete message: " + failure.getMessage())
             );
         }
     }

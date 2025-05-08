@@ -21,6 +21,10 @@ import java.util.Set;
 
 public class BiomeParser {
 
+    public static final String BIOME_IMAGE_BASE_PATH = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "images" + File.separator + "biomes";
+    public static final String BIOMES_JSON_FILEPATH = File.separator + "biome.json";
+    public static final String BIOMES_JSON_BIOMES = "biomes";
+
     /**
      * Wrapper function to parse the Biomes out of a JSON file
      *
@@ -49,10 +53,10 @@ public class BiomeParser {
     private List<Biome> getBiomesFromJSON() {
         List<Biome> biomeList = new ArrayList<>();
 
-        try (FileReader fileReader = new FileReader(Constants.JSON_BASE_PATH + Constants.BIOMES_JSON_FILEPATH)) {
+        try (FileReader fileReader = new FileReader(Constants.JSON_BASE_PATH + BIOMES_JSON_FILEPATH)) {
 
             JSONObject obj = new JSONObject(new JSONTokener(fileReader));
-            JSONArray arr = obj.getJSONArray(Constants.BIOMES_JSON_BIOMES);
+            JSONArray arr = obj.getJSONArray(BIOMES_JSON_BIOMES);
 
             for (Object o : arr) {
 
@@ -62,7 +66,7 @@ public class BiomeParser {
                 BiomeType biomeType = BiomeType.valueOf(jsonItem.getString("type"));
                 double biomeHP = jsonItem.getDouble("hp");
                 String fileName = jsonItem.getString("fileName");
-                String imgPath = Constants.BIOME_IMAGE_BASE_PATH + File.separator + fileName;
+                String imgPath = BIOME_IMAGE_BASE_PATH + File.separator + fileName;
                 boolean xpEnabled = jsonItem.getBoolean("xpEnabled");
                 JSONArray jsonArray = jsonItem.getJSONArray("mobs");
                 Set<MobSubType> spawnableMobs = new HashSet<>();

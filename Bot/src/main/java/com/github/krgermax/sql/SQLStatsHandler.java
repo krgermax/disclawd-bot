@@ -1,7 +1,6 @@
 package com.github.krgermax.sql;
 
 import com.github.krgermax.data.inventory.UserStats;
-import com.github.krgermax.tokens.Constants;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import com.github.krgermax.main.Main;
@@ -25,7 +24,7 @@ public class SQLStatsHandler {
         try {
             Connection connection = Main.bot.getSQLConnection();
             String sqlQuery = "SELECT * FROM players WHERE "
-                    + Constants.USER_ID_COLUMN_LABEL + " = ?";
+                    + SQLManager.USER_ID_COLUMN_LABEL + " = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
             preparedStatement.setString(1, userID);
@@ -33,11 +32,11 @@ public class SQLStatsHandler {
 
             if (resultSet.next()) {
                 userStats.setUserID(userID);
-                userStats.setMinedCount(resultSet.getInt(Constants.MINED_COLUMN_LABEL));
-                userStats.setXpCount(Main.generator.transformDouble(resultSet.getDouble(Constants.XP_COLUMN_LABEL))); // Fix precision issue
-                userStats.setGoldCount(resultSet.getInt(Constants.GOLD_COLUMN_LABEL));
-                userStats.setMobKills(resultSet.getInt(Constants.MOB_KILLS_COLUMN_LABEL));
-                userStats.setBossKills(resultSet.getInt(Constants.BOSS_KILLS_COLUMN_LABEL));
+                userStats.setMinedCount(resultSet.getInt(SQLManager.MINED_COLUMN_LABEL));
+                userStats.setXpCount(Main.generator.transformDouble(resultSet.getDouble(SQLManager.XP_COLUMN_LABEL))); // Fix precision issue
+                userStats.setGoldCount(resultSet.getInt(SQLManager.GOLD_COLUMN_LABEL));
+                userStats.setMobKills(resultSet.getInt(SQLManager.MOB_KILLS_COLUMN_LABEL));
+                userStats.setBossKills(resultSet.getInt(SQLManager.BOSS_KILLS_COLUMN_LABEL));
                 Main.LOGGER.info("Retrieved all stats for user: " + userID);
             }
 
@@ -67,10 +66,10 @@ public class SQLStatsHandler {
         try {
             Connection connection = Main.bot.getSQLConnection();
             String sqlQuery = "UPDATE players SET "
-                    + Constants.MOB_KILLS_COLUMN_LABEL + " = ?, "
-                    + Constants.GOLD_COLUMN_LABEL + " = ?, "
-                    + Constants.XP_COLUMN_LABEL + " = ? WHERE "
-                    + Constants.USER_ID_COLUMN_LABEL + " = ?";
+                    + SQLManager.MOB_KILLS_COLUMN_LABEL + " = ?, "
+                    + SQLManager.GOLD_COLUMN_LABEL + " = ?, "
+                    + SQLManager.XP_COLUMN_LABEL + " = ? WHERE "
+                    + SQLManager.USER_ID_COLUMN_LABEL + " = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
             preparedStatement.setInt(1, updatedMobKills);
@@ -110,10 +109,10 @@ public class SQLStatsHandler {
         try {
             Connection connection = Main.bot.getSQLConnection();
             String sqlQuery = "UPDATE players SET "
-                    + Constants.MINED_COLUMN_LABEL + " = ?, "
-                    + Constants.XP_COLUMN_LABEL + " = ?, "
-                    + Constants.GOLD_COLUMN_LABEL + " = ? WHERE "
-                    + Constants.USER_ID_COLUMN_LABEL + " = ?";
+                    + SQLManager.MINED_COLUMN_LABEL + " = ?, "
+                    + SQLManager.XP_COLUMN_LABEL + " = ?, "
+                    + SQLManager.GOLD_COLUMN_LABEL + " = ? WHERE "
+                    + SQLManager.USER_ID_COLUMN_LABEL + " = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
             preparedStatement.setInt(1, updatedMineCount);
@@ -147,15 +146,15 @@ public class SQLStatsHandler {
         try {
             Connection connection = Main.bot.getSQLConnection();
             String sqlQuery = "SELECT "
-                    + Constants.XP_COLUMN_LABEL + " FROM players WHERE "
-                    + Constants.USER_ID_COLUMN_LABEL + " = ?";
+                    + SQLManager.XP_COLUMN_LABEL + " FROM players WHERE "
+                    + SQLManager.USER_ID_COLUMN_LABEL + " = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
             preparedStatement.setString(1, userID);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                double retrievedXP = resultSet.getDouble(Constants.XP_COLUMN_LABEL);
+                double retrievedXP = resultSet.getDouble(SQLManager.XP_COLUMN_LABEL);
                 // Call to transformDouble() to hopefully fix 'precision issue' where doubles have to
                 // many decimal places
                 xpCount = Main.generator.transformDouble(retrievedXP);
@@ -179,15 +178,15 @@ public class SQLStatsHandler {
         try {
             Connection connection = Main.bot.getSQLConnection();
             String sqlQuery = "SELECT "
-                    + Constants.GOLD_COLUMN_LABEL + " FROM players WHERE "
-                    + Constants.USER_ID_COLUMN_LABEL + " = ?";
+                    + SQLManager.GOLD_COLUMN_LABEL + " FROM players WHERE "
+                    + SQLManager.USER_ID_COLUMN_LABEL + " = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
             preparedStatement.setString(1, userID);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                goldCount = resultSet.getInt(Constants.GOLD_COLUMN_LABEL);
+                goldCount = resultSet.getInt(SQLManager.GOLD_COLUMN_LABEL);
                 Main.LOGGER.info("Retrieved the total gold amount: " + goldCount + ". From user:" + userID);
             }
 
@@ -208,8 +207,8 @@ public class SQLStatsHandler {
         try {
             Connection connection = Main.bot.getSQLConnection();
             String sqlQuery = "UPDATE players SET "
-                    + Constants.GOLD_COLUMN_LABEL + " = ? WHERE "
-                    + Constants.USER_ID_COLUMN_LABEL + " = ?";
+                    + SQLManager.GOLD_COLUMN_LABEL + " = ? WHERE "
+                    + SQLManager.USER_ID_COLUMN_LABEL + " = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
             int newCount = currentGold + gold;

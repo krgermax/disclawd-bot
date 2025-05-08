@@ -1,5 +1,6 @@
 package com.github.krgermax.data;
 
+import com.github.krgermax.buttons.ButtonManager;
 import com.github.krgermax.data.biomes.Biome;
 import com.github.krgermax.data.mineworld.Mineworld;
 import com.github.krgermax.data.mobs.Mob;
@@ -10,7 +11,6 @@ import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.utils.FileUpload;
 import com.github.krgermax.main.Main;
-import com.github.krgermax.tokens.Constants;
 
 import java.awt.*;
 import java.io.File;
@@ -104,7 +104,7 @@ public class MobSpawner {
             messageChannelUnion.sendMessageEmbeds(embedBuilder.build())
                     .addFiles(FileUpload.fromData(imgFile, "mob.png"))
                     .addActionRow(
-                            Button.danger(Constants.HIT_BUTTON_ID + mob.getID(), "Hit")
+                            Button.danger(ButtonManager.HIT_BUTTON_ID + mob.getID(), "Hit")
                     )
                     .queue();
 
