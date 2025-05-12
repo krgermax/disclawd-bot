@@ -27,7 +27,7 @@ public class SQLInventoryHandler {
 
             preparedStatement.executeUpdate();
         } catch (SQLException ex) {
-            Main.LOGGER.severe("Some SQL error occurred: " + ex.getMessage());
+            Main.LOGGER.error("Some SQL error occurred: " + ex.getMessage());
         }
     }
 
@@ -47,7 +47,7 @@ public class SQLInventoryHandler {
             itemInInventory = resultSet.next();
             resultSet.close();
         } catch (SQLException ex) {
-            Main.LOGGER.severe("Some SQL error occurred: " + ex.getMessage());
+            Main.LOGGER.error("Some SQL error occurred: " + ex.getMessage());
         }
         return itemInInventory;
     }
@@ -74,12 +74,12 @@ public class SQLInventoryHandler {
             if (rowsAffected > 0) {
                 Main.LOGGER.info("Equipped item " + itemID + " for user " + userID);
             } else {
-                Main.LOGGER.severe("Failed to equip item " + itemID + " for user " + userID);
+                Main.LOGGER.error("Failed to equip item " + itemID + " for user " + userID);
             }
             preparedStatement.close();
 
         } catch (SQLException ex) {
-            Main.LOGGER.severe("Some SQL error occurred: " + ex.getMessage());
+            Main.LOGGER.error("Some SQL error occurred: " + ex.getMessage());
         }
     }
 
@@ -110,7 +110,7 @@ public class SQLInventoryHandler {
             preparedStatement.close();
 
         } catch (SQLException ex) {
-            Main.LOGGER.severe("Some SQL error occurred: " + ex.getMessage());
+            Main.LOGGER.error("Some SQL error occurred: " + ex.getMessage());
         }
         return itemID;
     }
@@ -140,7 +140,7 @@ public class SQLInventoryHandler {
             }
 
         } catch (SQLException ex) {
-            Main.LOGGER.severe("Some SQL error occurred: " + ex.getMessage());
+            Main.LOGGER.error("Some SQL error occurred: " + ex.getMessage());
         }
         return itemList;
     }

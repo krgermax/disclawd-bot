@@ -75,7 +75,7 @@ public class ButtonManager extends ListenerAdapter {
         if (button != null) {
             button.executeButton(event);
         } else {
-            Main.LOGGER.severe("Button ID not found: " + buttonID);
+            Main.LOGGER.error("Button ID not found: " + buttonID);
         }
     }
 }

@@ -11,6 +11,8 @@ public enum MobSubType {
     SLIME,
     ENDERMAN,
     ENDERMITE,
+    BLAZE,
+    WITHER_SKELETON,
     WITHER,
     COMMON_TRADER,
     UNCOMMON_TRADER,

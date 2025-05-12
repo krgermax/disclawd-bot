@@ -7,6 +7,7 @@ import com.github.krgermax.data.mobs.enums.MobSubType;
 import com.github.krgermax.main.Main;
 import com.github.krgermax.tokens.Constants;
 
+import java.io.File;
 import java.util.Set;
 
 public class Biome {
@@ -15,11 +16,11 @@ public class Biome {
     private final double biomeHP;
     private double currentHP;
     private double adjustableFullHP;
-    private final String imgPath;
+    private final File imgFile;
     private final boolean xpEnabled;
     private final Set<MobSubType> spawnableMobSubTypes;
 
-    public Biome(String name, BiomeType type, double biomeHP, String imgPath, boolean xpEnabled, Set<MobSubType> spawnableMobSubTypes) {
+    public Biome(String name, BiomeType type, double biomeHP, File imgFile, boolean xpEnabled, Set<MobSubType> spawnableMobSubTypes) {
         this.name = name;
         this.type = type;
         this.biomeHP = biomeHP;
@@ -27,7 +28,8 @@ public class Biome {
         this.currentHP = biomeHP;
         this.adjustableFullHP = biomeHP;
 
-        this.imgPath = imgPath;
+        this.imgFile = imgFile;
+
         this.xpEnabled = xpEnabled;
         this.spawnableMobSubTypes = spawnableMobSubTypes;
     }
@@ -52,8 +54,8 @@ public class Biome {
         return adjustableFullHP;
     }
 
-    public String getImgPath() {
-        return imgPath;
+    public File getImgFile() {
+        return imgFile;
     }
 
     public boolean isXpEnabled() {
@@ -106,7 +108,7 @@ public class Biome {
                 name,
                 type,
                 biomeHP,
-                imgPath,
+                imgFile,
                 xpEnabled,
                 spawnableMobSubTypes
         );

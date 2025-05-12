@@ -44,7 +44,7 @@ public class SQLStatsHandler {
             preparedStatement.close();
 
         } catch (SQLException ex) {
-            Main.LOGGER.severe("Some SQL error occurred: " + ex.getMessage());
+            Main.LOGGER.error("Some SQL error occurred: " + ex.getMessage());
         }
         return userStats;
     }
@@ -83,12 +83,12 @@ public class SQLStatsHandler {
                 Main.LOGGER.info("Updated stats for user: " + userID + ". New mob kills: " + updatedMobKills +
                         ", New gold count: " + updatedGoldCount + ", New XP count: " + updatedXPCount);
             } else {
-                Main.LOGGER.warning("Failed to update stats for user: " + userID);
+                Main.LOGGER.warn("Failed to update stats for user: " + userID);
             }
 
             preparedStatement.close();
         } catch (SQLException ex) {
-            Main.LOGGER.severe("Some SQL error occurred: " + ex.getMessage());
+            Main.LOGGER.error("Some SQL error occurred: " + ex.getMessage());
         }
     }
 
@@ -126,12 +126,12 @@ public class SQLStatsHandler {
                 Main.LOGGER.info("Updated stats for user: " + userID + ". New mine count: " + updatedMineCount +
                         ", New XP count: " + updatedXPCount + ", New gold count: " + updatedGoldCount);
             } else {
-                Main.LOGGER.warning("Failed to update stats for user: " + userID);
+                Main.LOGGER.warn("Failed to update stats for user: " + userID);
             }
 
             preparedStatement.close();
         } catch (SQLException ex) {
-            Main.LOGGER.severe("Some SQL error occurred: " + ex.getMessage());
+            Main.LOGGER.error("Some SQL error occurred: " + ex.getMessage());
         }
     }
 
@@ -162,7 +162,7 @@ public class SQLStatsHandler {
             }
 
         } catch (SQLException ex) {
-            Main.LOGGER.severe("Some SQL error occurred: " + ex.getMessage());
+            Main.LOGGER.error("Some SQL error occurred: " + ex.getMessage());
         }
         return xpCount;
     }
@@ -191,7 +191,7 @@ public class SQLStatsHandler {
             }
 
         } catch (SQLException ex) {
-            Main.LOGGER.severe("Some SQL error occurred: " + ex.getMessage());
+            Main.LOGGER.error("Some SQL error occurred: " + ex.getMessage());
         }
         return goldCount;
     }
@@ -221,10 +221,10 @@ public class SQLStatsHandler {
             if (rowsUpdated > 0) {
                 Main.LOGGER.info("Updated gold count for user: " + userID + ". New gold count: " + newCount);
             } else {
-                Main.LOGGER.warning("Failed to update gold count for user " + userID);
+                Main.LOGGER.warn("Failed to update gold count for user " + userID);
             }
         } catch (SQLException ex) {
-            Main.LOGGER.severe("Some SQL error occurred: " + ex.getMessage());
+            Main.LOGGER.error("Some SQL error occurred: " + ex.getMessage());
         }
     }
 

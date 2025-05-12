@@ -35,10 +35,11 @@ public class BiomeParser {
     public List<Biome> parseBiomes() throws FailedDataParseException {
         List<Biome> biomes = getBiomesFromJSON();
 
-        if (!validateBiomes(biomes) || biomes.isEmpty())
+        boolean valid = validateBiomes(biomes);
+        if (!valid || biomes.isEmpty())
             throw new FailedDataParseException(
                     "Could not parse biomes correctly:\n" +
-                            "- valid biomes = " + validateBiomes(biomes) + "\n" +
+                            "- valid biomes = " + valid + "\n" +
                             "- is biome list empty = " + biomes.isEmpty());
 
         Main.LOGGER.info("Biome parsing finished, biome list size: " + biomes.size());
@@ -50,7 +51,7 @@ public class BiomeParser {
      *
      * @return the list of parsed biomes
      */
-    private List<Biome> getBiomesFromJSON() {
+    private List<Biome> getBiomesFromJSON() throws FailedDataParseException {
         List<Biome> biomeList = new ArrayList<>();
 
         try (FileReader fileReader = new FileReader(Constants.JSON_BASE_PATH + BIOMES_JSON_FILEPATH)) {
@@ -75,10 +76,11 @@ public class BiomeParser {
                     spawnableMobs.add(MobSubType.valueOf((String) object));
                 }
 
-                biomeList.add(new Biome(name, biomeType, biomeHP, imgPath, xpEnabled, spawnableMobs));
+                biomeList.add(MineFactory.createBiome(name, biomeType, biomeHP, imgPath, xpEnabled, spawnableMobs));
             }
-        } catch (JSONException | IOException ex) {
-            Main.LOGGER.severe("Failed to parse JSON biomes file: " + ex.getMessage());
+        } catch (JSONException | IOException | IllegalArgumentException ex) {
+            Main.LOGGER.error("Failed to parse JSON biomes file: " + ex.getMessage());
+            throw new FailedDataParseException("Failed to parse JSON biomes file: " + ex.getMessage());
         }
 
         return biomeList;
@@ -110,9 +112,8 @@ public class BiomeParser {
         if (biome.getTrueHP() <= 0) {
             return false;
         }
-        File imageFile = new File(biome.getImgPath());
-        if (!imageFile.exists()) {
-            Main.LOGGER.severe("Biome image file not found: " + biome.getImgPath());
+        if (!biome.getImgFile().exists()) {
+            Main.LOGGER.error("Biome image file not found: " + biome.getImgFile().getPath());
             return false;
         }
         return true;

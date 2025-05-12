@@ -41,7 +41,7 @@ public class HitButton implements CustomButton {
                         Main.sqlHandler.sqlStatsHandler.replyToUserLevelUp(userCurrentXP, userUpdatedXP, event);
                         Main.LOGGER.info("Executed '" + ButtonManager.HIT_BUTTON_ID + "' button");
                     },
-                    failure -> Main.LOGGER.severe("Did not execute '" + ButtonManager.HIT_BUTTON_ID + "' button. Failed to delete message: " + failure.getMessage())
+                    failure -> Main.LOGGER.error("Did not execute '" + ButtonManager.HIT_BUTTON_ID + "' button. Failed to delete message: " + failure.getMessage())
             );
         }
     }

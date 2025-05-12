@@ -78,6 +78,17 @@
       ]
     },
     {
+      "name": "The Nether",
+      "type" : "NETHER_BRICK",
+      "fileName": "nether_brick.png",
+      "hp" : "15.0",
+      "xpEnabled": false,
+      "mobs": [
+        "WITHER_SKELETON",
+        "BLAZE"
+      ]
+    },
+    {
       "name": "The Overworld",
       "type" : "SWAMP",
       "hp" : "5.0",

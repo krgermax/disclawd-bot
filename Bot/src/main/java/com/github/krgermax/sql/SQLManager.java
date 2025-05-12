@@ -58,7 +58,7 @@ public class SQLManager {
             resultSet.close();
             preparedStatement.close();
         } catch (SQLException ex) {
-            Main.LOGGER.severe("Some SQL error occurred: " + ex.getMessage());
+            Main.LOGGER.error("Some SQL error occurred: " + ex.getMessage());
         }
         return registered;
     }
@@ -96,11 +96,11 @@ public class SQLManager {
             if (rowsAffected > 0) {
                 Main.LOGGER.info("Registered user with ID: " + userID);
             } else {
-                Main.LOGGER.severe("Failed to register user. ");
+                Main.LOGGER.warn("Failed to register user. ");
             }
             preparedStatement.close();
         } catch (SQLException ex) {
-            Main.LOGGER.severe("Some SQL error occurred: " + ex.getMessage());
+            Main.LOGGER.error("Some SQL error occurred: " + ex.getMessage());
         }
     }
 
@@ -138,7 +138,7 @@ public class SQLManager {
             }
 
         } catch (SQLException | IllegalStateException ex) {
-            Main.LOGGER.severe("Some SQL error occurred: " + ex.getMessage());
+            Main.LOGGER.error("Some SQL error occurred: " + ex.getMessage());
         }
         return userStatsList;
     }
@@ -177,7 +177,7 @@ public class SQLManager {
             }
 
         } catch (SQLException ex) {
-            Main.LOGGER.severe("Some SQL error occurred: " + ex.getMessage());
+            Main.LOGGER.error("Some SQL error occurred: " + ex.getMessage());
         }
         return userStats;
     }

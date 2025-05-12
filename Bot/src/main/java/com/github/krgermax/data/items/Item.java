@@ -7,10 +7,12 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import com.github.krgermax.data.DataObject;
 import com.github.krgermax.data.inventory.UserStats;
 
+import java.io.File;
+
 public abstract class Item extends DataObject {
 
     private final String emoji;
-    private final String imgPath;
+    private final File imgFile;
     protected int price;
     private final double dropChance;
     private final double xpMultiplier;
@@ -22,7 +24,7 @@ public abstract class Item extends DataObject {
             String name,
             String desc,
             String emoji,
-            String imgPath,
+            File imgFile,
             int reqLvl,
             ItemType itemType,
             double dropChance,
@@ -30,7 +32,7 @@ public abstract class Item extends DataObject {
     ) {
         super(uniqueID, name, desc);
         this.emoji = emoji;
-        this.imgPath = imgPath;
+        this.imgFile = imgFile;
         this.price = 0;
         this.dropChance = dropChance;
         this.xpMultiplier = xpMultiplier;
@@ -88,7 +90,7 @@ public abstract class Item extends DataObject {
         return reqLvl;
     }
 
-    public String getImgPath() {
-        return imgPath;
+    public File getImgFile() {
+        return imgFile;
     }
 }

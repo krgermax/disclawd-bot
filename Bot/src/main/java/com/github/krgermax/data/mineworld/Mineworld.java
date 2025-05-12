@@ -85,15 +85,6 @@ public class Mineworld {
         return embedBuilder;
     }
 
-    private File getBiomeImageFile() {
-        File imgFile = new File(currentBiome.getImgPath());
-        if (!imgFile.exists()) {
-            Main.LOGGER.severe("Biome image not found: " + currentBiome.getImgPath());
-            return null;
-        }
-        return imgFile;
-    }
-
     /**
      * This method replies to the '/biome' command, by building an embedded message
      * with all necessary information and buttons
@@ -106,11 +97,8 @@ public class Mineworld {
                     .addActionRow(Button.primary(ButtonManager.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
                     .queue();
         } else {
-            File imgFile = getBiomeImageFile();
-            if (imgFile == null) return;
-
             event.replyEmbeds(buildBiomeEmbed().build())
-                    .addFiles(FileUpload.fromData(imgFile, "ore.png"))
+                    .addFiles(FileUpload.fromData(currentBiome.getImgFile(), "ore.png"))
                     .addActionRow(Button.primary(ButtonManager.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
                     .queue();
             previousBiomeType = currentBiome.getType();
@@ -130,11 +118,8 @@ public class Mineworld {
                     .addActionRow(Button.primary(ButtonManager.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
                     .queue();
         } else {
-            File imgFile = getBiomeImageFile();
-            if (imgFile == null) return;
-
             event.replyEmbeds(buildBiomeEmbed().build())
-                    .addFiles(FileUpload.fromData(imgFile, "ore.png"))
+                    .addFiles(FileUpload.fromData(currentBiome.getImgFile(), "ore.png"))
                     .addActionRow(Button.primary(ButtonManager.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
                     .queue();
             previousBiomeType = currentBiome.getType();
@@ -152,11 +137,8 @@ public class Mineworld {
                     .setActionRow(Button.primary(ButtonManager.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
                     .queue();
         } else {
-            File imgFile = getBiomeImageFile();
-            if (imgFile == null) return;
-
             event.editMessageEmbeds(buildBiomeEmbed().build())
-                    .setFiles(FileUpload.fromData(imgFile, "ore.png"))
+                    .setFiles(FileUpload.fromData(currentBiome.getImgFile(), "ore.png"))
                     .setActionRow(Button.primary(ButtonManager.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
                     .queue();
             previousBiomeType = currentBiome.getType();

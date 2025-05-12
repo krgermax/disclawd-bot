@@ -177,12 +177,34 @@
       "gold_drop_amount": "1"
     },
     {
+      "id": "17",
+      "name": "Wither Skeleton",
+      "description": "Appears in the Nether",
+      "mob_type": "NORMAL",
+      "mob_sub_type": "WITHER_SKELETON",
+      "fileName": "wither_skeleton.png",
+      "spawn_chance": "0.05",
+      "xp_drop_amount": "1.0",
+      "gold_drop_amount": "1"
+    },
+    {
+      "id": "18",
+      "name": "Blaze",
+      "description": "Appears in the Nether",
+      "mob_type": "NORMAL",
+      "mob_sub_type": "BLAZE",
+      "fileName": "blaze.png",
+      "spawn_chance": "0.05",
+      "xp_drop_amount": "1.0",
+      "gold_drop_amount": "1"
+    },
+    {
       "id": "100",
-      "name": "test boss mob",
-      "description": "test boss mob description",
+      "name": "Wither",
+      "description": "Summoned in the nether",
       "mob_type": "BOSS",
       "mob_sub_type": "WITHER",
-      "fileName": "piglin_rider.png",
+      "fileName": "wither.png",
       "spawn_chance": "0.1",
       "xp_drop_amount": "1.0",
       "gold_drop_amount": "1",

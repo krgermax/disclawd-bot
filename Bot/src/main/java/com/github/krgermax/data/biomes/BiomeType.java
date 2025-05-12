@@ -10,5 +10,6 @@ public enum BiomeType {
     NETHERRACK,
     NETHER_QUARTZ,
     NETHER_GOLD,
+    NETHER_BRICK,
     VOID
 }

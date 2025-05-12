@@ -25,8 +25,7 @@ import java.util.List;
           -> json array for normal, boss, trader mobs
  */
 public class MobParser {
-
-    private  final  Factory factory = new Factory();
+    
     private final List<Integer> idList = new ArrayList<>();
 
     /*
@@ -51,11 +50,13 @@ public class MobParser {
     public List<Mob> parseMobs() throws FailedDataParseException {
         List<Mob> mobs = getMobsFromJSON();
 
-        if (!validateMobs(mobs) || mobs.isEmpty())
+        boolean valid = validateMobs(mobs);
+        if (!valid || mobs.isEmpty()) {
             throw new FailedDataParseException(
                     "Could not parse mobs correctly:\n" +
-                            "- valid mobs = " + validateMobs(mobs) + "\n" +
+                            "- valid mobs = " + valid + "\n" +
                             "- is mob list empty = " + mobs.isEmpty());
+        }
 
         Main.LOGGER.info("Mob parsing finished, mob list size: " + mobs.size());
         return mobs;
@@ -66,7 +67,7 @@ public class MobParser {
      *
      * @return the list of parsed mobs
      */
-    private List<Mob> getMobsFromJSON() {
+    private List<Mob> getMobsFromJSON() throws FailedDataParseException {
 
         List<Mob> mobs = new ArrayList<>();
 
@@ -103,8 +104,9 @@ public class MobParser {
                 mobs.add(mob);
             }
 
-        } catch (JSONException | IOException ex) {
-            Main.LOGGER.severe("Failed to parse JSON mobs file: " + ex.getMessage());
+        } catch (JSONException | IOException | IllegalArgumentException ex) {
+            Main.LOGGER.error("Failed to parse JSON mobs file: " + ex.getMessage());
+            throw new FailedDataParseException("Failed to parse JSON mobs file: " + ex.getMessage());
         }
         return mobs;
     }
@@ -119,7 +121,7 @@ public class MobParser {
         double xpDropAmount = jsonItem.getDouble("xp_drop_amount");
         int goldDropAmount = jsonItem.getInt("gold_drop_amount");
 
-        return factory.createNormalMob(
+        return MineFactory.createNormalMob(
                 mobID,
                 mobName,
                 mobDesc,
@@ -144,7 +146,7 @@ public class MobParser {
         boolean specialDrop = jsonItem.getBoolean("special_drop");
         double health = jsonItem.getDouble("health_amount");
 
-        return factory.createBossMob(
+        return MineFactory.createBossMob(
                 mobID,
                 mobName,
                 mobDesc,
@@ -168,7 +170,7 @@ public class MobParser {
 
         TradeType tradeType = TradeType.valueOf(jsonItem.getString("trade_type"));
 
-        return factory.createTradeMob(
+        return MineFactory.createTradeMob(
                 mobID,
                 mobName,
                 mobDesc,
@@ -226,9 +228,8 @@ public class MobParser {
             return health > 0 || xpDrop >= XP_DROP_AMOUNT_LOWER_B || goldDrop >= GOLD_DROP_AMOUNT_LOWER_B;
         }
 
-        File imageFile = new File(mob.getImgPath());
-        if (!imageFile.exists()) {
-            Main.LOGGER.severe("Mob image file not found: " + mob.getImgPath());
+        if (!mob.getImgFile().exists()) {
+            Main.LOGGER.error("Mob image file not found: " + mob.getImgFile().getPath());
             return false;
         }
 

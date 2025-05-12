@@ -99,18 +99,15 @@ public class MobSpawner {
     private void sendMobMessage(MessageChannelUnion messageChannelUnion, Mob mob) {
         try {
             EmbedBuilder embedBuilder = createMobEmbedded(mob);
-            File imgFile = new File(mob.getImgPath());
-
             messageChannelUnion.sendMessageEmbeds(embedBuilder.build())
-                    .addFiles(FileUpload.fromData(imgFile, "mob.png"))
+                    .addFiles(FileUpload.fromData(mob.getImgFile(), "mob.png"))
                     .addActionRow(
                             Button.danger(ButtonManager.HIT_BUTTON_ID + mob.getID(), "Hit")
                     )
                     .queue();
-
             Main.LOGGER.info("Mob spawned: " + mob.getName());
         } catch (NullPointerException ex) {
-            Main.LOGGER.severe("Could not load image file: " + ex.getMessage());
+            Main.LOGGER.error("Could not load image file: " + ex.getMessage());
         }
     }
 

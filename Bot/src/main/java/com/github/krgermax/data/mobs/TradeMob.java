@@ -4,6 +4,8 @@ import com.github.krgermax.data.mobs.enums.MobType;
 import com.github.krgermax.data.mobs.enums.TradeType;
 import com.github.krgermax.data.mobs.enums.MobSubType;
 
+import java.io.File;
+
 public class TradeMob extends Mob {
     private final TradeType tradeType;
     public TradeMob(
@@ -12,11 +14,11 @@ public class TradeMob extends Mob {
             String desc,
             MobType mobType,
             MobSubType mobSubType,
-            String imgPath,
+            File imgFile,
             double spawnChance,
             TradeType tradeType
     ) {
-        super(id, name, desc, mobType, mobSubType, imgPath, spawnChance);
+        super(id, name, desc, mobType, mobSubType, imgFile, spawnChance);
         this.tradeType = tradeType;
     }
 

@@ -68,7 +68,7 @@ public class Bot {
             botProps.load(new FileInputStream(configPath));
 
         } catch (NullPointerException | IOException ex) {
-            Main.LOGGER.severe("Error loading properties file: " + ex.getMessage());
+            Main.LOGGER.error("Error loading properties file: " + ex.getMessage());
         }
         return botProps;
     }
@@ -85,7 +85,7 @@ public class Bot {
                 Main.LOGGER.info("Successfully connected to SQL Database");
 
         } catch (ClassNotFoundException | SQLException ex) {
-            Main.LOGGER.severe("Could not connect to SQL Database " + ex.getMessage());
+            Main.LOGGER.error("Could not connect to SQL Database " + ex.getMessage());
         }
     }
 
@@ -100,7 +100,7 @@ public class Bot {
             Main.LOGGER.info("SQL connection closed successfully");
 
         } catch (SQLException ex) {
-            Main.LOGGER.severe("Could not close SQL connection" + ex.getMessage());
+            Main.LOGGER.error("Could not close SQL connection" + ex.getMessage());
         }
     }
 

@@ -15,6 +15,8 @@ import com.github.krgermax.parser.exceptions.FailedDataParseException;
 import com.github.krgermax.sql.SQLManager;
 import com.github.krgermax.tokens.Constants;
 import net.dv8tion.jda.api.OnlineStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,8 +25,6 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Main {
 
@@ -40,14 +40,14 @@ public class Main {
     public static Generator generator;
 
     public static void main(String[] args) {
-        LOGGER = Logger.getLogger(Constants.LOGGER_NAME);
+        LOGGER = LoggerFactory.getLogger(Constants.LOGGER_NAME);
         try {
             initialize();
             scheduleMineworldManagerCleanUp();
             scheduleInventoryCacheCleanUp();
             run(bot);
         } catch (FailedDataParseException ex) {
-            LOGGER.severe(ex.getMessage());
+            LOGGER.error(ex.getMessage());
         }
     }
 
@@ -127,7 +127,7 @@ public class Main {
                 }
             }
         } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, ex.getMessage());
+            LOGGER.error(ex.getMessage());
         }
     }
 }

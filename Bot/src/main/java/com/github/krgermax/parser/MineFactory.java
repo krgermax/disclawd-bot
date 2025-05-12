@@ -1,5 +1,7 @@
 package com.github.krgermax.parser;
 
+import com.github.krgermax.data.biomes.Biome;
+import com.github.krgermax.data.biomes.BiomeType;
 import com.github.krgermax.data.items.Item;
 import com.github.krgermax.data.items.UtilItem;
 import com.github.krgermax.data.items.WeaponItem;
@@ -12,7 +14,10 @@ import com.github.krgermax.data.mobs.enums.MobSubType;
 import com.github.krgermax.data.mobs.enums.MobType;
 import com.github.krgermax.data.mobs.enums.TradeType;
 
-public class Factory {
+import java.io.File;
+import java.util.Set;
+
+public class MineFactory {
     /**
      * Factory method to create a utility item object
      *
@@ -26,7 +31,7 @@ public class Factory {
      *
      * @return A utility item object
      */
-    public Item createUtilityItem(
+    public static Item createUtilityItem(
             int uniqueID,
             String name,
             String itemEmoji,
@@ -38,7 +43,8 @@ public class Factory {
             double xpMultiplier,
             double goldMultiplier
     ) {
-        return new UtilItem(uniqueID, name, itemEmoji, desc, imgPath, reqLvl, itemType, dropChance, xpMultiplier, goldMultiplier);
+        File imgFile = validateImagePath(imgPath);
+        return new UtilItem(uniqueID, name, itemEmoji, desc, imgFile, reqLvl, itemType, dropChance, xpMultiplier, goldMultiplier);
     }
 
     /**
@@ -54,7 +60,7 @@ public class Factory {
      *
      * @return A weapon item object
      */
-    public Item createWeaponItem(
+    public static Item createWeaponItem(
             int uniqueID,
             String name,
             String itemEmoji,
@@ -66,7 +72,8 @@ public class Factory {
             double xpMultiplier,
             double dmgMultiplier
     ) {
-        return new WeaponItem(uniqueID, name, desc, itemEmoji, imgPath,  reqLvl, itemType, dropChance, xpMultiplier, dmgMultiplier);
+        File imgFile = validateImagePath(imgPath);
+        return new WeaponItem(uniqueID, name, desc, itemEmoji, imgFile,  reqLvl, itemType, dropChance, xpMultiplier, dmgMultiplier);
     }
 
     /**
@@ -84,7 +91,7 @@ public class Factory {
      *
      * @return A normal mob object
      */
-    public Mob createNormalMob(
+    public static Mob createNormalMob(
             int uniqueID,
             String name,
             String desc,
@@ -95,7 +102,8 @@ public class Factory {
             double xpDrop,
             int goldDrop
     ) {
-        return new NormalMob(uniqueID, name, desc, mobType, mobSubType, imgPath, spawnChance, xpDrop, goldDrop);
+        File imgFile = validateImagePath(imgPath);
+        return new NormalMob(uniqueID, name, desc, mobType, mobSubType, imgFile, spawnChance, xpDrop, goldDrop);
     }
 
     /**
@@ -115,7 +123,7 @@ public class Factory {
      *
      * @return A boss mob object
      */
-    public Mob createBossMob(
+    public static Mob createBossMob(
             int uniqueID,
             String name,
             String desc,
@@ -128,7 +136,8 @@ public class Factory {
             boolean specialDrop,
             double health
     ) {
-        return new BossMob(uniqueID, name, desc, mobType, mobSubType, imgPath, spawnChance, xpDrop, goldDrop, specialDrop, health);
+        File imgFile = validateImagePath(imgPath);
+        return new BossMob(uniqueID, name, desc, mobType, mobSubType, imgFile, spawnChance, xpDrop, goldDrop, specialDrop, health);
     }
 
     /**
@@ -145,7 +154,7 @@ public class Factory {
      *
      * @return A trade mob object
      */
-    public Mob createTradeMob(
+    public static Mob createTradeMob(
             int uniqueID,
             String name,
             String desc,
@@ -155,6 +164,39 @@ public class Factory {
             double spawnChance,
             TradeType tradeType
     ) {
-        return new TradeMob(uniqueID, name, desc, mobType, mobSubType, imgPath, spawnChance, tradeType);
+        File imgFile = validateImagePath(imgPath);
+        return new TradeMob(uniqueID, name, desc, mobType, mobSubType, imgFile, spawnChance, tradeType);
+    }
+
+    /**
+     * Factory method to create a biome object
+     *
+     * @param name Name
+     * @param biomeType Biome type
+     * @param biomeHP Biome HP
+     * @param imgPath Image path
+     * @param xpEnabled XP enabled
+     * @param spawnableMobs Spawnable mobs
+     *
+     * @return A biome object
+     */
+    public static Biome createBiome(
+            String name,
+            BiomeType biomeType,
+            double biomeHP,
+            String imgPath,
+            boolean xpEnabled,
+            Set<MobSubType> spawnableMobs
+    ) {
+        File imgFile = validateImagePath(imgPath);
+        return new Biome(name, biomeType, biomeHP, imgFile, xpEnabled, spawnableMobs);
+    }
+
+    private static File validateImagePath(String imgPath) {
+        File file = new File(imgPath);
+        if (!file.exists()) {
+            throw new IllegalArgumentException("Image path not found: " + imgPath);
+        }
+        return file;
     }
 }

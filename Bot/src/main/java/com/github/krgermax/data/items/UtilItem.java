@@ -8,6 +8,8 @@ import com.github.krgermax.data.inventory.UserStats;
 import com.github.krgermax.main.Main;
 import com.github.krgermax.tokens.Constants;
 
+import java.io.File;
+
 public class UtilItem extends Item {
     private final double goldMultiplier;
 
@@ -16,14 +18,14 @@ public class UtilItem extends Item {
             String name,
             String desc,
             String itemEmoji,
-            String imgPath,
+            File imgFile,
             int reqLvl,
             ItemType itemType,
             double dropChance,
             double xpMultiplier,
             double goldMultiplier
     ) {
-        super(uniqueID, name, desc, itemEmoji, imgPath, reqLvl, itemType, dropChance, xpMultiplier);
+        super(uniqueID, name, desc, itemEmoji, imgFile, reqLvl, itemType, dropChance, xpMultiplier);
         this.goldMultiplier = goldMultiplier;
         this.price = calculatePrice(xpMultiplier, goldMultiplier);
     }

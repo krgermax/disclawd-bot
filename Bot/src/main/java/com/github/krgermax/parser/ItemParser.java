@@ -20,7 +20,6 @@ import java.util.List;
 
 public class ItemParser {
 
-    private final Factory factory = new Factory();
     private final List<Integer> idList = new ArrayList<>();
 
     /*
@@ -45,10 +44,11 @@ public class ItemParser {
     public List<Item> parseItems() throws FailedDataParseException {
         List<Item> items = getItemsFromJSON();
 
-        if (!validateItems(items) || items.isEmpty())
+        boolean valid = validateItems(items);
+        if (!valid || items.isEmpty())
             throw new FailedDataParseException(
                     "Could not parse items correctly:\n" +
-                            "- valid items = " + validateItems(items) + "\n" +
+                            "- valid items = " + valid + "\n" +
                             "- is item list empty = " + items.isEmpty());
 
         Main.LOGGER.info("Item parsing finished, item list size: " + items.size());
@@ -60,7 +60,7 @@ public class ItemParser {
      *
      * @return the list of parsed items
      */
-    private List<Item> getItemsFromJSON() {
+    private List<Item> getItemsFromJSON() throws FailedDataParseException {
 
         List<Item> items = new ArrayList<>();
 
@@ -89,7 +89,7 @@ public class ItemParser {
 
                     double goldMultiplier = jsonItem.getDouble("gold_multiplier");
 
-                    Item item = factory.createUtilityItem(
+                    Item item = MineFactory.createUtilityItem(
                             itemID,
                             itemName,
                             itemDesc,
@@ -107,7 +107,7 @@ public class ItemParser {
                 } else {
                     double dmgMultiplier = jsonItem.getDouble("dmg_multiplier");
 
-                    Item item = factory.createWeaponItem(
+                    Item item = MineFactory.createWeaponItem(
                             itemID,
                             itemName,
                             itemDesc,
@@ -125,8 +125,9 @@ public class ItemParser {
                 }
             }
 
-        } catch (JSONException | IOException ex) {
-            Main.LOGGER.severe("Failed to parse JSON items file: " + ex.getMessage());
+        } catch (JSONException | IOException | IllegalArgumentException ex) {
+            Main.LOGGER.error("Failed to parse JSON items file: " + ex.getMessage());
+            throw new FailedDataParseException("Failed to parse JSON items file: " + ex.getMessage());
         }
         return items;
     }
@@ -171,9 +172,8 @@ public class ItemParser {
             return weaponItem.getDmgMultiplier() >= DMG_MULTIPLIER_LOWER_B;
         }
 
-        File imageFile = new File(item.getImgPath());
-        if (!imageFile.exists()) {
-            Main.LOGGER.severe("Item image file not found: " + item.getImgPath());
+        if (!item.getImgFile().exists()) {
+            Main.LOGGER.error("Item image file not found: " + item.getImgFile().getPath());
             return false;
         }
 
