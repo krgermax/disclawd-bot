@@ -1,14 +1,14 @@
 package com.github.krgermax.main;
 
 import com.github.krgermax.data.Generator;
-import com.github.krgermax.data.biomes.Biome;
+import com.github.krgermax.data.blocks.Block;
 import com.github.krgermax.data.inventory.InventoryCache;
 import com.github.krgermax.data.inventory.InventoryManager;
 import com.github.krgermax.data.items.Item;
 import com.github.krgermax.data.mineworld.MineworldManager;
 import com.github.krgermax.data.mobs.Mob;
 import com.github.krgermax.data.shop.ShopManager;
-import com.github.krgermax.parser.BiomeParser;
+import com.github.krgermax.parser.BlockParser;
 import com.github.krgermax.parser.ItemParser;
 import com.github.krgermax.parser.MobParser;
 import com.github.krgermax.parser.exceptions.FailedDataParseException;
@@ -65,12 +65,12 @@ public class Main {
         MobParser mobParser = new MobParser();
         List<Mob> mobList = mobParser.parseMobs();
 
-        BiomeParser biomeParser = new BiomeParser();
-        List<Biome> biomeList = biomeParser.parseBiomes();
+        BlockParser blockParser = new BlockParser();
+        List<Block> blockList = blockParser.parseBlocks();
 
         shopManager = ShopManager.getInstance(itemList);
         inventoryManager = InventoryManager.getInstance();
-        mineworldManager = MineworldManager.getInstance(biomeList, mobList);
+        mineworldManager = MineworldManager.getInstance(blockList, mobList);
         generator = Generator.getInstance();
 
         bot = Bot.getInstance();
@@ -80,17 +80,36 @@ public class Main {
      * This method schedules the timing for inventory cache cleanups periodically
      */
     private static void scheduleInventoryCacheCleanUp() {
-        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
-        scheduledExecutorService.scheduleAtFixedRate(() -> inventoryManager.inventoryCache.cleanUpCache(), 0, InventoryCache.INV_CACHE_PERIOD_MINUTES, TimeUnit.MINUTES);
-    }
+        try (ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1)) {
 
+            scheduledExecutorService.scheduleAtFixedRate(() ->
+                    inventoryManager.inventoryCache.cleanUpCache(),
+                    Constants.CACHE_INITIAL_DELAY,
+                    InventoryCache.INV_CACHE_PERIOD_MINUTES,
+                    TimeUnit.MINUTES
+            );
+
+        } catch (Exception e) {
+            LOGGER.error("Failed to initialize InventoryManager cleanup: " + e.getMessage());
+        }
+    }
 
     /**
      * This method schedules the timing for mineworld manager cleanups periodically
      */
     private static void scheduleMineworldManagerCleanUp() {
-        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
-        scheduledExecutorService.scheduleAtFixedRate(() -> mineworldManager.cleanupCache(), 0, MineworldManager.MINE_CACHE_PERIOD_MINUTES, TimeUnit.MINUTES);
+        try (ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1)) {
+
+            scheduledExecutorService.scheduleAtFixedRate(() ->
+                mineworldManager.cleanupCache(),
+                Constants.CACHE_INITIAL_DELAY,
+                MineworldManager.MINE_CACHE_PERIOD_MINUTES,
+                TimeUnit.MINUTES
+            );
+
+        } catch (Exception e) {
+            LOGGER.error("Failed to initialize MineworldManager cleanup: " + e.getMessage());
+        }
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.github.krgermax.data.biomes;
+package com.github.krgermax.data.blocks;
 
 import com.github.krgermax.data.items.Item;
 import com.github.krgermax.data.items.WeaponItem;
@@ -10,23 +10,23 @@ import com.github.krgermax.tokens.Constants;
 import java.io.File;
 import java.util.Set;
 
-public class Biome {
+public class Block {
     private final String name;
-    private final BiomeType type;
-    private final double biomeHP;
+    private final BlockType type;
+    private final double blockHP;
     private double currentHP;
     private double adjustableFullHP;
     private final File imgFile;
     private final boolean xpEnabled;
     private final Set<MobSubType> spawnableMobSubTypes;
 
-    public Biome(String name, BiomeType type, double biomeHP, File imgFile, boolean xpEnabled, Set<MobSubType> spawnableMobSubTypes) {
+    public Block(String name, BlockType type, double blockHP, File imgFile, boolean xpEnabled, Set<MobSubType> spawnableMobSubTypes) {
         this.name = name;
         this.type = type;
-        this.biomeHP = biomeHP;
+        this.blockHP = blockHP;
 
-        this.currentHP = biomeHP;
-        this.adjustableFullHP = biomeHP;
+        this.currentHP = blockHP;
+        this.adjustableFullHP = blockHP;
 
         this.imgFile = imgFile;
 
@@ -38,12 +38,12 @@ public class Biome {
         return name;
     }
 
-    public BiomeType getType() {
+    public BlockType getType() {
         return type;
     }
 
     public double getTrueHP() {
-        return biomeHP;
+        return blockHP;
     }
 
     public double getCurrentHP() {
@@ -75,8 +75,8 @@ public class Biome {
     }
 
     /**
-     * Calculates the damage done to a biome by a user and applies it to
-     * the current HP of the current biome
+     * Calculates the damage done to a block by a user and applies it to
+     * the current HP of the current block
      *
      * @param equippedItem The equipped user item
      */
@@ -94,20 +94,20 @@ public class Biome {
 
         currentHP -= totalDamage;
         currentHP = Main.generator.roundDouble(currentHP, 1);
-        Main.LOGGER.info("Damage done to biome: " + type + "." +
+        Main.LOGGER.info("Damage done to block: " + type + "." +
                 " Damage: " + totalDamage + ", " + previousHP + "->" + currentHP);
     }
 
     /**
-     * Creates a copy of the current biome object
+     * Creates a copy of the current block object
      *
-     * @return A new instance of the Biome object
+     * @return A new instance of the block object
      */
-    public Biome copy() {
-        return new Biome(
+    public Block copy() {
+        return new Block(
                 name,
                 type,
-                biomeHP,
+                blockHP,
                 imgFile,
                 xpEnabled,
                 spawnableMobSubTypes

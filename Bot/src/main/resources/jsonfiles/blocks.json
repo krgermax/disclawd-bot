@@ -1,5 +1,5 @@
 {
-  "biomes": [
+  "blocks": [
     {
       "name": "The Overworld",
       "type" : "COAL",

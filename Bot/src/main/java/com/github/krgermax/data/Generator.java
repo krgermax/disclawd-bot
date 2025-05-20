@@ -1,7 +1,7 @@
 package com.github.krgermax.data;
 
-import com.github.krgermax.data.biomes.Biome;
-import com.github.krgermax.data.biomes.BiomeType;
+import com.github.krgermax.data.blocks.Block;
+import com.github.krgermax.data.blocks.BlockType;
 import com.github.krgermax.data.mineworld.Mineworld;
 import com.github.krgermax.main.Main;
 
@@ -13,12 +13,12 @@ import java.util.stream.Collectors;
 public class Generator {
 
     private static Generator INSTANCE;
-    private final Set<BiomeType> xpBiomeTypes;
+    private final Set<BlockType> xpBlockTypes;
 
     private Generator() {
-        this.xpBiomeTypes = Main.mineworldManager.getBiomes().stream()
-                .filter(Biome::isXpEnabled)
-                .map(Biome::getType)
+        this.xpBlockTypes = Main.mineworldManager.getBlocks().stream()
+                .filter(Block::isXpEnabled)
+                .map(Block::getType)
                 .collect(Collectors.toSet());
     }
 
@@ -35,9 +35,9 @@ public class Generator {
      * @return XP as double
      */
     public double generateXP(Mineworld mineworld) {
-        BiomeType biomeType = mineworld.getCurrentBiome().getType();
+        BlockType blockType = mineworld.getCurrentBlock().getType();
 
-        if (!xpBiomeTypes.contains(biomeType))
+        if (!xpBlockTypes.contains(blockType))
             return 0d;
 
         double generatedXP = (Math.random() * 4) + 1;

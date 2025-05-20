@@ -2,8 +2,8 @@ package com.github.krgermax.data.mineworld;
 
 import com.github.krgermax.buttons.ButtonManager;
 import com.github.krgermax.data.MobSpawner;
-import com.github.krgermax.data.biomes.Biome;
-import com.github.krgermax.data.biomes.BiomeType;
+import com.github.krgermax.data.blocks.Block;
+import com.github.krgermax.data.blocks.BlockType;
 import com.github.krgermax.data.items.Item;
 import com.github.krgermax.data.mobs.Mob;
 import com.github.krgermax.main.Main;
@@ -15,7 +15,6 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.utils.FileUpload;
 
 import java.awt.*;
-import java.io.File;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -31,11 +30,11 @@ public class Mineworld {
     private final MobSpawner mobSpawner;
 
     /*
-        Biome
+        Block
      */
-    private final List<Biome> biomeList;
-    private Biome currentBiome;
-    private BiomeType previousBiomeType;
+    private final List<Block> blockList;
+    private Block currentBlock;
+    private BlockType previousBlockType;
 
     /*
         Current user map
@@ -45,12 +44,12 @@ public class Mineworld {
     private final int MAX_MINE_NOT_INTERACTED_MINUTES = 2;
 
 
-    public Mineworld(List<Biome> biomeList, List<Mob> mobList) {
+    public Mineworld(List<Block> blockList, List<Mob> mobList) {
         this.timestamp = LocalDateTime.now();
 
-        this.biomeList = biomeList;
-        this.currentBiome = generateBiome();
-        this.previousBiomeType = BiomeType.VOID;
+        this.blockList = blockList;
+        this.currentBlock = generateBlock();
+        this.previousBlockType = BlockType.VOID;
 
         this.currentUserMap = new HashMap<>();
         this.currentUserMultiplier = 1;
@@ -59,49 +58,49 @@ public class Mineworld {
     }
 
     /**
-     * Selects a random biom from the biomes enum
+     * Selects a random biom from the blocks enum
      *
      * @return A biom
      */
-    private Biome generateBiome() {
-        int size = biomeList.size();
+    private Block generateBlock() {
+        int size = blockList.size();
         int selector = (int) (Math.random() * size);
 
-        Biome returnBiome = biomeList.get(selector);
-        Main.LOGGER.info("The current biome is: " + returnBiome.getType());
+        Block returnBlock = blockList.get(selector);
+        Main.LOGGER.info("The current block is: " + returnBlock.getType());
         /*
-            The biome is copied to avoid shared mutable state between Mineworld instances
+            The block is copied to avoid shared mutable state between Mineworld instances
          */
-        return returnBiome.copy();
+        return returnBlock.copy();
     }
 
-    private EmbedBuilder buildBiomeEmbed() {
+    private EmbedBuilder buildBlockEmbed() {
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setTitle(currentBiome.getName())
+        embedBuilder.setTitle(currentBlock.getName())
                 .setColor(Color.BLACK)
                 .setDescription("Active miners: " + currentUserMap.size() + " (Last " + MAX_MINE_NOT_INTERACTED_MINUTES + " minutes)")
-                .addField("Biome HP", currentBiome.getCurrentHP() + "/" + currentBiome.getAdjustableFullHP(), false)
+                .addField("Block HP", currentBlock.getCurrentHP() + "/" + currentBlock.getAdjustableFullHP(), false)
                 .setImage("attachment://ore.png");
         return embedBuilder;
     }
 
     /**
-     * This method replies to the '/biome' command, by building an embedded message
+     * This method replies to the '/block' command, by building an embedded message
      * with all necessary information and buttons
      *
      * @param event Event
      */
-    public void replyWithBiomeEmbedded(SlashCommandInteractionEvent event) {
-        if (currentBiome.getType().equals(previousBiomeType)) {
-            event.replyEmbeds(buildBiomeEmbed().build())
+    public void replyWithBlockEmbedded(SlashCommandInteractionEvent event) {
+        if (currentBlock.getType().equals(previousBlockType)) {
+            event.replyEmbeds(buildBlockEmbed().build())
                     .addActionRow(Button.primary(ButtonManager.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
                     .queue();
         } else {
-            event.replyEmbeds(buildBiomeEmbed().build())
-                    .addFiles(FileUpload.fromData(currentBiome.getImgFile(), "ore.png"))
+            event.replyEmbeds(buildBlockEmbed().build())
+                    .addFiles(FileUpload.fromData(currentBlock.getImgFile(), "ore.png"))
                     .addActionRow(Button.primary(ButtonManager.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
                     .queue();
-            previousBiomeType = currentBiome.getType();
+            previousBlockType = currentBlock.getType();
         }
     }
 
@@ -112,17 +111,17 @@ public class Mineworld {
      *
      * @param event Event
      */
-    public void replyWithBiomeEmbedded(ButtonInteractionEvent event) {
-        if (currentBiome.getType().equals(previousBiomeType)) {
-            event.replyEmbeds(buildBiomeEmbed().build())
+    public void replyWithBlockEmbedded(ButtonInteractionEvent event) {
+        if (currentBlock.getType().equals(previousBlockType)) {
+            event.replyEmbeds(buildBlockEmbed().build())
                     .addActionRow(Button.primary(ButtonManager.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
                     .queue();
         } else {
-            event.replyEmbeds(buildBiomeEmbed().build())
-                    .addFiles(FileUpload.fromData(currentBiome.getImgFile(), "ore.png"))
+            event.replyEmbeds(buildBlockEmbed().build())
+                    .addFiles(FileUpload.fromData(currentBlock.getImgFile(), "ore.png"))
                     .addActionRow(Button.primary(ButtonManager.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
                     .queue();
-            previousBiomeType = currentBiome.getType();
+            previousBlockType = currentBlock.getType();
         }
     }
 
@@ -131,62 +130,62 @@ public class Mineworld {
      *
      * @param event Event
      */
-    private void updateBiomeMsg(ButtonInteractionEvent event) {
-        if (currentBiome.getType().equals(previousBiomeType)) {
-            event.editMessageEmbeds(buildBiomeEmbed().build())
+    private void updateBlockMsg(ButtonInteractionEvent event) {
+        if (currentBlock.getType().equals(previousBlockType)) {
+            event.editMessageEmbeds(buildBlockEmbed().build())
                     .setActionRow(Button.primary(ButtonManager.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
                     .queue();
         } else {
-            event.editMessageEmbeds(buildBiomeEmbed().build())
-                    .setFiles(FileUpload.fromData(currentBiome.getImgFile(), "ore.png"))
+            event.editMessageEmbeds(buildBlockEmbed().build())
+                    .setFiles(FileUpload.fromData(currentBlock.getImgFile(), "ore.png"))
                     .setActionRow(Button.primary(ButtonManager.MINE_BUTTON_ID, Constants.MINE_BUTTON_EMOJI))
                     .queue();
-            previousBiomeType = currentBiome.getType();
+            previousBlockType = currentBlock.getType();
         }
     }
 
     /**
-     * Wrapper method to update the biome on a 'ButtonInteractionEvent'
+     * Wrapper method to update the block on a 'ButtonInteractionEvent'
      * and the embedded message, such that the current state is displayed
      * correctly
      *
      * @param event        Event
      * @param equippedItem The equipped user item
      */
-    public void updateBiome(ButtonInteractionEvent event, Item equippedItem) {
-        currentBiome.damage(equippedItem);
+    public void updateBlock(ButtonInteractionEvent event, Item equippedItem) {
+        currentBlock.damage(equippedItem);
         mobSpawner.spawnMob(event.getChannel());
-        if (currentBiome.getCurrentHP() <= 0) {
-            // Reset the old biome and generate a new one
-            previousBiomeType = BiomeType.VOID;
-            currentBiome = generateBiome();
-            updateBiomeOnCompletion(event);
+        if (currentBlock.getCurrentHP() <= 0) {
+            // Reset the old block and generate a new one
+            previousBlockType = BlockType.VOID;
+            currentBlock = generateBlock();
+            updateBlockOnCompletion(event);
             /*
-             * We need to update the mob spawner if a biome is completed and only if it is completed
+             * We need to update the mob spawner if a block is completed and only if it is completed
              * to update the spawnable mob list, avoids unnecessary list filtering calls
              */
             mobSpawner.updateSpawner();
             return;
         }
-        updateBiomeMsg(event);
+        updateBlockMsg(event);
     }
 
     /**
-     * Updates the biome state and embedded message on a 'ButtonInteractionEvent', if
-     * the biome has been completed by reaching HP of <= 0
+     * Updates the block state and embedded message on a 'ButtonInteractionEvent', if
+     * the block has been completed by reaching HP of <= 0
      *
      * @param event Event
      */
-    private void updateBiomeOnCompletion(ButtonInteractionEvent event) {
+    private void updateBlockOnCompletion(ButtonInteractionEvent event) {
         event.getMessage().delete().queue();
         /*
-            Since this method is called after a new biome is generated, we need to adjust its HP according to the amount
+            Since this method is called after a new block is generated, we need to adjust its HP according to the amount
             of interacting users
          */
-        adjustCurrentBiomeHP();
-        currentBiome.setCurrentHP(currentBiome.getAdjustableFullHP());
-        replyWithBiomeEmbedded(event);
-        Main.LOGGER.info("Updated biome because of completion.");
+        adjustCurrentBlockHP();
+        currentBlock.setCurrentHP(currentBlock.getAdjustableFullHP());
+        replyWithBlockEmbedded(event);
+        Main.LOGGER.info("Updated block because of completion.");
     }
 
     /**
@@ -200,7 +199,7 @@ public class Mineworld {
         updateCurrentUserMap();
         int newMapSize = this.currentUserMap.size();
         if (oldMapSize != newMapSize)
-            adjustCurrentBiomeHP();
+            adjustCurrentBlockHP();
     }
 
     /**
@@ -220,38 +219,38 @@ public class Mineworld {
     }
 
     /**
-     * Adjusts the biome HP depending on how many unique users interacted with the mine button in a specific time window
+     * Adjusts the block HP depending on how many unique users interacted with the mine button in a specific time window
      * <l>
      * <li>
      * If another user interacts and the current user map increases in size: <br>
-     * This method only increases the adjustable full HP, but not the current biome HP
+     * This method only increases the adjustable full HP, but not the current block HP
      * </li>
      * <li>
      * If the current user map decreases: <br>
      * This method only decreases the current full HP, but not the adjustable full HP. As this happens in
-     * {@link #updateBiomeOnCompletion}
+     * {@link #updateBlockOnCompletion}
      * </li>
      * </l>
      */
-    private void adjustCurrentBiomeHP() {
+    private void adjustCurrentBlockHP() {
         int previousUserMultiplier = this.currentUserMultiplier;
         this.currentUserMultiplier = currentUserMap.size();
 
-        double adjustedHP = Main.generator.roundDouble(currentBiome.getTrueHP() * currentUserMultiplier, 1);
+        double adjustedHP = Main.generator.roundDouble(currentBlock.getTrueHP() * currentUserMultiplier, 1);
         /*
             If the user count increases I do not want to erase previous progress, therefore only max hp is adjusted
          */
-        currentBiome.setAdjustableFullHP(adjustedHP);
+        currentBlock.setAdjustableFullHP(adjustedHP);
 
         if (this.currentUserMultiplier < previousUserMultiplier) {
             double adjustment = (double) currentUserMultiplier / previousUserMultiplier;
-            adjustedHP = Main.generator.roundDouble(currentBiome.getCurrentHP() * adjustment, 1);
-            currentBiome.setCurrentHP(adjustedHP);
+            adjustedHP = Main.generator.roundDouble(currentBlock.getCurrentHP() * adjustment, 1);
+            currentBlock.setCurrentHP(adjustedHP);
         }
     }
 
-    public Biome getCurrentBiome() {
-        return currentBiome;
+    public Block getCurrentBlock() {
+        return currentBlock;
     }
 
     public LocalDateTime getTimestamp() {

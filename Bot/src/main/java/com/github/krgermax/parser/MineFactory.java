@@ -1,7 +1,7 @@
 package com.github.krgermax.parser;
 
-import com.github.krgermax.data.biomes.Biome;
-import com.github.krgermax.data.biomes.BiomeType;
+import com.github.krgermax.data.blocks.Block;
+import com.github.krgermax.data.blocks.BlockType;
 import com.github.krgermax.data.items.Item;
 import com.github.krgermax.data.items.UtilItem;
 import com.github.krgermax.data.items.WeaponItem;
@@ -169,27 +169,27 @@ public class MineFactory {
     }
 
     /**
-     * Factory method to create a biome object
+     * Factory method to create a block object
      *
      * @param name Name
-     * @param biomeType Biome type
-     * @param biomeHP Biome HP
+     * @param blockType Block type
+     * @param blockHP Block HP
      * @param imgPath Image path
      * @param xpEnabled XP enabled
      * @param spawnableMobs Spawnable mobs
      *
-     * @return A biome object
+     * @return A block object
      */
-    public static Biome createBiome(
+    public static Block createBlock(
             String name,
-            BiomeType biomeType,
-            double biomeHP,
+            BlockType blockType,
+            double blockHP,
             String imgPath,
             boolean xpEnabled,
             Set<MobSubType> spawnableMobs
     ) {
         File imgFile = validateImagePath(imgPath);
-        return new Biome(name, biomeType, biomeHP, imgFile, xpEnabled, spawnableMobs);
+        return new Block(name, blockType, blockHP, imgFile, xpEnabled, spawnableMobs);
     }
 
     private static File validateImagePath(String imgPath) {

@@ -1,6 +1,6 @@
-package com.github.krgermax.data.biomes;
+package com.github.krgermax.data.blocks;
 
-public enum BiomeType {
+public enum BlockType {
     COAL,
     IRON,
     DIAMOND,

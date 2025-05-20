@@ -1,6 +1,6 @@
 package com.github.krgermax.data.mineworld;
 
-import com.github.krgermax.data.biomes.Biome;
+import com.github.krgermax.data.blocks.Block;
 import com.github.krgermax.data.mobs.Mob;
 import com.github.krgermax.main.Main;
 
@@ -13,28 +13,28 @@ public class MineworldManager {
 
     private static MineworldManager INSTANCE;
     private final Map<String, Mineworld> mineworldMap = new ConcurrentHashMap<>();
-    private final List<Biome> biomeList;
+    private final List<Block> blockList;
     private final List<Mob> mobList;
 
-    private static final long MINE_CACHE_EXPIRY_MINUTES = 120;
+    private static final long MINE_CACHE_EXPIRY_MINUTES = 2;
     public static final int MINE_CACHE_PERIOD_MINUTES = 2;
 
-    private MineworldManager(List<Biome> biomeList, List<Mob> mobList) {
-        this.biomeList = biomeList;
+    private MineworldManager(List<Block> blockList, List<Mob> mobList) {
+        this.blockList = blockList;
         this.mobList = mobList;
     }
 
     /**
      * Calls the private constructor
      *
-     * @param biomeList Needed to create mineworld objects later on
+     * @param blockList Needed to create mineworld objects later on
      * @param mobList Needed to create mineworld objects later on
      *
      * @return Mineworld instance
      */
-    public static MineworldManager getInstance(List<Biome> biomeList, List<Mob> mobList) {
+    public static MineworldManager getInstance(List<Block> blockList, List<Mob> mobList) {
         if (INSTANCE == null) {
-            INSTANCE = new MineworldManager(biomeList, mobList);
+            INSTANCE = new MineworldManager(blockList, mobList);
         }
         return INSTANCE;
     }
@@ -55,7 +55,7 @@ public class MineworldManager {
                 return existing;
             } else {
                 Main.LOGGER.info("Creating new Mineworld for guild: " + id);
-                return new Mineworld(biomeList, mobList);
+                return new Mineworld(blockList, mobList);
             }
         });
     }
@@ -88,8 +88,8 @@ public class MineworldManager {
         return null;
     }
 
-    public List<Biome> getBiomes() {
-        return biomeList;
+    public List<Block> getBlocks() {
+        return blockList;
     }
 
     public List<Mob> getMobs() {

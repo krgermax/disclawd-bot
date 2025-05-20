@@ -116,10 +116,17 @@ public class Bot {
     private void upsertCommands() {
         jda.upsertCommand(CommandManager.HELP_COMMAND_ID, "How does this work here?")
                 .queue();
-        jda.upsertCommand(CommandManager.BIOME_COMMAND_ID, "What do I have to mine?")
+        jda.upsertCommand(CommandManager.BLOCK_COMMAND_ID, "What do I have to mine?")
                 .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.ADMINISTRATOR))
                 .queue();
         jda.upsertCommand(CommandManager.INV_COMMAND_ID, "Show me my stuff!")
+                .addOption(
+                        OptionType.STRING,
+                        CommandManager.INV_COMMAND_OPTION_ID,
+                        "The stuff I want to see :D",
+                        true,
+                        true
+                )
                 .queue();
         jda.upsertCommand(CommandManager.SHOP_COMMAND_ID, "List me everything you have")
                 .queue();

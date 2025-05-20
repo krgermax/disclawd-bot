@@ -17,7 +17,7 @@ public class CommandManager extends ListenerAdapter {
     /*
      * Command Id's
      */
-    public static final String BIOME_COMMAND_ID = "biome";
+    public static final String BLOCK_COMMAND_ID = "block";
     public static final String INV_COMMAND_ID = "inventory";
     public static final String SHOP_COMMAND_ID = "shop";
     public static final String ITEM_COMMAND_ID = "item";
@@ -29,12 +29,13 @@ public class CommandManager extends ListenerAdapter {
      */
     public static final String ITEM_COMMAND_OPTION_ID = "name";
     public static final String RANK_COMMAND_OPTION_ID = "category";
+    public static final String INV_COMMAND_OPTION_ID = "category";
 
     public CommandManager() {
         this.commands = new HashMap<>();
 
         this.commands.put(HELP_COMMAND_ID, new HelpCommand());
-        this.commands.put(BIOME_COMMAND_ID, new BiomeCommand());
+        this.commands.put(BLOCK_COMMAND_ID, new BlockCommand());
         this.commands.put(SHOP_COMMAND_ID, new ShopCommand());
         this.commands.put(ITEM_COMMAND_ID, new ItemCommand());
         this.commands.put(INV_COMMAND_ID, new InvCommand());

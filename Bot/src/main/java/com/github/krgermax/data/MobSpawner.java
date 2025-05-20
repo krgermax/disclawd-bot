@@ -1,7 +1,7 @@
 package com.github.krgermax.data;
 
 import com.github.krgermax.buttons.ButtonManager;
-import com.github.krgermax.data.biomes.Biome;
+import com.github.krgermax.data.blocks.Block;
 import com.github.krgermax.data.mineworld.Mineworld;
 import com.github.krgermax.data.mobs.Mob;
 import com.github.krgermax.data.mobs.enums.MobSubType;
@@ -13,7 +13,6 @@ import net.dv8tion.jda.api.utils.FileUpload;
 import com.github.krgermax.main.Main;
 
 import java.awt.*;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -35,23 +34,23 @@ public class MobSpawner {
     /**
      * This method can be used to update the mob spawner such that the spawning mobs
      * match to the current state of the game. Note from the {@link Mineworld}
-     * class: <br> We need to update the mob spawner if a biome is completed and only if it is
+     * class: <br> We need to update the mob spawner if a block is completed and only if it is
      * completed to update the spawnable mob list, avoids unnecessary list filtering calls
      */
     public void updateSpawner() {
-        Biome currentBiome = mineworld.getCurrentBiome();
-        this.spawnableMobs = generateSpawnableMobs(currentBiome);
+        Block currentBlock = mineworld.getCurrentBlock();
+        this.spawnableMobs = generateSpawnableMobs(currentBlock);
     }
 
     /**
      * Generates a list of all spawnable mobs, cannot implement this function to return
      * a set because multiple mobs do share the same subtype with their rarer counterparts
      *
-     * @param currentBiome The current biome influences the selection of mobs
+     * @param currentBlock The current block influences the selection of mobs
      * @return The generated mob list
      */
-    private List<Mob> generateSpawnableMobs(Biome currentBiome) {
-        Set<MobSubType> spawnableMobTypes = currentBiome.getSpawnableMobSubTypes();
+    private List<Mob> generateSpawnableMobs(Block currentBlock) {
+        Set<MobSubType> spawnableMobTypes = currentBlock.getSpawnableMobSubTypes();
         return spawnableMobs = this.mobList.stream()
                 .filter(mob -> spawnableMobTypes.contains(mob.getMobSubType()))
                 .toList();
@@ -62,7 +61,7 @@ public class MobSpawner {
         attemptSpawn(messageChannelUnion, MobType.NORMAL);
         /*
          * TODO:
-         *  - Adjust biomes those mob types arent entered anywhere yet
+         *  - Adjust blocks those mob types arent entered anywhere yet
          *  - The function doesnt need to be called three times, could change that in
          *    combination with other changes
          */

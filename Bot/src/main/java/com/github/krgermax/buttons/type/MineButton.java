@@ -42,7 +42,7 @@ public class MineButton implements CustomButton {
             Main.LOGGER.info("Gold after multiplier: " + combinedGold);
 
             mineworld.updateCurrentUserMultiplication(userID);
-            mineworld.updateBiome(event, equippedItem);
+            mineworld.updateBlock(event, equippedItem);
 
             double userCurrentXP = Main.sqlHandler.sqlStatsHandler.getXPCountFromUser(userID);
             Main.sqlHandler.sqlStatsHandler.updateUserStatsAfterMining(userID, combinedXP, combinedGold);

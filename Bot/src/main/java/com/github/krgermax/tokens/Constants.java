@@ -40,7 +40,7 @@ public final class Constants {
     /*
      * Others
      */
-
+    public static final int CACHE_INITIAL_DELAY = 0;
     public static final int ITEMS_PER_PAGE = 3;
     public static final String PATH_LOGO_IMG = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "images" + File.separator + "disclawd_logo.png";
 
